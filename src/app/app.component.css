@@ -1,0 +1,25 @@
+.container {
+	padding-top: 10px;
+}
+
+.content {
+	padding: 0 30px;
+}
+
+header {
+	width: 100%;
+	margin: 20px 0; 
+}
+
+header .material-icons {
+	margin: 0 14px;
+	font-size: 21px;
+	color: #333;
+	line-height: 28px;
+}
+
+header .material-icons:last-child {
+	margin-right: 0;
+}
+
+
