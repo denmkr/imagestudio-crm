@@ -1,33 +1,73 @@
 <form [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
   
-  <ng-select #citySelect [items]="parties"
+  <ng-select #typeSelect [items]="types"
         bindValue="value"
-        placeholder="Select age" 
-        (data)="citySelect.designation=($event.id)">
+        placeholder="Выберите тип" 
+        (data)="typeSelect.designation=($event.id)">
   </ng-select>
-  <input type="hidden" [(ngModel)]="citySelect.designation" formControlName="city" name="city">
-  
+  <input type="hidden" [(ngModel)]="typeSelect.designation" formControlName="type" name="type">
+
+  <input formControlName="category" name="category" type="text" placeholder="Категория" [ngClass]="{
+       'has-danger': newPartyForm.controls.category.invalid && newPartyForm.controls.category.dirty, 
+       'has-success': newPartyForm.controls.category.valid && newPartyForm.controls.category.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.category.errors && (newPartyForm.controls.category.dirty || newPartyForm.controls.category.touched)">
+     <p>Заполните поле</p>
+  </div>
+
+  <input formControlName="organization" name="organization" type="text" placeholder="Организация" [ngClass]="{
+       'has-danger': newPartyForm.controls.organization.invalid && newPartyForm.controls.organization.dirty, 
+       'has-success': newPartyForm.controls.organization.valid && newPartyForm.controls.organization.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.organization.errors && (newPartyForm.controls.organization.dirty || newPartyForm.controls.organization.touched)">
+     <p>Заполните поле</p>
+  </div>
+
   <input formControlName="email" name="email" type="email" placeholder="Your email" [ngClass]="{
        'has-danger': newPartyForm.controls.email.invalid && newPartyForm.controls.email.dirty, 
        'has-success': newPartyForm.controls.email.valid && newPartyForm.controls.email.dirty 
      }">
   <div class="form-control-feedback"
      *ngIf="newPartyForm.controls.email.errors && (newPartyForm.controls.email.dirty || newPartyForm.controls.email.touched)">
-     
-     <p *ngIf="newPartyForm.controls.email.errors.pattern">Password is required</p>
      <p *ngIf="newPartyForm.controls.email.errors.pattern">The email address must contain at least the @ character</p>
   </div>
-  
-  <input formControlName="password" name="password" type="password" placeholder="Your password" [ngClass]="{
-    'has-danger': newPartyForm.controls.password.invalid && newPartyForm.controls.password.dirty, 
-    'has-success': newPartyForm.controls.password.valid && newPartyForm.controls.password.dirty 
-  }">
+
+  <input formControlName="contact" name="contact" type="text" placeholder="Контакт" [ngClass]="{
+       'has-danger': newPartyForm.controls.contact.invalid && newPartyForm.controls.contact.dirty, 
+       'has-success': newPartyForm.controls.contact.valid && newPartyForm.controls.contact.dirty 
+     }">
   <div class="form-control-feedback"
-     *ngIf="newPartyForm.controls.password.errors && (newPartyForm.controls.password.dirty || newPartyForm.controls.password.touched)">
-     
-     <!-- This goes underneath the Name label -->
-     <p *ngIf="newPartyForm.controls.password.errors.required">Password is required</p>
-     <p *ngIf="newPartyForm.controls.password.errors.minlength">Password must be 8 characters long</p>
+     *ngIf="newPartyForm.controls.contact.errors && (newPartyForm.controls.contact.dirty || newPartyForm.controls.contact.touched)">
+      <p>Заполните поле</p>
+  </div>
+
+  <input formControlName="position" name="position" type="text" placeholder="Должность" [ngClass]="{
+       'has-danger': newPartyForm.controls.position.invalid && newPartyForm.controls.position.dirty, 
+       'has-success': newPartyForm.controls.position.valid && newPartyForm.controls.position.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.position.errors && (newPartyForm.controls.position.dirty || newPartyForm.controls.position.touched)">
+      <p>Заполните поле</p>
+  </div>
+
+  <input formControlName="phone" name="phone" type="text" placeholder="Номер телефона" [ngClass]="{
+       'has-danger': newPartyForm.controls.phone.invalid && newPartyForm.controls.phone.dirty, 
+       'has-success': newPartyForm.controls.phone.valid && newPartyForm.controls.phone.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.phone.errors && (newPartyForm.controls.phone.dirty || newPartyForm.controls.phone.touched)">
+      <p>Введите корректный номер телефона</p>
+  </div>
+
+  <input formControlName="comment" name="comment" type="text" placeholder="Комментарий" [ngClass]="{
+       'has-danger': newPartyForm.controls.comment.invalid && newPartyForm.controls.comment.dirty, 
+       'has-success': newPartyForm.controls.comment.valid && newPartyForm.controls.comment.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.comment.errors && (newPartyForm.controls.comment.dirty || newPartyForm.controls.comment.touched)">
+      <p>Заполните поле</p>
   </div>
 
   <button type="submit">Создать</button>

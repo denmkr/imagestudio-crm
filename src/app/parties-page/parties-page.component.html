@@ -5,13 +5,14 @@
 			<h1>{{title}}</h1>
 		</div>
 		<div class="col-6 right">
+			
     		<div class="button black">Поиск / Фильтр</div>
 		</div>
 	</div>
 	<div class="buttons">
 		<div (click)="showModal()" class="button">Новый агент</div>
-		<div (click)="showClients()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
-		<div (click)="showPartners()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
+		<div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
+		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
 	</div>
 </div>
 <parties-table></parties-table>

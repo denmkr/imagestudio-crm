@@ -30,6 +30,11 @@ export class PartiesPageComponent implements OnInit {
       this.clientsActive = true;
       this.partnersActive = false;
     }
+    else {
+      this.partiesTableComponent.showAllParties();
+      this.clientsActive = false;
+      this.partnersActive = false;
+    }
   }
 
   showPartners() {
@@ -37,6 +42,11 @@ export class PartiesPageComponent implements OnInit {
       this.partiesTableComponent.showPartnersParties();
       this.partnersActive = true;
       this.clientsActive = false;
+    }
+    else {
+      this.partiesTableComponent.showAllParties();
+      this.clientsActive = false;
+      this.partnersActive = false;
     }
   }
 

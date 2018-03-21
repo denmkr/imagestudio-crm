@@ -24,4 +24,8 @@ export class PartiesTableComponent {
   showPartnersParties() {
     this.partiesService.getPartnersParties().subscribe(parties => { this.parties = parties });
   }
+
+  showAllParties() {
+    this.partiesService.getAllParties().subscribe(parties => { this.parties = parties });
+  }
 }
