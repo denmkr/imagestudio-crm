@@ -1,0 +1,35 @@
+<div class="top-block">
+	<div class="row middle">
+		<div class="col-6 left">
+			<h1>{{title}}</h1>
+		</div>
+		<div class="col-6 right">
+    		<div class="button black">Поиск / Фильтр</div>
+		</div>
+	</div>
+	<div class="buttons">
+		<div (click)="showModal()" class="button">Новый агент</div>
+		<div (click)="showPartnersParties()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
+		<div (click)="showClientsParties()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
+	</div>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Организация</th>
+      <th>Контакт</th>
+      <th>Email</th>
+      <th>Телефон</th>
+      <th>Примечание</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let party of parties">
+      <td>{{ party.name }}</td>
+      <td>{{ party.lastname }}</td>
+      <td>{{ party.street }}</td>
+      <td>{{ party.city }}</td>
+      <td>{{ party.state }}</td>
+    </tr>
+  </tbody>
+</table>
