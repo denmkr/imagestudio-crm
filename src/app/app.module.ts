@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavComponent } from './nav/nav.component';
 import { PartiesPageComponent } from './parties-page/parties-page.component';
+import { PartiesTableComponent } from './parties-page/parties-table/parties-table.component';
 
 const routes = [
   {
@@ -23,7 +24,8 @@ const routes = [
     AppComponent,
     HomePageComponent,
     NavComponent,
-    PartiesPageComponent
+    PartiesPageComponent,
+    PartiesTableComponent
   ],
   imports: [
     BrowserModule,

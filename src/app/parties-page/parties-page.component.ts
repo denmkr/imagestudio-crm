@@ -1,30 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { PartiesService } from './parties.service';
+import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
+import { PartiesTableComponent } from './parties-table/parties-table.component';
 
 @Component({
   selector: 'app-parties-page',
   templateUrl: './parties-page.component.html',
-  styleUrls: ['./parties-page.component.css'],
-  providers: [PartiesService]
-
+  styleUrls: ['./parties-page.component.css']
 })
+
 export class PartiesPageComponent implements OnInit {
+  @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
+
+  @HostBinding('class.active') 
+  partnersActive: boolean = false;
+  clientsActive: boolean = false;
 
   title = "Контрагенты";
-  parties = [];
+  constructor() { }
+  ngOnInit() { }
 
-  constructor(private partiesService: PartiesService) { }
-
-  ngOnInit() {
-    this.partiesService.getAllParties().subscribe(parties => { this.parties = parties });
+  showClients() {
+    this.partiesTableComponent.showClientsParties();
+    this.clientsActive = true;
+    this.partnersActive = false;
   }
 
-  showClientsParties() {
-    this.partiesService.getClientsParties().subscribe(parties => { this.parties = parties });
-  }
-
-  showPartnersParties() {
-    this.partiesService.getPartnersParties().subscribe(parties => { this.parties = parties });
+  showPartners() {
+    this.partiesTableComponent.showPartnersParties();
+    this.partnersActive = true;
+    this.clientsActive = false;
   }
 
 }

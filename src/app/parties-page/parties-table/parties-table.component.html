@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Организация</th>
+      <th>Контакт</th>
+      <th>Email</th>
+      <th>Телефон</th>
+      <th>Примечание</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let party of parties">
+      <td>{{ party.name }}</td>
+      <td>{{ party.lastname }}</td>
+      <td>{{ party.street }}</td>
+      <td>{{ party.city }}</td>
+      <td>{{ party.state }}</td>
+    </tr>
+  </tbody>
+</table>
