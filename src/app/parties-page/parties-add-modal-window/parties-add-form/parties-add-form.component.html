@@ -1,0 +1,34 @@
+<form [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
+  
+  <ng-select #citySelect [items]="parties"
+        bindValue="value"
+        placeholder="Select age" 
+        (data)="citySelect.designation=($event.id)">
+  </ng-select>
+  <input type="hidden" [(ngModel)]="citySelect.designation" formControlName="city" name="city">
+  
+  <input formControlName="email" name="email" type="email" placeholder="Your email" [ngClass]="{
+       'has-danger': newPartyForm.controls.email.invalid && newPartyForm.controls.email.dirty, 
+       'has-success': newPartyForm.controls.email.valid && newPartyForm.controls.email.dirty 
+     }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.email.errors && (newPartyForm.controls.email.dirty || newPartyForm.controls.email.touched)">
+     
+     <p *ngIf="newPartyForm.controls.email.errors.pattern">Password is required</p>
+     <p *ngIf="newPartyForm.controls.email.errors.pattern">The email address must contain at least the @ character</p>
+  </div>
+  
+  <input formControlName="password" name="password" type="password" placeholder="Your password" [ngClass]="{
+    'has-danger': newPartyForm.controls.password.invalid && newPartyForm.controls.password.dirty, 
+    'has-success': newPartyForm.controls.password.valid && newPartyForm.controls.password.dirty 
+  }">
+  <div class="form-control-feedback"
+     *ngIf="newPartyForm.controls.password.errors && (newPartyForm.controls.password.dirty || newPartyForm.controls.password.touched)">
+     
+     <!-- This goes underneath the Name label -->
+     <p *ngIf="newPartyForm.controls.password.errors.required">Password is required</p>
+     <p *ngIf="newPartyForm.controls.password.errors.minlength">Password must be 8 characters long</p>
+  </div>
+
+  <button type="submit">Создать</button>
+</form>

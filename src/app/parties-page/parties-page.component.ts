@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
+import { PartiesAddModalWindowComponent } from './parties-add-modal-window/parties-add-modal-window.component';
 import { PartiesTableComponent } from './parties-table/parties-table.component';
 
 @Component({
@@ -8,6 +9,7 @@ import { PartiesTableComponent } from './parties-table/parties-table.component';
 })
 
 export class PartiesPageComponent implements OnInit {
+  @ViewChild(PartiesAddModalWindowComponent) addModalWindowComponent: PartiesAddModalWindowComponent;
   @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
 
   @HostBinding('class.active') 
@@ -18,16 +20,24 @@ export class PartiesPageComponent implements OnInit {
   constructor() { }
   ngOnInit() { }
 
+  showModal() {
+    this.addModalWindowComponent.show();
+  }
+
   showClients() {
-    this.partiesTableComponent.showClientsParties();
-    this.clientsActive = true;
-    this.partnersActive = false;
+    if (!this.clientsActive) {
+      this.partiesTableComponent.showClientsParties();
+      this.clientsActive = true;
+      this.partnersActive = false;
+    }
   }
 
   showPartners() {
-    this.partiesTableComponent.showPartnersParties();
-    this.partnersActive = true;
-    this.clientsActive = false;
+    if (!this.partnersActive) {
+      this.partiesTableComponent.showPartnersParties();
+      this.partnersActive = true;
+      this.clientsActive = false;
+    }
   }
 
 }
