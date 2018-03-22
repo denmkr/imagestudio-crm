@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Route } from '@angular/router';
 
 import { PartiesAddModalWindowComponent } from './parties-add-modal-window/parties-add-modal-window.component';
 import { PartiesTableComponent } from './parties-table/parties-table.component';
@@ -16,14 +16,22 @@ export class PartiesPageComponent implements OnInit {
   @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
   @ViewChild(PartiesSearchComponent) partiesSearchComponent: PartiesSearchComponent;
 
-  @HostBinding('class.active') 
+  @HostBinding('class.active');
   partnersActive: boolean = false;
   clientsActive: boolean = false;
   filersActive: boolean = false;
 
   title = "Контрагенты";
-  constructor(private router: Router) { }
-  ngOnInit() { }
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+
+  ngOnInit() { 
+    this.activatedRoute.queryParams.subscribe(params => {
+        let type = params['type'];
+        if (type == "client") this.clientsActive = true;
+        if (type == "partner") this.partnersActive = true;
+    });
+  }
 
   updateTableBySearch(search: string) {
     this.partiesTableComponent.showPartiesBySearch(search);

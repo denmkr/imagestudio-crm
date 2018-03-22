@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Route } from '@angular/router';
 import { PartiesPageComponent } from '../parties-page.component';
 
 @Component({
@@ -15,7 +15,7 @@ export class PartiesSearchComponent implements OnInit {
   searchForm: FormGroup;
   search: FormControl;
 
-  constructor(public formbuilder: FormBuilder, private router: Router) { }
+  constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   updateParties() {
     this.searchStrings.emit(this.searchForm.get("search").value);
@@ -29,6 +29,10 @@ export class PartiesSearchComponent implements OnInit {
  
   	this.searchForm = new FormGroup({
       search: this.search
+    });
+
+    this.activatedRoute.queryParams.subscribe(params => {
+        this.search.setValue(params['search']);
     });
   }
 

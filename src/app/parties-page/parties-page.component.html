@@ -13,7 +13,8 @@
 	</div>
 	<div class="buttons">
 		<div (click)="showModal()" class="button">Новый агент</div>
-		 <div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
+		<div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
+		<!--<a [routerLink]="['/parties']" [queryParams]="{type:'client'}" queryParamsHandling="merge">-->
 		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
 	</div>
 </div>
