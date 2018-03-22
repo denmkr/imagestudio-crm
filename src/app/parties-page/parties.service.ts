@@ -28,68 +28,19 @@ export class PartiesService {
     console.log("sent");
   }
 
-  getPartiesBySearch(search: string) {
+  getPartiesByParams(type: string, organization: string, contact: string, search: string) {
     const params = {
-      format: "json",
-      search: search
+      type: type,
+      organization: organization,
+      contact: contact,
+      search: search,
     }
 
-    return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params} )
+    return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params })
     .map(response => response.json())
     .map(response => response.results)
     .map(users => {
       return users.map(user => {
-        return {
-          organization: user.organization,
-          contact: user.contact,
-          email: user.email,
-          contact_phone: user.contact_phone,
-          comment: user.comment,
-        }
-      })
-    });
-  }
-
-  getAllParties() {
-  	return this.http.get("https://api.crm.badygin.ru/counterparties/?format=json")
-    .map(response => response.json())
-    .map(response => response.results)
-    .map(users => {
-      return users.map(user => {
-        return {
-          organization: user.organization,
-          contact: user.contact,
-          email: user.email,
-          contact_phone: user.contact_phone,
-          comment: user.comment,
-        }
-      })
-    });
-  }
-
-  getPartnersParties() {
-    return this.http.get("https://api.crm.badygin.ru/counterparties/?format=json")
-    .map(response => response.json())
-    .map(response => response.results)
-    .map(users => {
-      return users.filter(user => user.type === "partner").map(user => {
-        return {
-          organization: user.organization,
-          contact: user.contact,
-          email: user.email,
-          contact_phone: user.contact_phone,
-          comment: user.comment,
-        }
-      })
-    });
-  }
-
-  getClientsParties() {
-    return this.http.get("https://api.crm.badygin.ru/counterparties/?format=json")
-    .map(response => response.json())
-    .map(response => response.results)
-    .map(users => {
-      return users.filter(user => user.type === "client").map(user => {
         return {
           organization: user.organization,
           contact: user.contact,

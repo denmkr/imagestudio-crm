@@ -165,6 +165,21 @@ html, body {
 	margin-right: 12px;
 }
 
+.top-block .filters {
+	display: none;
+	vertical-align: middle;
+}
+
+.top-block .filters.active {
+	display: inline-block;
+}
+
+.top-block .filter-button {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 20px;
+}
+
 table {
 	width: 100%;
 	border-collapse: collapse;

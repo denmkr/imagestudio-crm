@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PartiesPageComponent } from '../parties-page.component';
 
 @Component({
@@ -14,10 +15,11 @@ export class PartiesSearchComponent implements OnInit {
   searchForm: FormGroup;
   search: FormControl;
 
-  constructor(public formbuilder: FormBuilder) { }
+  constructor(public formbuilder: FormBuilder, private router: Router) { }
 
   updateParties() {
     this.searchStrings.emit(this.searchForm.get("search").value);
+    this.router.navigate(['/parties'], { queryParams: { search: this.search.value}, queryParamsHandling: 'merge' });
   }
 
   ngOnInit() {

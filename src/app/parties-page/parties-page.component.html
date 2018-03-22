@@ -5,13 +5,15 @@
 			<h1>{{title}}</h1>
 		</div>
 		<div class="col-6 right">
-			<parties-search (searchStrings)="updateTableBySearch($event)"></parties-search>
-    		<div class="button black">Поиск / Фильтр</div>
+			<div [ngClass]="{'active' : filersActive}" class="filters">
+				<parties-search (searchStrings)="updateTableBySearch($event)"></parties-search>
+			</div>
+    		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
 		</div>
 	</div>
 	<div class="buttons">
 		<div (click)="showModal()" class="button">Новый агент</div>
-		<div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
+		 <div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Партнер</div>
 		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
 	</div>
 </div>
