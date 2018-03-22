@@ -12,6 +12,7 @@ import { PartiesPageComponent } from './parties-page/parties-page.component';
 import { PartiesTableComponent } from './parties-page/parties-table/parties-table.component';
 import { PartiesAddModalWindowComponent } from './parties-page/parties-add-modal-window/parties-add-modal-window.component';
 import { PartiesAddFormComponent } from './parties-page/parties-add-modal-window/parties-add-form/parties-add-form.component';
+import { PartiesSearchComponent } from './parties-page/parties-search/parties-search.component';
 
 const routes = [
   {
@@ -31,7 +32,8 @@ const routes = [
     PartiesPageComponent,
     PartiesTableComponent,
     PartiesAddModalWindowComponent,
-    PartiesAddFormComponent
+    PartiesAddFormComponent,
+    PartiesSearchComponent
   ],
   imports: [
     BrowserModule,

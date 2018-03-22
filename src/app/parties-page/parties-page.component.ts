@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { PartiesAddModalWindowComponent } from './parties-add-modal-window/parties-add-modal-window.component';
 import { PartiesTableComponent } from './parties-table/parties-table.component';
+import { PartiesSearchComponent } from './parties-search/parties-search.component';
 
 @Component({
   selector: 'app-parties-page',
@@ -11,6 +12,7 @@ import { PartiesTableComponent } from './parties-table/parties-table.component';
 export class PartiesPageComponent implements OnInit {
   @ViewChild(PartiesAddModalWindowComponent) addModalWindowComponent: PartiesAddModalWindowComponent;
   @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
+  @ViewChild(PartiesSearchComponent) partiesSearchComponent: PartiesSearchComponent;
 
   @HostBinding('class.active') 
   partnersActive: boolean = false;
@@ -19,6 +21,10 @@ export class PartiesPageComponent implements OnInit {
   title = "Контрагенты";
   constructor() { }
   ngOnInit() { }
+
+  updateTableBySearch(search: string) {
+    this.partiesTableComponent.showPartiesBySearch(search);
+  }
 
   showModal() {
     this.addModalWindowComponent.show();

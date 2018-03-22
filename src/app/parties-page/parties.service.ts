@@ -29,12 +29,12 @@ export class PartiesService {
   }
 
   getPartiesBySearch(search: string) {
-    const parameters = {
+    const params = {
       format: "json",
       search: search
     }
 
-    return this.http.get("https://api.crm.badygin.ru/counterparties/", parameters)
+    return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params} )
     .map(response => response.json())
     .map(response => response.results)
     .map(users => {

@@ -28,4 +28,8 @@ export class PartiesTableComponent {
   showAllParties() {
     this.partiesService.getAllParties().subscribe(parties => { this.parties = parties });
   }
+
+  showPartiesBySearch(search: string) {
+    this.partiesService.getPartiesBySearch(search).subscribe(parties => { this.parties = parties });
+  }
 }
