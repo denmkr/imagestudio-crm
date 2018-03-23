@@ -10,29 +10,37 @@ import { PartiesPageComponent } from '../parties-page.component';
 })
 export class PartiesSearchComponent implements OnInit {
 
-  @Output() searchStrings = new EventEmitter<string>();
+  @Output() filterEmitter = new EventEmitter<FormGroup>();
 
-  searchForm: FormGroup;
+  filterForm: FormGroup;
   search: FormControl;
+  category: FormControl;
+
+  public categories = [
+      {text: 'Государство', id: "state"}, 
+      {text: 'Бизнес', id: "business"},
+      {text: 'Частное лицо', id: "private"}
+  ];
 
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   updateParties() {
-    this.searchStrings.emit(this.searchForm.get("search").value);
-    this.router.navigate(['/parties'], { queryParams: { search: this.search.value}, queryParamsHandling: 'merge' });
+    this.filterEmitter.emit(this.filterForm);
+    this.router.navigate(['/parties'], { queryParams: { search: this.search.value, category: this.category.value}, queryParamsHandling: 'merge' });
   }
 
   ngOnInit() {
-  	this.search = new FormControl("", [
-  	  Validators.required
-  	]);
+  	this.search = new FormControl("");
+    this.category = new FormControl("");
  
-  	this.searchForm = new FormGroup({
-      search: this.search
+  	this.filterForm = new FormGroup({
+      search: this.search,
+      category: this.category
     });
 
     this.activatedRoute.queryParams.subscribe(params => {
         this.search.setValue(params['search']);
+        this.category.setValue(params['category']);
     });
   }
 

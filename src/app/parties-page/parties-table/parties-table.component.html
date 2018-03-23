@@ -12,12 +12,16 @@
     <tr *ngFor="let party of parties">
       <td>
         <div>{{ party.organization }}</div>
-        <div>{{ party.author }}</div>
-        <div>{{ party.category }}</div>
+        <div class="additional-attributes">
+          <div class="author">{{ party.author }}</div>
+          <div class="category">{{ party.category }}</div>
+        </div>
       </td>
       <td>
         <div>{{ party.contact }}</div>
-        <div>{{ party.position }}</div>
+        <div class="additional-attributes">
+          <div class="position">{{ party.position }}</div>
+        </div>
       </td>
       <td>{{ party.email }}</td>
       <td>{{ party.contact_phone }}</td>

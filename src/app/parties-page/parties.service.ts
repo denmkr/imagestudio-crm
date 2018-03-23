@@ -28,12 +28,11 @@ export class PartiesService {
     console.log("sent");
   }
 
-  getPartiesByParams(type: string, organization: string, contact: string, search: string) {
+  getPartiesByParams(type: string, category: string, contact: string, search: string) {
     const params = {
       type: type,
-      organization: organization,
-      contact: contact,
-      search: search,
+      category: category,
+      contact: search
     }
 
     return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params })

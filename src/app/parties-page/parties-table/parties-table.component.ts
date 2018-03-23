@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
 
 import { PartiesService } from '../parties.service';
@@ -13,14 +14,14 @@ import { PartiesService } from '../parties.service';
 export class PartiesTableComponent {
   parties = [];
   currentType: string;
-  currentOrganization: string;
+  currentCategory: string;
   currentContact: string;
   currentSearch: string;
 
   constructor(private partiesService: PartiesService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentType = params['type'];
-        this.currentOrganization = params['organization'];
+        this.currentCategory = params['category'];
         this.currentContact = params['contact'];
         this.currentSearch = params['search'];
     });
@@ -31,22 +32,14 @@ export class PartiesTableComponent {
   }
 
   showAllParties() {
-    this.partiesService.getPartiesByParams(this.currentType, this.currentOrganization, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
+    this.partiesService.getPartiesByParams(this.currentType, this.currentCategory, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
   }
 
   showPartiesByType(type: string) {
-    this.partiesService.getPartiesByParams(type, this.currentOrganization, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
+    this.partiesService.getPartiesByParams(type, this.currentCategory, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
   }
 
-  showPartiesByOgranization(organization: string) {
-    this.partiesService.getPartiesByParams(this.currentType, organization, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
-  }
-
-  showPartiesByContact(contact: string) {
-    this.partiesService.getPartiesByParams(this.currentType, this.currentOrganization, contact, this.currentSearch).subscribe(parties => { this.parties = parties });
-  }
-
-  showPartiesBySearch(search: string) {
-    this.partiesService.getPartiesByParams(this.currentType, this.currentOrganization, this.currentContact, search).subscribe(parties => { this.parties = parties });
+  showPartiesByFilterForm(formGroup: FormGroup) {
+    this.partiesService.getPartiesByParams(this.currentType, formGroup.get("category").value, this.currentContact, formGroup.get("search").value).subscribe(parties => { this.parties = parties });
   }
 }

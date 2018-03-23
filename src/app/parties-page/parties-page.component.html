@@ -6,7 +6,7 @@
 		</div>
 		<div class="col-6 right">
 			<div [ngClass]="{'active' : filersActive}" class="filters">
-				<parties-search (searchStrings)="updateTableBySearch($event)"></parties-search>
+				<parties-search (filterEmitter)="updateTableByFilterForm($event)"></parties-search>
 			</div>
     		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
 		</div>

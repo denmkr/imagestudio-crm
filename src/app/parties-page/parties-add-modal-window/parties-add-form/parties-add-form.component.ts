@@ -29,7 +29,7 @@ export class PartiesAddFormComponent implements OnInit {
   ];
 
   public categories = [
-      'Государство', 'Бизнес'
+      'Государство', 'Бизнес', 'Частное лицо'
   ];
 
   newPartyForm: FormGroup;

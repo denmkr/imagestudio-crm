@@ -200,7 +200,8 @@ h1.title {
 .top-block .filter-button {
 	display: inline-block;
 	vertical-align: middle;
-	margin-left: 20px;
+	margin-left: 12px;
+	margin-right: 0;
 }
 
 table {
@@ -212,11 +213,11 @@ table thead {
 	background: #eef0ef;
 	border-left: 18px solid #eef0ef;
 	border-right: 18px solid #eef0ef;
-	border-bottom: 8px solid #fff;
 }
 
 table tbody {
 	border: 18px solid #eef0ef;
+	border-top: none;
 }
 
 table thead th {
@@ -226,10 +227,16 @@ table thead th {
 table th, table tr td {
 	text-align: left;
 	padding: 12px 15px;
+	vertical-align: top;
 }
 
-table tr {
+table tr td {
+	padding: 8px 15px;
+}
+
+table tbody tr {
 	border-bottom: 12px solid #eef0ef;
+	cursor: pointer;
 }
 
 .modal .select-blocks .select-field-block .ui-select-placeholder, .select-blocks .select-field-block .ui-select-match-text, .select-blocks .select-field-block .ui-select-search  {
@@ -238,14 +245,14 @@ table tr {
 	font-weight: 700;
 	outline: none;
 	border: none;
-	font-size: 13px;
+	font-size: 12px;
 	text-transform: uppercase;
 	padding: 8px 12px;
 	padding-right: 30px;
 }
 
 .modal .input-blocks {
-	min-width: 684px;
+	min-width: 680px;
 }
 
 .modal .select-blocks .select-field-block {
@@ -253,6 +260,10 @@ table tr {
 	display: inline-block;
 	vertical-align: middle;
 	cursor: pointer;
+}
+
+.modal .input-blocks .input-field-block {
+	font-size: 0;
 }
 
 .modal .input-blocks .input-field-block.inline {
@@ -280,6 +291,7 @@ table tr {
 
 .modal .select-blocks {
 	margin-bottom: 15px;
+	padding-left: 130px;
 }
 
 .modal .input-blocks input {
@@ -297,7 +309,7 @@ table tr {
 .modal .input-blocks .input-title {
 	display: inline-block;
 	vertical-align: middle;
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 700;
 	margin-right: 10px;
 	min-width: 120px;

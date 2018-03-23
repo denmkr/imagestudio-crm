@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute, Route } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 
 import { PartiesAddModalWindowComponent } from './parties-add-modal-window/parties-add-modal-window.component';
 import { PartiesTableComponent } from './parties-table/parties-table.component';
@@ -33,8 +34,8 @@ export class PartiesPageComponent implements OnInit {
     });
   }
 
-  updateTableBySearch(search: string) {
-    this.partiesTableComponent.showPartiesBySearch(search);
+  updateTableByFilterForm(formGroup: FormGroup) {
+    this.partiesTableComponent.showPartiesByFilterForm(formGroup);
   }
 
   showModal() {
