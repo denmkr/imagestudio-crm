@@ -81,6 +81,15 @@ html, body {
 	vertical-align: middle;
 }
 
+button {
+	border: none;
+	box-shadow: none;
+}
+
+h1.title {
+	font-size: 36px;
+}
+
 .modal-container {
 	position: fixed;
 	top: 0;
@@ -107,15 +116,11 @@ html, body {
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	width: 600px;
-	height: 420px;
-	margin-left: -300px;
-	margin-top: -210px;
-	background: #efefeb;
+	background: #eef0ef;
 	z-index: 101;
 	opacity: 0;
-	-webkit-transform: scale(0.9);
-	transform: scale(0.9);
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 	visibility: hidden;
 	transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s, -webkit-transform 0.2s ease-in-out;
 	transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out, visibility 0s linear 0.2s;
@@ -123,11 +128,15 @@ html, body {
 }
 
 .modal.active {
-	-webkit-transform: scale(1);
-	transform: scale(1);
 	opacity: 1;
 	visibility: visible;
 	transition-delay: 0s;
+}
+
+.modal .title {
+	font-size: 24px;
+	font-weight: 700;
+	margin-bottom: 25px;
 }
 
 .button {
@@ -136,9 +145,19 @@ html, body {
 	color: #fff;
 	font-weight: 700;
 	font-size: 12px;
+	vertical-align: middle;
 	display: inline-block;
 	background: #2d4d8a;
 	cursor: pointer;
+	margin-right: 12px;
+}
+
+.button.save-button {
+	background: #539666;
+}
+
+.button.cancel-button {
+	background: #ab2036;
 }
 
 .button.black {
@@ -162,7 +181,11 @@ html, body {
 }
 
 .top-block .buttons .button {
-	margin-right: 12px;
+	margin-right: 10px;
+}
+
+.top-block .buttons .create-button {
+	margin-right: 22px;
 }
 
 .top-block .filters {
@@ -186,18 +209,18 @@ table {
 }
 
 table thead {
-	background: #efefeb;
-	border-left: 18px solid #efefeb;
-	border-right: 18px solid #efefeb;
+	background: #eef0ef;
+	border-left: 18px solid #eef0ef;
+	border-right: 18px solid #eef0ef;
 	border-bottom: 8px solid #fff;
 }
 
 table tbody {
-	border: 18px solid #efefeb;
+	border: 18px solid #eef0ef;
 }
 
 table thead th {
-	background: #efefeb;
+	background: #eef0ef;
 }
 
 table th, table tr td {
@@ -206,6 +229,89 @@ table th, table tr td {
 }
 
 table tr {
-	border-bottom: 12px solid #efefeb;
+	border-bottom: 12px solid #eef0ef;
+}
+
+.modal .select-blocks .select-field-block .ui-select-placeholder, .select-blocks .select-field-block .ui-select-match-text, .select-blocks .select-field-block .ui-select-search  {
+	background: #666;
+	color: #fff;
+	font-weight: 700;
+	outline: none;
+	border: none;
+	font-size: 13px;
+	text-transform: uppercase;
+	padding: 8px 12px;
+	padding-right: 30px;
+}
+
+.modal .input-blocks {
+	min-width: 684px;
+}
+
+.modal .select-blocks .select-field-block {
+	margin-right: 14px;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.modal .input-blocks .input-field-block.inline {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.modal .input-blocks .input-field-block.small {
+	margin-left: 20px;
+}
+
+.modal .input-blocks .input-field-block.small input {
+	min-width: 180px;
+	width: 180px;
+}
+
+.modal .input-blocks .input-field-block.big input {
+	width: 100%;
+	min-width: 100%;
+}
+
+.modal .input-blocks .input-field-block .form-control-feedback {
+	display: none !important;
+}
+
+.modal .select-blocks {
+	margin-bottom: 15px;
+}
+
+.modal .input-blocks input {
+	border: 1px solid #fff;
+	background: #fff;
+	box-shadow: none;
+	outline: none;
+	padding: 8px 13px;
+	min-width: 350px;
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
+.modal .input-blocks .input-title {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 16px;
+	font-weight: 700;
+	margin-right: 10px;
+	min-width: 120px;
+}
+
+.modal .input-blocks input.ng-invalid.ng-dirty:not(.ng-untouched) {
+	border-color: red;
+}
+
+.modal .input-blocks .input-field-block {
+	margin-bottom: 15px;
+}
+
+.modal .buttons-block {
+	margin-top: 30px;
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
 
@@ -10,8 +10,26 @@ import { PartiesService } from '../../parties.service';
 })
 export class PartiesAddFormComponent implements OnInit {
 
+  public selects = [
+    {items: "types", name: "type", placeholder: "Тип", id: "typeSelect"},
+    {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}
+  ];
+
+  public inputs = [
+    {name: "organization", type: "text", placeholder: "ИП Пупина Александра Владимировича", title: "Организация"},
+    {name: "email", type: "email", placeholder: "pupinastar@imagestudio.su", title: "Email"},
+    {name: "contact", type: "text", placeholder: "Фамилия Имя Отчество", inline: true, title: "Контакт"},
+    {name: "position", type: "text", placeholder: "Должность", inline: true, small: true},
+    {name: "phone", type: "text", placeholder: "+7 (903) 344-56-22", title: "Телефон"},
+    {name: "comment", type: "text", placeholder: "Комментарий", big: true}
+  ];
+
   public types = [
       'Партнер', 'Клиент'
+  ];
+
+  public categories = [
+      'Государство', 'Бизнес'
   ];
 
   newPartyForm: FormGroup;
@@ -24,6 +42,12 @@ export class PartiesAddFormComponent implements OnInit {
   position: FormControl;
   phone: FormControl;
   comment: FormControl;
+
+  @Output() eventEmitter = new EventEmitter<boolean>();
+
+  hideWindow() {
+    this.eventEmitter.emit(true);
+  }
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService) { }
 

@@ -39,14 +39,17 @@ export class PartiesService {
     return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params })
     .map(response => response.json())
     .map(response => response.results)
-    .map(users => {
-      return users.map(user => {
+    .map(parties => {
+      return parties.map(party => {
         return {
-          organization: user.organization,
-          contact: user.contact,
-          email: user.email,
-          contact_phone: user.contact_phone,
-          comment: user.comment,
+          author: party.author.username,
+          organization: party.organization,
+          contact: party.contact,
+          category: party.category,
+          position: party.position,
+          email: party.email,
+          contact_phone: party.contact_phone,
+          comment: party.comment,
         }
       })
     });

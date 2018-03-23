@@ -10,8 +10,15 @@
   </thead>
   <tbody>
     <tr *ngFor="let party of parties">
-      <td>{{ party.organization }}</td>
-      <td>{{ party.contact }}</td>
+      <td>
+        <div>{{ party.organization }}</div>
+        <div>{{ party.author }}</div>
+        <div>{{ party.category }}</div>
+      </td>
+      <td>
+        <div>{{ party.contact }}</div>
+        <div>{{ party.position }}</div>
+      </td>
       <td>{{ party.email }}</td>
       <td>{{ party.contact_phone }}</td>
       <td>{{ party.comment }}</td>

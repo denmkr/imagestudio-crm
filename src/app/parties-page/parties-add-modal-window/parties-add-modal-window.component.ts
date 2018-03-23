@@ -11,6 +11,8 @@ export class PartiesAddModalWindowComponent implements OnInit {
   @ViewChild(PartiesAddFormComponent) partiesAddFormComponent: PartiesAddFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
+  title = "Новый контрагент";
+
   constructor() { }
 
   ngOnInit() {
@@ -21,8 +23,8 @@ export class PartiesAddModalWindowComponent implements OnInit {
   }
 
   hide() {
-    this.partiesAddFormComponent.newPartyForm.reset();
     this.activeClass = false;
+    let timeoutClear = setTimeout(() => { this.partiesAddFormComponent.newPartyForm.reset(); clearTimeout(timeoutClear); }, 300);
   }
   
 }
