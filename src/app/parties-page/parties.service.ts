@@ -36,19 +36,17 @@ export class PartiesService {
     }
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/")
-    .map(counterparties => {
-      return counterparties.map(counterParty => {
-        return {
-          author: counterParty.user.first_name,
-          organization: counterParty.organization.name,
-          contact: counterParty.contact_name,
-          category: counterParty.category,
-          position: counterParty.position,
-          email: counterParty.email,
-          contact_phone: counterParty.contact_phone,
-          comment: counterParty.comment,
-        }
-      })
+    .map(result => {
+      return result.counterparties.map(party => ({
+        author: party.user.first_name,
+        organization: party.organization.name,
+        contact: party.contact_name,
+        category: party.category,
+        position: party.position,
+        email: party.email,
+        contact_phone: party.contact_phone,
+        comment: party.comment
+      }))
     });
   }
 

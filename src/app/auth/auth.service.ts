@@ -20,9 +20,9 @@ export class AuthService {
     return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/authentication/login/', userData)
     .map(response => {
         if (response.status != 401) {
-            localStorage.setItem('firstName', response.user_data.first_name);
+          localStorage.setItem('firstName', response.user_data.first_name);
 	      	localStorage.setItem('token', response.token);
- 		}
+ 		    }
     });
    
   }
