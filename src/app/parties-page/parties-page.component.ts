@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Route } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
@@ -17,7 +17,7 @@ export class PartiesPageComponent implements OnInit {
   @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
   @ViewChild(PartiesSearchComponent) partiesSearchComponent: PartiesSearchComponent;
 
-  @HostBinding('class.active');
+  @HostBinding('class.active')
   partnersActive: boolean = false;
   clientsActive: boolean = false;
   filersActive: boolean = false;

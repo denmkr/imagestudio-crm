@@ -17,6 +17,7 @@ export class PartiesSearchComponent implements OnInit {
   category: FormControl;
 
   public categories = [
+      {text: 'Все', id: "all"}, 
       {text: 'Государство', id: "state"}, 
       {text: 'Бизнес', id: "business"},
       {text: 'Частное лицо', id: "private"}
@@ -26,6 +27,8 @@ export class PartiesSearchComponent implements OnInit {
 
   updateParties() {
     this.filterEmitter.emit(this.filterForm);
+    if (this.category.value === "all") this.category.setValue(null);
+    if (this.search.value === "") this.search.setValue(null);
     this.router.navigate(['/parties'], { queryParams: { search: this.search.value, category: this.category.value}, queryParamsHandling: 'merge' });
   }
 

@@ -7,20 +7,16 @@
       </ng-select>
       <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
 
+      <!--
       <select #{{select.id}} (change)="updateParties()">
         <option *ngFor="let item of this[select.items]" [value]="item">
           {{item}}
         </option>
       </select>
+    -->
     </div>
   </div>
 
-  <select #{{select.id}} (change)="updateParties()">
-      <option *ngFor="let category of categories" [value]="category">
-        {{category}}
-      </option>
-    </select>
- 
   <div class="input-blocks">
     <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>

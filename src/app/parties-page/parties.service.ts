@@ -1,10 +1,10 @@
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class PartiesService {
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   createNewParty(type: string, category: string, organization: string, email: string, contact: string, 
     position: string, phone: string, comment: string) {
@@ -20,7 +20,7 @@ export class PartiesService {
       comment: comment
     };
 
-    this.http.post('https://api.crm.badygin.ru/counterparties/', party).subscribe(
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party).subscribe(
       res => { console.log(res) },
       err => { console.log("Error occured") }
     );
@@ -30,25 +30,23 @@ export class PartiesService {
 
   getPartiesByParams(type: string, category: string, contact: string, search: string) {
     const params = {
-      type: type,
+      kind: type,
       category: category,
-      contact: search
+      q: search
     }
 
-    return this.http.get("https://api.crm.badygin.ru/counterparties", { params: params })
-    .map(response => response.json())
-    .map(response => response.results)
-    .map(parties => {
-      return parties.map(party => {
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/")
+    .map(counterparties => {
+      return counterparties.map(counterParty => {
         return {
-          author: party.author.username,
-          organization: party.organization,
-          contact: party.contact,
-          category: party.category,
-          position: party.position,
-          email: party.email,
-          contact_phone: party.contact_phone,
-          comment: party.comment,
+          author: counterParty.user.first_name,
+          organization: counterParty.organization.name,
+          contact: counterParty.contact_name,
+          category: counterParty.category,
+          position: counterParty.position,
+          email: counterParty.email,
+          contact_phone: counterParty.contact_phone,
+          comment: counterParty.comment,
         }
       })
     });

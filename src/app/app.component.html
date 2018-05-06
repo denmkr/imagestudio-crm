@@ -1,4 +1,5 @@
-<header>
+<ng-template [ngIf]="isAuth" [ngIfElse]="loggedOut">
+  <header>
 	<div class="content">
 		<div class="row">
 			<div class="col-10 left">
@@ -6,15 +7,15 @@
 			</div>
 			<div class="col-2 right">
 	    		<a routerLink="/settings"><i class="material-icons">settings</i></a>
-	    		<a routerLink="/account"><i class="material-icons">account_circle</i></a>
+	    		<a routerLink="/signin"><i class="material-icons">account_circle</i></a>
 			</div>
 		</div>
 	</div>	
-</header>
+  </header>
+</ng-template>
 
 <div class="container">
 	<div class="content">
-		<router-outlet></router-outlet>
+		<router-outlet (activate)="refresh()"></router-outlet>
 	</div>
 </div>
-
