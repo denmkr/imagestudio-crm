@@ -25,11 +25,14 @@ export class PartiesAddFormComponent implements OnInit {
   ];
 
   public types = [
-      'Партнер', 'Клиент'
+    {text: 'Партнер', id: 'partner'}, 
+    {text: 'Клиент', id: 'client'}
   ];
 
   public categories = [
-      'Государство', 'Бизнес', 'Частное лицо'
+    {text: 'Государство', id: "state"}, 
+    {text: 'Бизнес', id: "business"},
+    {text: 'Частное лицо', id: "individual"}
   ];
 
   newPartyForm: FormGroup;
@@ -55,11 +58,11 @@ export class PartiesAddFormComponent implements OnInit {
     if (this.newPartyForm.controls.email.valid) {
       this.newPartyForm.controls.organization;
   	  this.partiesService.createNewParty(this.newPartyForm.get("type").value, this.newPartyForm.get("category").value, 
-        this.newPartyForm.get("organization").value, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
-        this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value);
+      this.newPartyForm.get("organization").value, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
+      this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value);
       
-      console.log(this.newPartyForm.value);
-      // this.newPartyForm.reset();
+      this.newPartyForm.reset();
+      this.eventEmitter.emit(true);
     }
   }
 

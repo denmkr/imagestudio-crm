@@ -1,28 +1,34 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class PartiesService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   createNewParty(type: string, category: string, organization: string, email: string, contact: string, 
     position: string, phone: string, comment: string) {
 
     const party = {
-      type: type,
+      kind: type,
       category: category,
-      organization: organization,
+      organization: {
+        id: 1
+      },
       email: email,
-      contact: contact,
+      contact_name: contact,
       position: position,
-      phone: phone,
-      comment: comment
+      contact_phone: phone,
+      comment: comment,
+      user: {
+        id: this.authService.getUserId()
+      }
     };
 
     this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party).subscribe(
       res => { console.log(res) },
-      err => { console.log("Error occured") }
+      err => { console.log(err) }
     );
     
     console.log("sent");

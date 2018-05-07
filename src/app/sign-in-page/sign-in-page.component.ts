@@ -36,7 +36,7 @@ export class SignInPageComponent implements OnInit {
 
   signOut() {
     this.authService.signOut();
-    this.isAuth = this.authService.isAuthenticated();
+    window.location.reload();
   }
 
   ngOnInit() {

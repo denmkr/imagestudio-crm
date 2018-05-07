@@ -19,17 +19,24 @@ export class AuthService {
 
     return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/authentication/login/', userData)
     .map(response => {
-        if (response.status != 401) {
-          localStorage.setItem('firstName', response.user_data.first_name);
-	      	localStorage.setItem('token', response.token);
- 		    }
+      if (response.status != 401) {
+        var user: User = {
+            id: response.user_data.id,
+            email: response.user_data.email,
+            firstName: response.user_data.first_name,
+            lastName: response.user_data.last_name,
+            groups: null
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+      	localStorage.setItem('token', response.token);
+		   }
     });
    
   }
 
   public signOut() {
     localStorage.removeItem('token');
-    this.router.navigate(['/signin']);
   }
 
   public isAuthenticated(): boolean {
@@ -41,6 +48,11 @@ export class AuthService {
 
   public getAccountName(): string {
   	return "Denis";
+  }
+
+  public getUserId(): string {
+    let user = JSON.parse(localStorage.getItem('user'));
+    return user.id;
   }
 
   public getToken(): string {

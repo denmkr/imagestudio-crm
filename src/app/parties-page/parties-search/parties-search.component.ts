@@ -17,10 +17,10 @@ export class PartiesSearchComponent implements OnInit {
   category: FormControl;
 
   public categories = [
-      {text: 'Все', id: "all"}, 
-      {text: 'Государство', id: "state"}, 
-      {text: 'Бизнес', id: "business"},
-      {text: 'Частное лицо', id: "private"}
+    {text: 'Все', id: "all"}, 
+    {text: 'Государство', id: "state"}, 
+    {text: 'Бизнес', id: "business"},
+    {text: 'Частное лицо', id: "private"}
   ];
 
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
