@@ -38,7 +38,7 @@ export class PartiesPageComponent implements OnInit {
     this.partiesTableComponent.showPartiesByFilterForm(formGroup);
   }
 
-  showModal() {
+  showCreateModal() {
     this.addModalWindowComponent.show();
   }
 

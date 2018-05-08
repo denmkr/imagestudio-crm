@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
 
 import { PartiesService } from '../parties.service';
+import { PartiesEditModalWindowComponent } from '../parties-edit-modal-window/parties-edit-modal-window.component';
 
 @Component({
   selector: 'parties-table',
@@ -12,6 +13,8 @@ import { PartiesService } from '../parties.service';
 })
 
 export class PartiesTableComponent {
+  @ViewChild(PartiesEditModalWindowComponent) editModalWindowComponent: PartiesEditModalWindowComponent;
+
   parties = [];
   currentType: string;
   currentCategory: string;
@@ -25,6 +28,10 @@ export class PartiesTableComponent {
         this.currentContact = params['contact'];
         this.currentSearch = params['search'];
     });
+  }
+
+  showEditModal(party) {
+    this.editModalWindowComponent.show(party);
   }
 
   ngOnInit() {

@@ -26,10 +26,12 @@ export class PartiesSearchComponent implements OnInit {
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   updateParties() {
-    this.filterEmitter.emit(this.filterForm);
+    console.log("dsf");
     if (this.category.value === "all") this.category.setValue(null);
     if (this.search.value === "") this.search.setValue(null);
     this.router.navigate(['/parties'], { queryParams: { search: this.search.value, category: this.category.value}, queryParamsHandling: 'merge' });
+
+    this.filterEmitter.emit(this.filterForm);
   }
 
   ngOnInit() {

@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let party of parties">
+    <tr *ngFor="let party of parties" (click)="showEditModal(party)">
       <td>
         <div>{{ party.organization }}</div>
         <div class="additional-attributes">
