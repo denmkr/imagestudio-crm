@@ -5,22 +5,29 @@
 </ng-template>
 
 <ng-template #loggedOut>
-  <form [formGroup]="signInForm" (ngSubmit)="signIn($event)">
-    <div class="input-blocks">
-      <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
-        <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-        <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
-           'has-danger': signInForm.get(input.name).invalid && signInForm.get(input.name).dirty, 
-           'has-success': signInForm.get(input.name).valid && signInForm.get(input.name).dirty
-         }">
-        <div class="form-control-feedback"
-           *ngIf="signInForm.get(input.name).errors && (signInForm.get(input.name).dirty || signInForm.get(input.name).touched)">
-           <p>Заполните поле</p>
+  <div class="sign-in-container">
+    <div class="sign-in-content">
+      <div class="sign-in-title">Вход</div>
+      <form [formGroup]="signInForm" (ngSubmit)="signIn($event)">
+        <div class="input-blocks">
+          <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+            <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
+            <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+               'has-danger': signInForm.get(input.name).invalid && signInForm.get(input.name).dirty, 
+               'has-success': signInForm.get(input.name).valid && signInForm.get(input.name).dirty
+             }">
+            <div class="form-control-feedback"
+               *ngIf="signInForm.get(input.name).errors && (signInForm.get(input.name).dirty || signInForm.get(input.name).touched)">
+               <p>Заполните поле</p>
+            </div>
+          </div>
         </div>
-      </div>
+        <div class="buttons-block">
+          <button class="button signin-button" type="submit">Войти</button>
+        </div>
+      </form>
     </div>
-    <div class="buttons-block">
-      <button class="button signin-button" type="submit">Войти</button>
-    </div>
-  </form>
+  </div>
 </ng-template>
+ 
+

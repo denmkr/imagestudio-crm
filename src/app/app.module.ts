@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'ng2-select';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
@@ -37,6 +38,7 @@ import { routing } from './app.routing';
   imports: [
     HttpClientModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpModule,
     ReactiveFormsModule,
     SelectModule,

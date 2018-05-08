@@ -21,6 +21,18 @@ html, body {
     font-size: 14px;
 }
 
+input {
+	border: 1px solid #ddd;
+	background: #fff;
+	box-shadow: none;
+	outline: none;
+	padding: 8px 13px;
+	min-width: 350px;
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
 .left {
 	text-align: left;
 }

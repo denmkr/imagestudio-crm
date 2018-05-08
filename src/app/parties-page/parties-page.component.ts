@@ -54,7 +54,7 @@ export class PartiesPageComponent implements OnInit {
       this.router.navigate(['/parties'], { queryParams: { type: "client"}, queryParamsHandling: 'merge' });
     }
     else {
-      this.partiesTableComponent.showPartiesByType("");
+      this.partiesTableComponent.showPartiesByType(null);
       this.clientsActive = false;
       this.partnersActive = false;
       this.router.navigate(['/parties'], { queryParams: { type: null}, queryParamsHandling: 'merge' });
@@ -69,7 +69,7 @@ export class PartiesPageComponent implements OnInit {
       this.router.navigate(['/parties'], { queryParams: { type: "partner"}, queryParamsHandling: 'merge' });
     }
     else {
-      this.partiesTableComponent.showPartiesByType("");
+      this.partiesTableComponent.showPartiesByType(null);
       this.clientsActive = false;
       this.partnersActive = false;
       this.router.navigate(['/parties'], { queryParams: { type: null}, queryParamsHandling: 'merge' });

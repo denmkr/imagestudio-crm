@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import 'rxjs/add/operator/map';
@@ -35,13 +35,14 @@ export class PartiesService {
   }
 
   getPartiesByParams(type: string, category: string, contact: string, search: string) {
-    const params = {
-      kind: type,
-      category: category,
-      q: search
-    }
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/")
+    let httpParams = new HttpParams();
+    if (type != null && type != undefined) {httpParams = httpParams.set('kind', type); }
+    if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
+    if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
+
+
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", {params: httpParams})
     .map(result => {
       return result.counterparties.map(party => ({
         author: party.user.first_name,

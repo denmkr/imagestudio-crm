@@ -1,0 +1,71 @@
+.sign-in-container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background: #2d4d8a;
+}
+
+.sign-in-content {
+	top: 50%;
+	margin-top: -162px;
+	left: 50%;
+	margin-left: -208px;
+	position: relative;
+	background: #fff;
+	width: 416px;
+	padding: 30px 30px;
+	box-sizing: border-box;
+}
+
+.sign-in-content .sign-in-title {
+	font-weight: 700;
+	font-size: 36px;
+	color: #2d4d8a;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.sign-in-content form {
+	text-align: center;
+	display: inline-block;
+}
+
+.sign-in-content form input {
+	border: 1px solid #ddd;
+	background: #fff;
+	box-shadow: none;
+	outline: none;
+	padding: 8px 13px;
+	min-width: 260px;
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
+.sign-in-content form .input-blocks .input-title {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 15px;
+	font-weight: 700;
+	text-align: left;
+	margin-right: 10px;
+	min-width: 80px;
+}
+
+.sign-in-content form .input-blocks input.ng-invalid.ng-dirty:not(.ng-untouched) {
+	border-color: red;
+}
+
+.sign-in-content form .input-blocks .input-field-block {
+	margin-bottom: 15px;
+}
+
+.sign-in-content form .buttons-block {
+	margin-top: 30px;
+}
+
+.sign-in-content form .buttons-block button {
+	margin-right: 0;
+}

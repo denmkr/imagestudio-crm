@@ -20,7 +20,7 @@ export class PartiesSearchComponent implements OnInit {
     {text: 'Все', id: "all"}, 
     {text: 'Государство', id: "state"}, 
     {text: 'Бизнес', id: "business"},
-    {text: 'Частное лицо', id: "private"}
+    {text: 'Частное лицо', id: "individual"}
   ];
 
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }

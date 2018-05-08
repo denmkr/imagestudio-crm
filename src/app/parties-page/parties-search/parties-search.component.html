@@ -1,8 +1,8 @@
 <form [formGroup]="filterForm" (ngSubmit)="updateParties()">
-	<input formControlName="search" name="search" type="text" placeholder="Поиск">
-	<ng-select #categorySelect [items]="categories" bindValue="category" placeholder="Категория" (data)="categorySelect.designation=($event.id);">
+	<input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateParties()">
+	<ng-select #categorySelect [items]="categories" bindValue="category" placeholder="Категория" (data)="categorySelect.designation=($event.id);updateParties();">
     </ng-select>
-    <input type="hidden" [(ngModel)]="categorySelect.designation" (ngModelChange)="updateParties()" formControlName="category" name="category">
+    <input type="hidden" [(ngModel)]="categorySelect.designation" formControlName="category" name="category">
 
 	<!--
     <select #{{select.id}} (change)="updateParties()">
