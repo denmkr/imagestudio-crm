@@ -23,7 +23,7 @@ import { AuthService } from './auth/auth.service';
 import { routing } from './app.routing';
 import { PartiesEditModalWindowComponent } from './parties-page/parties-edit-modal-window/parties-edit-modal-window.component';
 import { PartiesEditFormComponent } from './parties-page/parties-edit-modal-window/parties-edit-form/parties-edit-form.component';
-
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,7 @@ import { PartiesEditFormComponent } from './parties-page/parties-edit-modal-wind
     PartiesEditFormComponent
   ],
   imports: [
+    LoadingBarHttpClientModule,
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,

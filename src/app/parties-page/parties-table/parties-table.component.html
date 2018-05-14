@@ -18,14 +18,24 @@
         </div>
       </td>
       <td>
-        <div>{{ party.contact }}</div>
+        <div>{{ party.contact_name }}</div>
         <div class="additional-attributes">
           <div class="position">{{ party.position }}</div>
         </div>
       </td>
       <td>{{ party.email }}</td>
-      <td>{{ party.contact_phone }}</td>
+      <td>{{ party.contact }}</td>
       <td>{{ party.comment }}</td>
     </tr>
   </tbody>
 </table>
+<ul class="pagination">
+  <li *ngIf="meta.prev_page != null" (click)="showPartiesOnPage(meta.prev_page)"><</li>
+  <li *ngIf="meta.current_page > 2" (click)="showPartiesOnPage(1)">1</li>
+  <li *ngIf="meta.current_page > 2">..</li>
+  <li class="active">{{ meta.current_page }}</li>
+  <li *ngIf="meta.next_page != null" (click)="showPartiesOnPage(meta.next_page)">{{ meta.next_page }}</li>
+  <li *ngIf="(meta.total_pages - meta.current_page) > 2">..</li>
+  <li *ngIf="(meta.total_pages - meta.current_page) > 1" (click)="showPartiesOnPage(meta.total_pages)">{{ meta.total_pages }}</li>
+  <li *ngIf="meta.next_page != null" (click)="showPartiesOnPage(meta.next_page)">></li>
+</ul>

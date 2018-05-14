@@ -7,8 +7,8 @@ import { AuthGuard } from './auth/auth.guard';
 
 const routes = [
   { path: '', redirectTo: "/home", pathMatch: 'full' },
-  { path: 'parties', component: PartiesPageComponent, canActivate: [AuthGuard], data: { animation: 'page1' } },
-  { path: 'home', component: HomePageComponent, canActivate: [AuthGuard], data: { animation: 'page2' } },
+  { path: 'parties', component: PartiesPageComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
   { path: 'signin', component: SignInPageComponent }
 ];
 

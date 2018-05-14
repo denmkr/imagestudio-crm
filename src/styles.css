@@ -4,7 +4,6 @@ html, body {
     font-family: 'Open Sans', sans-serif;
     width: 100%;
     -webkit-font-smoothing: antialiased;
-    position: relative;
 }
 
 * {
@@ -19,6 +18,14 @@ html, body {
 *:not(i) {
 	font-family: 'Open Sans', sans-serif;
     font-size: 14px;
+}
+
+#loading-bar-spinner {
+	display: none !important;
+}
+
+main .content > * {
+	display: block;
 }
 
 input {

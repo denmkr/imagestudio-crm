@@ -27,6 +27,7 @@ export class PartiesPageComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() { 
+    console.log("INIT");
     this.activatedRoute.queryParams.subscribe(params => {
         let type = params['type'];
         if (type == "client") this.clientsActive = true;
@@ -45,7 +46,7 @@ export class PartiesPageComponent implements OnInit {
   toggleFilters() {
     this.filersActive = !this.filersActive;
   }
-
+  
   showClients() {
     if (!this.clientsActive) {
       this.partiesTableComponent.showPartiesByType("client");

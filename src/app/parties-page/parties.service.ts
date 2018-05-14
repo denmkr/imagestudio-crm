@@ -34,15 +34,17 @@ export class PartiesService {
     console.log("sent");
   }
 
-  getPartiesByParams(type: string, category: string, contact: string, search: string) {
+  getPartiesByParams(type: string, category: string, contact: string, search: string, page: string) {
 
     let httpParams = new HttpParams();
-    if (type != null && type != undefined) {httpParams = httpParams.set('kind', type); }
+    if (type != null && type != undefined) { httpParams = httpParams.set('kind', type); }
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
+    if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
+    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", {params: httpParams})
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })
     .map(result => {
       result.counterparties.map(party => {
         switch (party.category) {
@@ -59,9 +61,10 @@ export class PartiesService {
             break;
         }
       });
-      return result.counterparties.map(party => ({
+
+      let parties = result.counterparties.map(party => ({
         id: party.id,
-        author: party.user.first_name,
+        author: party.user.first_name + " " + party.user.last_name,
         organization: party.organization.name,
         contact: party.contact_name,
         category: party.category,
@@ -69,7 +72,10 @@ export class PartiesService {
         email: party.email,
         contact_phone: party.contact_phone,
         comment: party.comment
-      }))
+      }));
+
+      return [parties, result.meta];
+
     });
   }
 

@@ -16,6 +16,7 @@ export class PartiesTableComponent {
   @ViewChild(PartiesEditModalWindowComponent) editModalWindowComponent: PartiesEditModalWindowComponent;
 
   parties = [];
+  meta = [];
   currentType: string;
   currentCategory: string;
   currentContact: string;
@@ -38,15 +39,31 @@ export class PartiesTableComponent {
     this.showAllParties();
   }
 
+  showPartiesOnPage(page: number) {
+    this.partiesService.getPartiesByParams(this.currentType, this.currentCategory, this.currentContact, this.currentSearch, page.toString()).subscribe(
+      result => { 
+        /*
+        if (result[1].current_page > 1) this.meta.push({ 'page': result[1].prev_page, 'text': '<' });
+        this.meta.push({ 'page': result[1].next_page, 'text': result[1].next_page });
+        this.meta.push({ 'page': result[1].next_page, 'text': '' });
+        if (result[1].total_pages < 4) this.meta.push({ 'page': result[1].prev_page, 'text': '<' });
+        this.meta.push({ 'number': 2, 'type': 'test' });
+        */
+        this.parties = result[0]; 
+        this.meta = result[1]; 
+      }
+    );
+  }
+
   showAllParties() {
-    this.partiesService.getPartiesByParams(this.currentType, this.currentCategory, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
+    this.partiesService.getPartiesByParams(this.currentType, this.currentCategory, this.currentContact, this.currentSearch, "1").subscribe(result => { this.parties = result[0]; this.meta = result[1]; });
   }
 
   showPartiesByType(type: string) {
-    this.partiesService.getPartiesByParams(type, this.currentCategory, this.currentContact, this.currentSearch).subscribe(parties => { this.parties = parties });
+    this.partiesService.getPartiesByParams(type, this.currentCategory, this.currentContact, this.currentSearch, "1").subscribe(result => { this.parties = result[0]; this.meta = result[1]; });
   }
 
   showPartiesByFilterForm(formGroup: FormGroup) {
-    this.partiesService.getPartiesByParams(this.currentType, formGroup.get("category").value, this.currentContact, formGroup.get("search").value).subscribe(parties => { this.parties = parties });
+    this.partiesService.getPartiesByParams(this.currentType, formGroup.get("category").value, this.currentContact, formGroup.get("search").value, "1").subscribe(result => { this.parties = result[0]; this.meta = result[1]; });
   }
 }
