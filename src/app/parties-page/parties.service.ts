@@ -34,14 +34,14 @@ export class PartiesService {
     console.log("sent");
   }
 
-  getPartiesByParams(type: string, category: string, contact: string, search: string, page: string) {
+  getPartiesByParams(type: string, contact: string, search: string, page: string) {
 
     let httpParams = new HttpParams();
     if (type != null && type != undefined) { httpParams = httpParams.set('kind', type); }
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
-    if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
+    // if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
     if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
-    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
+    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '15');
 
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })

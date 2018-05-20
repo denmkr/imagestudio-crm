@@ -27,7 +27,6 @@ export class PartiesPageComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() { 
-    console.log("INIT");
     this.activatedRoute.queryParams.subscribe(params => {
         let type = params['type'];
         if (type == "client") this.clientsActive = true;
@@ -46,19 +45,19 @@ export class PartiesPageComponent implements OnInit {
   toggleFilters() {
     this.filersActive = !this.filersActive;
   }
-  
+
   showClients() {
     if (!this.clientsActive) {
       this.partiesTableComponent.showPartiesByType("client");
       this.clientsActive = true;
       this.partnersActive = false;
-      this.router.navigate(['/parties'], { queryParams: { type: "client"}, queryParamsHandling: 'merge' });
+      this.router.navigate(['/parties'], { queryParams: { type: "client", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.partiesTableComponent.showPartiesByType(null);
       this.clientsActive = false;
       this.partnersActive = false;
-      this.router.navigate(['/parties'], { queryParams: { type: null}, queryParamsHandling: 'merge' });
+      this.router.navigate(['/parties'], { queryParams: { type: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
@@ -67,13 +66,13 @@ export class PartiesPageComponent implements OnInit {
       this.partiesTableComponent.showPartiesByType("partner");
       this.partnersActive = true;
       this.clientsActive = false;
-      this.router.navigate(['/parties'], { queryParams: { type: "partner"}, queryParamsHandling: 'merge' });
+      this.router.navigate(['/parties'], { queryParams: { type: "partner", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.partiesTableComponent.showPartiesByType(null);
       this.clientsActive = false;
       this.partnersActive = false;
-      this.router.navigate(['/parties'], { queryParams: { type: null}, queryParamsHandling: 'merge' });
+      this.router.navigate(['/parties'], { queryParams: { type: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
