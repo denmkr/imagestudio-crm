@@ -10,6 +10,15 @@
   </div>
 
   <div class="input-blocks">
+    
+    <div *ngFor="let select of selectInputs" class="input-field-block">
+      <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+      <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
+        (data)="select.designation=($event.id)">
+      </ng-select>
+      <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
+    </div>
+
     <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
       <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{

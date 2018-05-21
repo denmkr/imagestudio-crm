@@ -15,8 +15,13 @@ export class PartiesEditFormComponent implements OnInit {
     {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}
   ];
 
+  public organizations = [];
+
+  public selectInputs = [
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationSelect"}
+  ];
+
   public inputs = [
-    {name: "organization", type: "text", placeholder: "ИП Пупина Александра Владимировича", title: "Организация"},
     {name: "email", type: "email", placeholder: "pupinastar@imagestudio.su", title: "Email"},
     {name: "contact", type: "text", placeholder: "Фамилия Имя Отчество", inline: true, title: "Контакт"},
     {name: "position", type: "text", placeholder: "Должность", inline: true, small: true},
@@ -54,11 +59,15 @@ export class PartiesEditFormComponent implements OnInit {
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService) { }
 
+  getAllOrganizations() {
+    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
+  }
+
   updateValues(party) {
     //this.type.setValue(party.type);
     //this.category.setValue(party.category);
     this.email.setValue(party.email);
-    this.organization.setValue(party.organization);
+    // this.organization.setValue(party.organization);
     this.contact.setValue(party.contact);
     this.position.setValue(party.position);
     this.phone.setValue(party.contact_phone);
@@ -79,6 +88,8 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAllOrganizations();
+
   	this.email = new FormControl("", [
   	  Validators.required, 
   	  Validators.pattern("[^ @]*@[^ @]*")

@@ -328,7 +328,7 @@ table tbody tr {
 	background: #2d4d8a !important;
 }
 
-.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item div {
+.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
 	color: #fff !important;
 }
 
