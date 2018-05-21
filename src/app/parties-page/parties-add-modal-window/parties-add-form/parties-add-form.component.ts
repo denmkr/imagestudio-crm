@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
 
@@ -9,6 +9,19 @@ import { PartiesService } from '../../parties.service';
   providers: [PartiesService]
 })
 export class PartiesAddFormComponent implements OnInit {
+
+  @HostBinding('class.active') activeClass: boolean = false;
+
+  @HostListener('document:keyup', ['$event'])
+  handleClick(event: Event) {
+    var element =  document.getElementsByClassName('ui-select-choices')[0];
+    if (typeof(element) != 'undefined' && element != null) {
+      this.activeClass = false;
+    }
+    else {
+      this.activeClass = true;
+    }
+  }
 
   public selects = [
     {items: "types", name: "type", placeholder: "Тип", id: "typeSelect"},
@@ -57,7 +70,7 @@ export class PartiesAddFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService) { }
+  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer) { }
 
   createParty(event) {
     if (this.newPartyForm.controls.email.valid) {
@@ -71,11 +84,16 @@ export class PartiesAddFormComponent implements OnInit {
     }
   }
 
+  createOrganization() {
+    // this.partiesService.createOrganization();
+  }
+
   getAllOrganizations() {
     this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
   }
 
   ngOnInit() {
+ 
     this.getAllOrganizations();
 
   	this.email = new FormControl("", [

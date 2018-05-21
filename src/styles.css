@@ -281,6 +281,27 @@ table tbody tr {
 	cursor: pointer;
 }
 
+.modal .input-blocks .select-container {
+	position: relative;
+	display: inline-block;
+}
+
+.modal .input-blocks .select-container .select-add-button {
+	position: absolute;
+	right: -3px;
+	top: 7px;
+}
+
+.modal .input-blocks .select-container .select-add-button .button {
+	padding: 5px;
+	font-size: 9px;
+	display: none;
+}
+
+.modal .input-blocks .select-container .select-add-button .button.active {
+	display: block;
+}
+
 .modal .input-blocks ng-select {
 	border: 1px solid #fff;
 	background: #fff;
@@ -300,6 +321,7 @@ table tbody tr {
 	background: #fff;
 	left: -1px;
 	right: -1px;
+	max-height: 180px;
 	width: auto;
 }
 
