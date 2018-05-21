@@ -19,4 +19,4 @@
 		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Клиент</div>
 	</div>
 </div>
-<parties-table></parties-table>
+<parties-table (eventEmitter)="showEditModal($event)"></parties-table>

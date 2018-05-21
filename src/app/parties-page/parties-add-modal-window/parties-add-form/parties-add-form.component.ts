@@ -15,8 +15,13 @@ export class PartiesAddFormComponent implements OnInit {
     {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}
   ];
 
+  public organizations = [];
+
+  public selectInputs = [
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationSelect"}
+  ];
+
   public inputs = [
-    {name: "organization", type: "text", placeholder: "ИП Пупина Александра Владимировича", title: "Организация"},
     {name: "email", type: "email", placeholder: "pupinastar@imagestudio.su", title: "Email"},
     {name: "contact", type: "text", placeholder: "Фамилия Имя Отчество", inline: true, title: "Контакт"},
     {name: "position", type: "text", placeholder: "Должность", inline: true, small: true},
@@ -66,7 +71,13 @@ export class PartiesAddFormComponent implements OnInit {
     }
   }
 
+  getAllOrganizations() {
+    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
+  }
+
   ngOnInit() {
+    this.getAllOrganizations();
+
   	this.email = new FormControl("", [
   	  Validators.required, 
   	  Validators.pattern("[^ @]*@[^ @]*")

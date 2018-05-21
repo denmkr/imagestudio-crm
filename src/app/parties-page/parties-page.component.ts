@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, Route } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
 import { PartiesAddModalWindowComponent } from './parties-add-modal-window/parties-add-modal-window.component';
+import { PartiesEditModalWindowComponent } from './parties-edit-modal-window/parties-edit-modal-window.component';
 import { PartiesTableComponent } from './parties-table/parties-table.component';
 import { PartiesSearchComponent } from './parties-search/parties-search.component';
 
@@ -14,6 +15,7 @@ import { PartiesSearchComponent } from './parties-search/parties-search.componen
 
 export class PartiesPageComponent implements OnInit {
   @ViewChild(PartiesAddModalWindowComponent) addModalWindowComponent: PartiesAddModalWindowComponent;
+  @ViewChild(PartiesEditModalWindowComponent) editModalWindowComponent: PartiesEditModalWindowComponent;
   @ViewChild(PartiesTableComponent) partiesTableComponent: PartiesTableComponent;
   @ViewChild(PartiesSearchComponent) partiesSearchComponent: PartiesSearchComponent;
 
@@ -40,6 +42,10 @@ export class PartiesPageComponent implements OnInit {
 
   showCreateModal() {
     this.addModalWindowComponent.show();
+  }
+
+  showEditModal(party) {
+    this.editModalWindowComponent.show(party);
   }
 
   toggleFilters() {

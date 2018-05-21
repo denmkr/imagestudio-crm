@@ -2,8 +2,7 @@
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
-        (data)="select.designation=($event.id)">
+      <ng-select id="{{select.id}}" #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}" (data)="select.designation=($event.id)">
       </ng-select>
       <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
 
@@ -27,6 +26,7 @@
   <div class="buttons-block">
     <button class="button save-button" type="submit">Сохранить</button>
     <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+    <div class="button remove-button" (click)="deleteWindow()">Удалить</div>
   </div>
   
 </form>

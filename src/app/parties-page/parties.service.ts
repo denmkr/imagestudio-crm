@@ -7,6 +7,16 @@ import 'rxjs/add/operator/map';
 export class PartiesService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  getOrganizations() {
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/")
+    .map(result => {
+      return result.organizations.map(organization => ({
+        id: organization.id,
+        text: organization.name
+      }))
+    });
+  }
+
   createNewParty(type: string, category: string, organization: string, email: string, contact: string, 
     position: string, phone: string, comment: string) {
 
@@ -14,7 +24,7 @@ export class PartiesService {
       kind: type,
       category: category,
       organization: {
-        id: 1
+        id: organization
       },
       email: email,
       contact_name: contact,

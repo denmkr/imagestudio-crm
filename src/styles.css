@@ -281,6 +281,57 @@ table tbody tr {
 	cursor: pointer;
 }
 
+.modal .input-blocks ng-select {
+	border: 1px solid #fff;
+	background: #fff;
+	box-shadow: none;
+	min-width: 350px;
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
+.modal .input-blocks ng-select * {
+	outline: none !important;
+}
+
+.modal .input-blocks ng-select ul.ui-select-choices {
+	position: absolute;
+	background: #fff;
+	left: -1px;
+	right: -1px;
+	width: auto;
+}
+
+.modal .input-blocks ng-select .ui-select-container {
+	position: relative;
+}
+
+.modal .input-blocks ng-select .ui-select-match {
+	padding: 8px 13px;
+}
+
+.modal .input-blocks ng-select .ui-select-placeholder {
+	padding-bottom: 8px;
+	color: #999;
+}
+
+.modal .input-blocks ng-select .ui-select-search {
+	border: none;
+}
+
+.modal .input-blocks ng-select .dropdown-item {
+	padding: 8px 13px !important;
+}
+
+.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item {
+	background: #2d4d8a !important;
+}
+
+.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item div {
+	color: #fff !important;
+}
+
 .modal .input-blocks .input-field-block {
 	font-size: 0;
 }

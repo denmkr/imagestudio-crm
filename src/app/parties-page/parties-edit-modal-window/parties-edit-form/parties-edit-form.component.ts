@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
 
@@ -53,6 +53,18 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService) { }
+
+  updateValues(party) {
+    //this.type.setValue(party.type);
+    //this.category.setValue(party.category);
+    this.email.setValue(party.email);
+    this.organization.setValue(party.organization);
+    this.contact.setValue(party.contact);
+    this.position.setValue(party.position);
+    this.phone.setValue(party.contact_phone);
+    this.comment.setValue(party.comment);
+
+  }
 
   editParty(event) {
     if (this.editPartyForm.controls.email.valid) {

@@ -1,9 +1,8 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
 
 import { PartiesService } from '../parties.service';
-import { PartiesEditModalWindowComponent } from '../parties-edit-modal-window/parties-edit-modal-window.component';
 import { PartiesTablePaginationComponent } from './parties-table-pagination/parties-table-pagination.component';
 
 @Component({
@@ -14,8 +13,8 @@ import { PartiesTablePaginationComponent } from './parties-table-pagination/part
 })
 
 export class PartiesTableComponent {
-  @ViewChild(PartiesEditModalWindowComponent) editModalWindowComponent: PartiesEditModalWindowComponent;
   @ViewChild(PartiesTablePaginationComponent) partiesTablePaginationComponent: PartiesTablePaginationComponent;
+  @Output() eventEmitter = new EventEmitter<any>();
 
   parties = [];
   currentType: string;
@@ -33,7 +32,7 @@ export class PartiesTableComponent {
   }
 
   showEditModal(party) {
-    this.editModalWindowComponent.show(party);
+    this.eventEmitter.emit(party);
   }
 
   ngOnInit() {

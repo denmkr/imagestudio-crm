@@ -11,7 +11,7 @@ export class PartiesEditModalWindowComponent implements OnInit {
   @ViewChild(PartiesEditFormComponent) partiesEditFormComponent: PartiesEditFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
-  title = "Редкатировать контрагента";
+  title = "Редактировать контрагента";
 
   constructor() { }
 
@@ -20,6 +20,7 @@ export class PartiesEditModalWindowComponent implements OnInit {
 
   show(party) {
   	this.activeClass = true;
+    this.partiesEditFormComponent.updateValues(party);
   }
 
   hide() {
