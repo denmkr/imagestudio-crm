@@ -10,6 +10,8 @@ import { PartiesService } from '../../parties.service';
 })
 export class PartiesEditFormComponent implements OnInit {
 
+  public party;
+
   public selects = [
     {items: "types", name: "type", placeholder: "Тип", id: "typeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}
@@ -53,6 +55,11 @@ export class PartiesEditFormComponent implements OnInit {
 
   @Output() eventEmitter = new EventEmitter<boolean>();
 
+  removeParty() {
+    this.partiesService.removeParty(this.party.id);
+    this.eventEmitter.emit(true);
+  }
+
   hideWindow() {
     this.eventEmitter.emit(true);
   }
@@ -64,6 +71,7 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   updateValues(party) {
+    this.party = party;
     //this.type.setValue(party.type);
     //this.category.setValue(party.category);
     this.email.setValue(party.email);
@@ -78,7 +86,7 @@ export class PartiesEditFormComponent implements OnInit {
   editParty(event) {
     if (this.editPartyForm.controls.email.valid) {
       this.editPartyForm.controls.organization;
-  	  this.partiesService.createNewParty(this.editPartyForm.get("type").value, this.editPartyForm.get("category").value, 
+  	  this.partiesService.updateParty(this.party.id, this.editPartyForm.get("type").value, this.editPartyForm.get("category").value, 
       this.editPartyForm.get("organization").value, this.editPartyForm.get("email").value, this.editPartyForm.get("contact").value,
       this.editPartyForm.get("position").value, this.editPartyForm.get("phone").value, this.editPartyForm.get("comment").value);
       

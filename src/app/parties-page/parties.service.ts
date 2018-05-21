@@ -17,6 +17,40 @@ export class PartiesService {
     });
   }
 
+  removeParty(id: string) {
+    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    ); 
+  }
+
+  updateParty(id: string, type: string, category: string, organization: string, email: string, contact: string, 
+    position: string, phone: string, comment: string) {
+
+    const party = {
+      id: id,
+      kind: type,
+      category: category,
+      organization: {
+        id: organization
+      },
+      email: email,
+      contact_name: contact,
+      position: position,
+      contact_phone: phone,
+      comment: comment,
+      user: {
+        id: this.authService.getUserId()
+      }
+    };
+
+    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+    
+  }
+
   createNewParty(type: string, category: string, organization: string, email: string, contact: string, 
     position: string, phone: string, comment: string) {
 
@@ -41,7 +75,6 @@ export class PartiesService {
       err => { console.log(err) }
     );
     
-    console.log("sent");
   }
 
   getPartiesByParams(type: string, contact: string, search: string, page: string) {
