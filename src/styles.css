@@ -258,11 +258,17 @@ table tbody tr {
 	cursor: pointer;
 }
 
+.modal .select-blocks input {
+	min-width: auto;
+}
+
 .modal .select-blocks .select-field-block .ui-select-placeholder, .select-blocks .select-field-block .ui-select-match-text, .select-blocks .select-field-block .ui-select-search  {
 	background: #666;
 	color: #fff;
 	font-weight: 700;
 	outline: none;
+	width: 140px;
+	box-sizing: border-box;
 	border: none;
 	font-size: 12px;
 	text-transform: uppercase;
@@ -270,8 +276,26 @@ table tbody tr {
 	padding-right: 30px;
 }
 
-.modal .input-blocks {
-	min-width: 680px;
+.modal .select-blocks .select-field-block .ui-select-placeholder {
+	color: #bbb;
+}
+
+.modal .select-blocks .select-field-block .ui-select-choices {
+	background: #fff;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	width: auto;
+	z-index: 100;
+}
+
+.modal .select-blocks .ui-select-container {
+	width: 140px;
+	position: relative;
+}
+
+.modal .select-blocks .select-field-block input {
+	width: 140px;
 }
 
 .modal .select-blocks .select-field-block {
@@ -281,9 +305,45 @@ table tbody tr {
 	cursor: pointer;
 }
 
+.modal .select-blocks ng-select .dropdown-item {
+	padding: 8px 13px !important;
+}
+
+.modal .select-blocks ng-select .ui-select-choices-row .dropdown-item * {
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.modal .select-blocks ng-select .ui-select-choices-row.active .dropdown-item {
+	background: #2d4d8a !important;
+}
+
+.modal .select-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
+	color: #fff !important;
+}
+
+.modal .select-blocks ng-select * {
+	outline: none !important;
+}
+
+.modal .select-blocks ng-select .ui-select-match {
+	font-size: 0;
+}
+
+.modal .select-blocks ng-select .ui-select-match-text, .modal .select-blocks ng-select .ui-select-toggle {
+	width: 140px;
+	display: inline-block;
+	max-width: none;
+}
+
+.modal .input-blocks {
+	min-width: 680px;
+}
+
 .modal .input-blocks .select-container {
 	position: relative;
 	display: inline-block;
+	font-size: 0
 }
 
 .modal .input-blocks .select-container .select-add-button {
