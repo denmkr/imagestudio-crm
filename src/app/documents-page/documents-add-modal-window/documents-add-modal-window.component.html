@@ -1,0 +1,5 @@
+<div class="modal-container" [ngClass]="{'active' : activeClass}" (click)="hide()"></div>
+<div class="modal new-document-modal" [ngClass]="{'active' : activeClass}">
+	<div class="title">{{title}}</div>
+ 	<documents-add-form (eventEmitter)="hide()"></documents-add-form>
+</div>

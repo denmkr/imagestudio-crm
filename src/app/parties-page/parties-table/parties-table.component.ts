@@ -36,7 +36,12 @@ export class PartiesTableComponent {
   }
 
   ngOnInit() {
-    this.showAllParties();
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['page'] != null && params['page'] != undefined) {
+        this.showPartiesByPage(params['page']);
+      }
+      else this.showAllParties();
+    });
   }
 
   showPartiesByPage(page: number) {

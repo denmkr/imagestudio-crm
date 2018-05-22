@@ -267,7 +267,7 @@ table tbody tr {
 	color: #fff;
 	font-weight: 700;
 	outline: none;
-	width: 140px;
+	width: 160px;
 	box-sizing: border-box;
 	border: none;
 	font-size: 12px;
@@ -290,12 +290,12 @@ table tbody tr {
 }
 
 .modal .select-blocks .ui-select-container {
-	width: 140px;
+	width: 160px;
 	position: relative;
 }
 
 .modal .select-blocks .select-field-block input {
-	width: 140px;
+	width: 160px;
 }
 
 .modal .select-blocks .select-field-block {
@@ -331,7 +331,7 @@ table tbody tr {
 }
 
 .modal .select-blocks ng-select .ui-select-match-text, .modal .select-blocks ng-select .ui-select-toggle {
-	width: 140px;
+	width: 160px;
 	display: inline-block;
 	max-width: none;
 }
@@ -421,10 +421,11 @@ table tbody tr {
 .modal .input-blocks .input-field-block.inline {
 	display: inline-block;
 	vertical-align: top;
+	margin-right: 20px;
 }
 
 .modal .input-blocks .input-field-block.small {
-	margin-left: 20px;
+	margin-right: 0;
 }
 
 .modal .input-blocks .input-field-block.small input {

@@ -25,6 +25,14 @@ import { PartiesEditModalWindowComponent } from './parties-page/parties-edit-mod
 import { PartiesEditFormComponent } from './parties-page/parties-edit-modal-window/parties-edit-form/parties-edit-form.component';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { PartiesTablePaginationComponent } from './parties-page/parties-table/parties-table-pagination/parties-table-pagination.component';
+import { DocumentsPageComponent } from './documents-page/documents-page.component';
+import { DocumentsTableComponent } from './documents-page/documents-table/documents-table.component';
+import { DocumentsSearchComponent } from './documents-page/documents-search/documents-search.component';
+import { DocumentsAddModalWindowComponent } from './documents-page/documents-add-modal-window/documents-add-modal-window.component';
+import { DocumentsEditModalWindowComponent } from './documents-page/documents-edit-modal-window/documents-edit-modal-window.component';
+import { DocumentsTablePaginationComponent } from './documents-page/documents-table/documents-table-pagination/documents-table-pagination.component';
+import { DocumentsAddFormComponent } from './documents-page/documents-add-modal-window/documents-add-form/documents-add-form.component';
+import { DocumentsEditFormComponent } from './documents-page/documents-edit-modal-window/documents-edit-form/documents-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +47,15 @@ import { PartiesTablePaginationComponent } from './parties-page/parties-table/pa
     SignInPageComponent,
     PartiesEditModalWindowComponent,
     PartiesEditFormComponent,
-    PartiesTablePaginationComponent
+    PartiesTablePaginationComponent,
+    DocumentsPageComponent,
+    DocumentsTableComponent,
+    DocumentsSearchComponent,
+    DocumentsAddModalWindowComponent,
+    DocumentsEditModalWindowComponent,
+    DocumentsTablePaginationComponent,
+    DocumentsAddFormComponent,
+    DocumentsEditFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

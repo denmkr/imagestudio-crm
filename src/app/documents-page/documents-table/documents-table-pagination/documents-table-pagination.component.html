@@ -1,0 +1,10 @@
+<ul class="pagination">
+  <li *ngIf="paginator.prev_page != null" (click)="changePage(paginator.prev_page)"><</li>
+  <li *ngIf="paginator.current_page > 2" (click)="changePage(1)">1</li>
+  <li *ngIf="paginator.current_page > 2">..</li>
+  <li class="active">{{ paginator.current_page }}</li>
+  <li *ngIf="paginator.next_page != null" (click)="changePage(paginator.next_page)">{{ paginator.next_page }}</li>
+  <li *ngIf="(paginator.total_pages - paginator.current_page) > 2">..</li>
+  <li *ngIf="(paginator.total_pages - paginator.current_page) > 1" (click)="changePage(paginator.total_pages)">{{ paginator.total_pages }}</li>
+  <li *ngIf="paginator.next_page != null" (click)="changePage(paginator.next_page)">></li>
+</ul>

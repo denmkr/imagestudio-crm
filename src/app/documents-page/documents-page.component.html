@@ -1,0 +1,22 @@
+<documents-add-modal-window></documents-add-modal-window>
+<documents-edit-modal-window></documents-edit-modal-window>
+<div class="top-block">
+	<div class="row middle">
+		<div class="col-6 left">
+			<h1 class="title">{{title}}</h1>
+		</div>
+		<div class="col-6 right">
+			<div [ngClass]="{'active' : filersActive}" class="filters">
+				<documents-search (filterEmitter)="updateTableByFilterForm($event)"></documents-search>
+			</div>
+    		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
+		</div>
+	</div>
+	<div class="buttons">
+		<div (click)="showCreateModal()" class="button create-button">Новый документ</div>
+		<div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Расход</div>
+		<!--<a [routerLink]="['/parties']" [queryParams]="{type:'client'}" queryParamsHandling="merge">-->
+		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Доход</div>
+	</div>
+</div>
+<documents-table (eventEmitter)="showEditModal($event)"></documents-table>

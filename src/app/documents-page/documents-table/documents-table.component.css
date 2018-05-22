@@ -1,0 +1,28 @@
+table tr .square {
+	display: inline-block;
+	padding: 2px 5px;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+table tr .square.orange {
+	background: orange;
+}
+
+table tr .square.green {
+	background: green;
+}
+
+table tr .square.purple {
+	background: purple;
+}
+
+table tr .date {
+	color: #999;
+}
+
+table tr .file a {
+	color: #999;
+}
