@@ -13,27 +13,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr (click)="showEditModal(document)">
-      <td>ООО "ФотоАрт"</td>
-      <td><div class="square orange">Расход</div></td>
-      <td><div class="square green">Счет</div></td>
-      <td>№88</td>
-      <td>#324</td>
-      <td><div class="file"><img src=""><a>2Mb</a></div></td>
-      <td>Тут какой-то красивый текст</td>
-      <td><div class="square purple">Не подписано</div></td>
-      <td><div class="date">12 нояб. 2017</div></td>
-    </tr>
     <tr *ngFor="let document of documents" (click)="showEditModal(document)">
       <td>{{ document.organization }}</td>
-      <td>{{ document.type }}</td>
-      <td>{{ document.document }}</td>
+      <td><div class="square orange">{{ document.category }}</div></td>
+      <td><div class="square green">{{ document.type }}</div></td>
       <td>{{ document.number }}</td>
       <td>{{ document.order }}</td>
-      <td>{{ document.file }}</td>
-      <td>{{ document.mark }}</td>
-      <td>{{ document.status }}</td>
-      <td>{{ document.date }}</td>
+      <td><div class="file"><img src=""><a>2Mb</a></div></td>
+      <td>{{ document.comment }}</td>
+      <td><div class="square purple">{{ document.status }}</div></td>
+      <td>12 нояб. 2017</td>
     </tr>
   </tbody>
 </table>

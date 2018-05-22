@@ -14,21 +14,10 @@ export class DocumentsSearchComponent implements OnInit {
 
   filterForm: FormGroup;
   search: FormControl;
-  // category: FormControl;
-
-  /*
-  public categories = [
-    {text: 'Все', id: "all"}, 
-    {text: 'Государство', id: "state"}, 
-    {text: 'Бизнес', id: "business"},
-    {text: 'Частное лицо', id: "individual"}
-  ];
-  */
 
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   updateDocuments() {
-    // if (this.category.value === "all") this.category.setValue(null);
     if (this.search.value === "") this.search.setValue(null);
     this.router.navigate(['/documents'], { queryParams: { search: this.search.value }, queryParamsHandling: 'merge' });
 
@@ -37,16 +26,13 @@ export class DocumentsSearchComponent implements OnInit {
 
   ngOnInit() {
   	this.search = new FormControl("");
-    // this.category = new FormControl("");
  
   	this.filterForm = new FormGroup({
       search: this.search
-      // category: this.category
     });
 
     this.activatedRoute.queryParams.subscribe(params => {
         this.search.setValue(params['search']);
-        // this.category.setValue(params['category']);
     });
   }
 

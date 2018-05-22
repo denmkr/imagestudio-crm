@@ -47,7 +47,7 @@ export class DocumentsEditFormComponent implements OnInit {
 
   @Output() eventEmitter = new EventEmitter<boolean>();
 
-  removedocument() {
+  removeDocument() {
     this.documentsService.removeDocument(this.document.id);
     this.eventEmitter.emit(true);
   }

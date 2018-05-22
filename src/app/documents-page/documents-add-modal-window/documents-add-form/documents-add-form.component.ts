@@ -12,17 +12,6 @@ export class DocumentsAddFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
 
-  @HostListener('document:keyup', ['$event'])
-  handleClick(event: Event) {
-    var element =  document.getElementsByClassName('ui-select-choices')[0];
-    if (typeof(element) != 'undefined' && element != null) {
-      this.activeClass = false;
-    }
-    else {
-      this.activeClass = true;
-    }
-  }
-
   public selects = [
     {items: "types", name: "type", placeholder: "Тип документа", id: "typeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}

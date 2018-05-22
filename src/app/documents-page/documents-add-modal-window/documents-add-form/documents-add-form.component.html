@@ -16,10 +16,6 @@
         <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
           (data)="select.designation=($event.id)">
         </ng-select>
-        <div class="select-add-button">
-          <div [ngClass]="{'active' : activeClass}" class="button" (click)="createOrganization()">Добавить</div>
-        </div>
-
         <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
       </div>
     </div>

@@ -14,9 +14,9 @@
 	</div>
 	<div class="buttons">
 		<div (click)="showCreateModal()" class="button create-button">Новый документ</div>
-		<div (click)="showPartners()" [ngClass]="{'active' : partnersActive}" class="button grey">Расход</div>
+		<div (click)="showExpenseDocuments()" [ngClass]="{'active' : expenseActive}" class="button grey">Расход</div>
 		<!--<a [routerLink]="['/parties']" [queryParams]="{type:'client'}" queryParamsHandling="merge">-->
-		<div (click)="showClients()" [ngClass]="{'active' : clientsActive}" class="button grey">Доход</div>
+		<div (click)="showIncomeDocuments()" [ngClass]="{'active' : incomeActive}" class="button grey">Доход</div>
 	</div>
 </div>
 <documents-table (eventEmitter)="showEditModal($event)"></documents-table>

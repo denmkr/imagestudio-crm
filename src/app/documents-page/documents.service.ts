@@ -60,27 +60,61 @@ export class DocumentsService {
     
   }
 
-  getDocumentsByParams(type: string, contact: string, search: string, page: string) {
+  getDocumentsByParams(category: string, contact: string, search: string, page: string) {
 
     let httpParams = new HttpParams();
-    if (type != null && type != undefined) { httpParams = httpParams.set('kind', type); }
+    if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
-    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '15');
+    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '5');
 
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
     .map(result => {
       result.documents.map(document => {
         switch (document.category) {
-          case "state":
-            document.category = "Государство";
+          case "spending":
+            document.category = "Расход";
             break;
-          case "business":
-            document.category = "Бизнес";
+          case "income":
+            document.category = "Доход";
             break;
-          case "individual":
-            document.category = "Частное лицо";
+          default:
+            break;
+        }
+
+        switch (document.kind) {
+          case "act":
+            document.kind = "Акт";
+            break;
+          case "layout":
+            document.kind = "Макет";
+            break;
+          case "check":
+            document.kind = "Счет";
+            break;
+          case "agreement":
+            document.kind = "Договор";
+            break;
+          case "invoice":
+            document.kind = "Накладная";
+            break;
+          case "other":
+            document.kind = "Прочее";
+            break;
+          case "offer":
+            document.kind = "Коммерческое предложение";
+            break;
+          default:
+            break;
+        }
+
+        switch (document.status) {
+          case "pending":
+            document.status = "Не оплачено";
+            break;
+          case "complete":
+            document.status = "Оплачено";
             break;
           default:
             break;
@@ -89,13 +123,11 @@ export class DocumentsService {
 
       let documents = result.documents.map(document => ({
         id: document.id,
-        author: document.user.first_name + " " + document.user.last_name,
-        organization: document.organization.name,
-        contact: document.contact_name,
+        organization: document.counterparty.organization.name,
         category: document.category,
-        position: document.position,
-        email: document.email,
-        contact_phone: document.contact_phone,
+        type: document.kind,
+        number: document.number,
+        status: document.status,
         comment: document.comment
       }));
 

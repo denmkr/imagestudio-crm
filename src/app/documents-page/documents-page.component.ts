@@ -20,8 +20,8 @@ export class DocumentsPageComponent implements OnInit {
   @ViewChild(DocumentsSearchComponent) documentsSearchComponent: DocumentsSearchComponent;
 
   @HostBinding('class.active')
-  partnersActive: boolean = false;
-  clientsActive: boolean = false;
+  incomeActive: boolean = false;
+  expenseActive: boolean = false;
   filersActive: boolean = false;
 
   title = "Документы";
@@ -31,8 +31,8 @@ export class DocumentsPageComponent implements OnInit {
   ngOnInit() { 
     this.activatedRoute.queryParams.subscribe(params => {
         let type = params['type'];
-        if (type == "client") this.clientsActive = true;
-        if (type == "partner") this.partnersActive = true;
+        if (type == "client") this.expenseActive = true;
+        if (type == "partner") this.incomeActive = true;
     });
   }
 
@@ -52,33 +52,33 @@ export class DocumentsPageComponent implements OnInit {
     this.filersActive = !this.filersActive;
   }
 
-  showClients() {
-    if (!this.clientsActive) {
-      this.documentsTableComponent.showDocumentsByType("client");
-      this.clientsActive = true;
-      this.partnersActive = false;
-      this.router.navigate(['/documents'], { queryParams: { type: "client", page: "1" }, queryParamsHandling: 'merge' });
+  showExpenseDocuments() {
+    if (!this.expenseActive) {
+      this.documentsTableComponent.showDocumentsByCategory("spending");
+      this.expenseActive = true;
+      this.incomeActive = false;
+      this.router.navigate(['/documents'], { queryParams: { category: "spending", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
-      this.documentsTableComponent.showDocumentsByType(null);
-      this.clientsActive = false;
-      this.partnersActive = false;
-      this.router.navigate(['/documents'], { queryParams: { type: null, page: "1" }, queryParamsHandling: 'merge' });
+      this.documentsTableComponent.showDocumentsByCategory(null);
+      this.expenseActive = false;
+      this.incomeActive = false;
+      this.router.navigate(['/documents'], { queryParams: { category: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
-  showPartners() {
-    if (!this.partnersActive) {
-      this.documentsTableComponent.showDocumentsByType("partner");
-      this.partnersActive = true;
-      this.clientsActive = false;
-      this.router.navigate(['/documents'], { queryParams: { type: "partner", page: "1" }, queryParamsHandling: 'merge' });
+  showIncomeDocuments() {
+    if (!this.incomeActive) {
+      this.documentsTableComponent.showDocumentsByCategory("income");
+      this.incomeActive = true;
+      this.expenseActive = false;
+      this.router.navigate(['/documents'], { queryParams: { category: "income", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
-      this.documentsTableComponent.showDocumentsByType(null);
-      this.clientsActive = false;
-      this.partnersActive = false;
-      this.router.navigate(['/documents'], { queryParams: { type: null, page: "1" }, queryParamsHandling: 'merge' });
+      this.documentsTableComponent.showDocumentsByCategory(null);
+      this.expenseActive = false;
+      this.incomeActive = false;
+      this.router.navigate(['/documents'], { queryParams: { category: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
