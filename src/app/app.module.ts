@@ -33,6 +33,10 @@ import { DocumentsEditModalWindowComponent } from './documents-page/documents-ed
 import { DocumentsTablePaginationComponent } from './documents-page/documents-table/documents-table-pagination/documents-table-pagination.component';
 import { DocumentsAddFormComponent } from './documents-page/documents-add-modal-window/documents-add-form/documents-add-form.component';
 import { DocumentsEditFormComponent } from './documents-page/documents-edit-modal-window/documents-edit-form/documents-edit-form.component';
+import { DealsPageComponent } from './deals-page/deals-page.component';
+import { DealsTableComponent } from './deals-page/deals-table/deals-table.component';
+import { DealsTablePaginationComponent } from './deals-page/deals-table/deals-table-pagination/deals-table-pagination.component';
+import { DealsSearchComponent } from './deals-page/deals-search/deals-search.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +59,11 @@ import { DocumentsEditFormComponent } from './documents-page/documents-edit-moda
     DocumentsEditModalWindowComponent,
     DocumentsTablePaginationComponent,
     DocumentsAddFormComponent,
-    DocumentsEditFormComponent
+    DocumentsEditFormComponent,
+    DealsPageComponent,
+    DealsTableComponent,
+    DealsTablePaginationComponent,
+    DealsSearchComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

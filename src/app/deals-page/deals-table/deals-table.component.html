@@ -1,0 +1,27 @@
+<table>
+  <thead>
+    <tr>
+      <th>Клиент</th>
+      <th>Номер</th>
+      <th>Время</th>
+      <th>Наименования</th>
+      <th>Дедлайн</th>
+      <th>Сумма</th>
+      <th>Прибыль</th>
+      <th>Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deal of deals" (click)="showEditModal(deal)">
+      <td>{{ deal.organization }}</td>
+      <td>{{ deal.number }}</td>
+      <td>23.05</td>
+      <td><div class="square orange">{{ deal.category }}</div></td>
+      <td>{{ deal.order }}</td>
+      <td><div class="file"><img src=""><a>2Mb</a></div></td>
+      <td>{{ deal.order }}</td>
+      <td><div class="square purple">{{ deal.status }}</div></td>
+    </tr>
+  </tbody>
+</table>
+<deals-table-pagination (eventEmitter)="showDealsByPage($event)"></deals-table-pagination>

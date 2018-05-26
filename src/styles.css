@@ -72,10 +72,22 @@ input {
 	width: 25%;
 }
 
+.col-4 {
+	display: inline-block;
+	vertical-align: top;
+	width: 33.3%;
+}
+
 .col-6 {
 	display: inline-block;
 	vertical-align: top;
 	width: 50%;
+}
+
+.col-8 {
+	display: inline-block;
+	vertical-align: top;
+	width: 66.6%;
 }
 
 .col-9 {

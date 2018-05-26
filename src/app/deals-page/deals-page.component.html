@@ -1,0 +1,33 @@
+<div class="top-block">
+	<div class="row middle">
+		<div class="col-6 left">
+			<h1 class="title">{{title}}</h1>
+		</div>
+		<div class="col-6 right">
+			<div [ngClass]="{'active' : filersActive}" class="filters">
+				<deals-search (filterEmitter)="updateTableByFilterForm($event)"></deals-search>
+			</div>
+    		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
+		</div>
+	</div>
+	<div class="row middle">
+		<div class="col-8 left">
+			<div class="buttons">
+				<div class="button create-button">Создать заказ</div>
+				<div (click)="showNewDeals()" [ngClass]="{'active' : newActive}" class="button grey">Новое</div>
+				<div (click)="showLeadDeals()" [ngClass]="{'active' : leadActive}" class="button grey">Лид</div>
+				<div (click)="showWorkDeals()" [ngClass]="{'active' : workActive}" class="button grey">В работе</div>
+				<div (click)="showDebtDeals()" [ngClass]="{'active' : debtActive}" class="button grey">Долг</div>
+				<div (click)="showDoneDeals()" [ngClass]="{'active' : doneActive}" class="button grey">Сделано</div>
+				<div (click)="showDumbDeals()" [ngClass]="{'active' : dumbActive}" class="button grey">Слив</div>
+			</div>
+		</div>
+		<div class="col-4 right">
+			<div class="own">
+				<div (click)="showMyDeals()" [ngClass]="{'active' : mineActive}" class="item">Мои</div>
+				<div (click)="showAllDeals()" [ngClass]="{'active' : allActive}" class="item">Все</div>
+			</div>
+		</div>
+	</div>
+</div>
+<deals-table (eventEmitter)="showEditModal($event)"></deals-table>

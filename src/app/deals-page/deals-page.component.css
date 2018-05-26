@@ -1,0 +1,19 @@
+.own {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.own .item {
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: 700;
+	color: #bbb;
+	margin-left: 10px;
+	border-bottom: 2px solid transparent;
+	cursor: pointer;
+}
+
+.own .item.active {
+	color: #777;
+	border-color: #777;
+}

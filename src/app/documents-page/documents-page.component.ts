@@ -30,9 +30,9 @@ export class DocumentsPageComponent implements OnInit {
 
   ngOnInit() { 
     this.activatedRoute.queryParams.subscribe(params => {
-        let type = params['type'];
-        if (type == "client") this.expenseActive = true;
-        if (type == "partner") this.incomeActive = true;
+        let category = params['category'];
+        if (category == "spending") this.expenseActive = true;
+        if (category == "income") this.incomeActive = true;
     });
   }
 

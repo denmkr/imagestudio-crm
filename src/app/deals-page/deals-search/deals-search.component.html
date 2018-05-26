@@ -1,0 +1,3 @@
+<form [formGroup]="filterForm" (ngSubmit)="updateDeals()">
+	<input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateDeals()">
+</form>
