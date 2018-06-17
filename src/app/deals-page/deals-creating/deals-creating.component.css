@@ -1,0 +1,23 @@
+.top-block .back img {
+	width: 8px;
+	cursor: pointer;
+}
+
+.top-block .back {
+	margin-right: 15px;
+}
+
+.top-block .back, .top-block .title {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.top-block .title {
+	font-size: 22px;
+	margin-top: -4px;
+}
+
+.cancel-button {
+	font-weight: 700;
+	color: #777;
+}

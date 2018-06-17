@@ -17,3 +17,7 @@
 	color: #777;
 	border-color: #777;
 }
+
+.top-block .buttons .button.create-button {
+	background: #111;
+}

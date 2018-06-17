@@ -13,7 +13,7 @@
 	<div class="row middle">
 		<div class="col-8 left">
 			<div class="buttons">
-				<div class="button create-button">Создать заказ</div>
+				<div routerLink="{{creatingLink}}" class="button create-button">Создать заказ</div>
 				<div (click)="showNewDeals()" [ngClass]="{'active' : newActive}" class="button grey">Новое</div>
 				<div (click)="showLeadDeals()" [ngClass]="{'active' : leadActive}" class="button grey">Лид</div>
 				<div (click)="showWorkDeals()" [ngClass]="{'active' : workActive}" class="button grey">В работе</div>

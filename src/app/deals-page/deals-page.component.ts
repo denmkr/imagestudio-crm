@@ -28,6 +28,7 @@ export class DealsPageComponent implements OnInit {
   allActive: boolean = false;
 
   title = "Сделки";
+  creatingLink = "/deals/create";
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 

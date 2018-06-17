@@ -7,6 +7,26 @@ import 'rxjs/add/operator/map';
 export class DealsService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  getOrganizations() {
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/")
+    .map(result => {
+      return result.organizations.map(organization => ({
+        id: organization.id,
+        text: organization.name
+      }))
+    });
+  }
+
+  createOrganization(name: string) {
+    let httpParams = new HttpParams();
+    if (name != null && name != undefined) { httpParams = httpParams.set('name', name); }
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', { params: httpParams }).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+  }
+
   removeDeal(id: string) {
     this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/deals/' + id).subscribe(
       res => { console.log(res) },

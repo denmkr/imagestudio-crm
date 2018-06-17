@@ -37,6 +37,8 @@ import { DealsPageComponent } from './deals-page/deals-page.component';
 import { DealsTableComponent } from './deals-page/deals-table/deals-table.component';
 import { DealsTablePaginationComponent } from './deals-page/deals-table/deals-table-pagination/deals-table-pagination.component';
 import { DealsSearchComponent } from './deals-page/deals-search/deals-search.component';
+import { DealsCreatingComponent } from './deals-page/deals-creating/deals-creating.component';
+import { DealsCreatingFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-creating-form.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { DealsSearchComponent } from './deals-page/deals-search/deals-search.com
     DealsPageComponent,
     DealsTableComponent,
     DealsTablePaginationComponent,
-    DealsSearchComponent
+    DealsSearchComponent,
+    DealsCreatingComponent,
+    DealsCreatingFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,
