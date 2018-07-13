@@ -1,6 +1,7 @@
-import { Component, OnInit, EventEmitter, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 
 @Component({
   selector: 'parties-add-form',
@@ -72,7 +73,7 @@ export class PartiesAddFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer) { }
+  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createParty(event) {
     if (this.newPartyForm.controls.email.valid) {
@@ -92,12 +93,32 @@ export class PartiesAddFormComponent implements OnInit {
   }
 
   getAllOrganizations() {
-    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations; });
+    // this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations; });
+  }
+
+  organizationsTypeahead = new EventEmitter<string>();
+  serverSideFilterItems = [];
+
+  private serverSideSearch() {
+    this.organizationsTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.partiesService.getOrganizations(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.organizations = x;
+    }, (err) => {
+        console.log(err);
+        this.organizations = [];
+    });
   }
 
   ngOnInit() {
+
+    //this.partiesService.getOrganizations("auth").subscribe(organizations => { this.organizations = organizations; });
+    this.serverSideSearch();
  
-    this.getAllOrganizations();
+    // this.getAllOrganizations();
 
   	this.email = new FormControl("", [
   	  Validators.required, 
@@ -142,7 +163,7 @@ export class PartiesAddFormComponent implements OnInit {
   }
 
   onChange(change) {
-    console.log(this.type.value);
+    // console.log(this.type.value);
   }
 
 }

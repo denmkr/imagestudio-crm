@@ -23,7 +23,22 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [addTag]="true" [typeahead]="organizationsTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  No data found for "{{searchTerm}}"
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Fetching data for "{{searchTerm}}"
+              </div>
+          </ng-template>
         </ng-select>
         <!--
         <div class="select-add-button">

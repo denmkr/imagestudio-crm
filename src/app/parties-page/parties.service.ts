@@ -7,8 +7,11 @@ import 'rxjs/add/operator/map';
 export class PartiesService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getOrganizations() {
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/")
+  getOrganizations(search) {
+    let httpParams = new HttpParams();
+    if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
+
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/", { params: httpParams })
     .map(result => {
       return result.organizations.map(organization => ({
         id: organization.id,
@@ -100,7 +103,6 @@ export class PartiesService {
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })
     .map(result => {
       result.counterparties.map(party => {
-        console.log(party);
         switch (party.category) {
           case "state":
             party.categoryName = "Государство";
