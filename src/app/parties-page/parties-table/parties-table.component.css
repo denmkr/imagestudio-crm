@@ -18,8 +18,11 @@
 	font-size: 12px;
 	color: #fff;
 	font-weight: 700;
+	text-transform: capitalize;
+	margin-right: 2px;
 }
 
 .additional-attributes .position {
 	color: #ababab;
 }
+

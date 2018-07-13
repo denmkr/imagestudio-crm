@@ -60,6 +60,12 @@ export class PartiesTableComponent {
     );
   }
 
+  refreshParties() {
+    if (params['page'] != null && params['page'] != undefined) page = params['page'];
+    else page = 1;
+    this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, page.toString()).subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
+  }
+
   showAllParties() {
     this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, "1").subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
   }

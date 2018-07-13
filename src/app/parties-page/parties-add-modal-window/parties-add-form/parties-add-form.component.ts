@@ -12,6 +12,7 @@ export class PartiesAddFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
 
+  /*
   @HostListener('document:keyup', ['$event'])
   handleClick(event: Event) {
     var element =  document.getElementsByClassName('ui-select-choices')[0];
@@ -22,6 +23,7 @@ export class PartiesAddFormComponent implements OnInit {
       this.activeClass = true;
     }
   }
+  */
 
   public selects = [
     {items: "types", name: "type", placeholder: "Тип", id: "typeSelect"},
@@ -75,6 +77,7 @@ export class PartiesAddFormComponent implements OnInit {
   createParty(event) {
     if (this.newPartyForm.controls.email.valid) {
       this.newPartyForm.controls.organization;
+  
   	  this.partiesService.createNewParty(this.newPartyForm.get("type").value, this.newPartyForm.get("category").value, 
       this.newPartyForm.get("organization").value, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
       this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value);
@@ -89,7 +92,7 @@ export class PartiesAddFormComponent implements OnInit {
   }
 
   getAllOrganizations() {
-    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
+    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations; });
   }
 
   ngOnInit() {
@@ -133,6 +136,13 @@ export class PartiesAddFormComponent implements OnInit {
       phone: this.phone,
       comment: this.comment,
     });
+
+    this.newPartyForm.reset();
+
+  }
+
+  onChange(change) {
+    console.log(this.type.value);
   }
 
 }

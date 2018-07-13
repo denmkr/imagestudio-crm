@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 html, body {
     font-family: 'Open Sans', sans-serif;
@@ -29,7 +30,7 @@ main .content > * {
 	display: block;
 }
 
-input {
+.input-field-block input {
 	border: 1px solid #ddd;
 	background: #fff;
 	box-shadow: none;
@@ -376,8 +377,8 @@ table tbody tr {
 }
 
 .modal .input-blocks ng-select {
-	border: 1px solid #fff;
-	background: #fff;
+	/*border: 1px solid #fff;*/
+	/*background: #fff;*/
 	box-shadow: none;
 	min-width: 350px;
 	display: inline-block;
@@ -493,3 +494,53 @@ table tbody tr {
 	margin-top: 30px;
 }
 
+.ng-select input {
+	line-height: 1.75;
+	padding: 0 !important;
+	min-width: 0 !important;
+}
+
+
+.select-blocks .ng-select.grey {
+	background: #555;
+	background-color: #555;
+}
+
+.select-blocks .ng-select.grey * {
+	background: #555 !important;
+	background-color: #555 !important;
+	color: #fff;
+}
+
+.select-blocks .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+	background-color: #2d4d8a !important;
+	color: #fff !important;
+}
+
+.select-blocks .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked .ng-option-label, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+	color: #fff !important;
+	background-color: #2d4d8a !important;
+}
+
+.ng-select .ng-select-container {
+	border-radius: 0;
+	border: none;
+	box-shadow: none !important;
+}
+
+.ng-dropdown-panel {
+	border: none;
+	border-radius: 0;
+}
+
+.ng-select#typeSelect {
+	width: 100px;
+}
+
+.ng-select#categorySelect {
+	width: 150px;
+}
+
+.ng-select .ng-clear-wrapper {
+	margin-top: 2px;
+}

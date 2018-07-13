@@ -72,10 +72,10 @@ export class PartiesEditFormComponent implements OnInit {
 
   updateValues(party) {
     this.party = party;
-    //this.type.setValue(party.type);
-    //this.category.setValue(party.category);
+    this.type.setValue(party.type);
+    this.category.setValue(party.category);
+    this.organization.setValue(party.organization_id);
     this.email.setValue(party.email);
-    // this.organization.setValue(party.organization);
     this.contact.setValue(party.contact);
     this.position.setValue(party.position);
     this.phone.setValue(party.contact_phone);

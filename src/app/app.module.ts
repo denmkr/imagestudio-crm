@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'ng2-select';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+/*import { SelectModule } from 'ng2-select';*/
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
@@ -76,7 +78,8 @@ import { DealsCreatingFormComponent } from './deals-page/deals-creating/deals-cr
     BrowserAnimationsModule,
     HttpModule,
     ReactiveFormsModule,
-    SelectModule,
+    /*SelectModule,*/
+    NgSelectModule,
     routing
   ],
   providers: [

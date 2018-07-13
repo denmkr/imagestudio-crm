@@ -100,15 +100,16 @@ export class PartiesService {
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })
     .map(result => {
       result.counterparties.map(party => {
+        console.log(party);
         switch (party.category) {
           case "state":
-            party.category = "Государство";
+            party.categoryName = "Государство";
             break;
           case "business":
-            party.category = "Бизнес";
+            party.categoryName = "Бизнес";
             break;
           case "individual":
-            party.category = "Частное лицо";
+            party.categoryName = "Частное лицо";
             break;
           default:
             break;
@@ -117,10 +118,13 @@ export class PartiesService {
 
       let parties = result.counterparties.map(party => ({
         id: party.id,
-        author: party.user.first_name + " " + party.user.last_name,
+        author: party.user.first_name
         organization: party.organization.name,
+        organization_id: party.organization.id,
         contact: party.contact_name,
+        type: party.kind,
         category: party.category,
+        categoryName: party.categoryName,
         position: party.position,
         email: party.email,
         contact_phone: party.contact_phone,

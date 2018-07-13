@@ -1,19 +1,21 @@
 <form [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
+<!--
+  <ng-select #typeSelect [items]="types"
+        bindLabel="text"
+        bindValue="id"
+        (change)="onChange($event)"
+        formControlName="type"
+        placeholder="Тип"
+        notFoundText="Не найдено">
+  </ng-select>
+-->
+
+
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
-        (data)="select.designation=($event.id)">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
-      <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
-
-      <!--
-      <select #{{select.id}} (change)="updateParties()">
-        <option *ngFor="let item of this[select.items]" [value]="item">
-          {{item}}
-        </option>
-      </select>
-    -->
     </div>
   </div>
 
@@ -21,14 +23,13 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
-          (data)="select.designation=($event.id)">
+        <ng-select #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
         </ng-select>
+        <!--
         <div class="select-add-button">
           <div [ngClass]="{'active' : activeClass}" class="button" (click)="createOrganization()">Добавить</div>
         </div>
-
-        <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
+      -->
       </div>
     </div>
 
