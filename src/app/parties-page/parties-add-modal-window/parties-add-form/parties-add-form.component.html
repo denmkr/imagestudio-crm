@@ -1,4 +1,4 @@
-<form [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
 <!--
   <ng-select #typeSelect [items]="types"
         bindLabel="text"
@@ -9,8 +9,6 @@
         notFoundText="Не найдено">
   </ng-select>
 -->
-
-
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -23,7 +21,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [addTag]="true" [typeahead]="organizationsTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]="organizationsTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -31,12 +29,12 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  No data found for "{{searchTerm}}"
+                  Не найдено для "{{searchTerm}}"
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Fetching data for "{{searchTerm}}"
+                  Загрузка "{{searchTerm}}"
               </div>
           </ng-template>
         </ng-select>

@@ -21,13 +21,11 @@ export class PartiesService {
   }
 
   createOrganization(name: string) {
-    let httpParams = new HttpParams();
-    if (name != null && name != undefined) { httpParams = httpParams.set('name', name); }
+    const params = {
+      name: name
+    };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', { params: httpParams }).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', params);
   }
 
   removeParty(id: string) {
@@ -83,10 +81,7 @@ export class PartiesService {
       }
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party);
     
   }
 

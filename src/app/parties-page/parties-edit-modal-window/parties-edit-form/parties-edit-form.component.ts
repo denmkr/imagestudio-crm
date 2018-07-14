@@ -1,6 +1,7 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 
 @Component({
   selector: 'parties-edit-form',
@@ -64,10 +65,10 @@ export class PartiesEditFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService) { }
+  constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
   getAllOrganizations() {
-    this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
+    this.partiesService.getOrganizations(this.party.organization).subscribe(organizations => { this.organizations = organizations });
   }
 
   updateValues(party) {
@@ -81,6 +82,7 @@ export class PartiesEditFormComponent implements OnInit {
     this.phone.setValue(party.contact_phone);
     this.comment.setValue(party.comment);
 
+    this.getAllOrganizations();
   }
 
   editParty(event) {
@@ -95,8 +97,25 @@ export class PartiesEditFormComponent implements OnInit {
     }
   }
 
+  organizationsTypeahead = new EventEmitter<string>();
+
+  private serverSideSearch() {
+    this.organizationsTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.partiesService.getOrganizations(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.organizations = x;
+    }, (err) => {
+        console.log(err);
+        this.organizations = [];
+    });
+  }
+
   ngOnInit() {
-    this.getAllOrganizations();
+
+    this.serverSideSearch();
 
   	this.email = new FormControl("", [
   	  Validators.required, 
@@ -135,6 +154,10 @@ export class PartiesEditFormComponent implements OnInit {
       phone: this.phone,
       comment: this.comment,
     });
+  }
+
+  addTag(name) {
+    return { id: name, text: name };
   }
 
 }

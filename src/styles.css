@@ -30,7 +30,7 @@ main .content > * {
 	display: block;
 }
 
-.input-field-block input {
+.input-field-block input, .filters input {
 	border: 1px solid #ddd;
 	background: #fff;
 	box-shadow: none;
@@ -40,6 +40,10 @@ main .content > * {
 	display: inline-block;
 	vertical-align: middle;
 	box-sizing: border-box;
+}
+
+.filters input {
+	min-width: 260px;
 }
 
 .left {
@@ -482,7 +486,23 @@ table tbody tr {
 	min-width: 120px;
 }
 
-.modal .input-blocks input.ng-invalid.ng-dirty:not(.ng-untouched) {
+.modal form .input-blocks input {
+	transition: border 0.2s linear;
+	border: none;
+	border-bottom: 2px solid transparent;
+}
+
+.modal form.validation ng-select.ng-invalid {
+	border-color: red;
+}
+
+.modal form ng-select {
+	transition: border 0.2s linear;
+	border: none;
+	border-bottom: 2px solid transparent;
+}
+
+.modal form.validation .input-blocks input.ng-invalid {
 	border-color: red;
 }
 

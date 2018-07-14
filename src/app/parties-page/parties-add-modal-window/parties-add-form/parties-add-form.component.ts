@@ -12,6 +12,9 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 export class PartiesAddFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
+  @HostBinding('class.validation') validationClass: boolean = false;
+
+  loading = false;
 
   /*
   @HostListener('document:keyup', ['$event'])
@@ -70,34 +73,49 @@ export class PartiesAddFormComponent implements OnInit {
   @Output() eventEmitter = new EventEmitter<boolean>();
 
   hideWindow() {
+    this.validationClass = false;
     this.eventEmitter.emit(true);
   }
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createParty(event) {
-    if (this.newPartyForm.controls.email.valid) {
-      this.newPartyForm.controls.organization;
-  
-  	  this.partiesService.createNewParty(this.newPartyForm.get("type").value, this.newPartyForm.get("category").value, 
-      this.newPartyForm.get("organization").value, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
-      this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value);
+    if (this.newPartyForm.valid) {
+      let organization_id = this.newPartyForm.get("organization").value;
       
-      this.newPartyForm.reset();
-      this.eventEmitter.emit(true);
+      if (isNaN(this.organization.value)) {
+        this.partiesService.createOrganization(this.organization.value).subscribe(result => {
+          organization_id = result.organization.id;
+
+          this.partiesService.createNewParty(this.newPartyForm.get("type").value, this.newPartyForm.get("category").value, 
+          organization_id, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
+          this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value).subscribe(
+            res => { 
+              this.newPartyForm.reset();
+              this.eventEmitter.emit(true); 
+            },
+            err => { console.log(err) }
+          );
+        }, err => { console.log(err); });
+      }
+      else {
+        this.partiesService.createNewParty(this.newPartyForm.get("type").value, this.newPartyForm.get("category").value, 
+        organization_id, this.newPartyForm.get("email").value, this.newPartyForm.get("contact").value,
+        this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value).subscribe(
+          res => { 
+            this.newPartyForm.reset();
+            this.eventEmitter.emit(true);
+          },
+          err => { console.log(err) }
+        );
+      }
+    }
+    else {
+      this.validationClass = true;
     }
   }
 
-  createOrganization() {
-    // this.partiesService.createOrganization();
-  }
-
-  getAllOrganizations() {
-    // this.partiesService.getOrganizations().subscribe(organizations => { this.organizations = organizations; });
-  }
-
   organizationsTypeahead = new EventEmitter<string>();
-  serverSideFilterItems = [];
 
   private serverSideSearch() {
     this.organizationsTypeahead.pipe(
@@ -117,8 +135,6 @@ export class PartiesAddFormComponent implements OnInit {
 
     //this.partiesService.getOrganizations("auth").subscribe(organizations => { this.organizations = organizations; });
     this.serverSideSearch();
- 
-    // this.getAllOrganizations();
 
   	this.email = new FormControl("", [
   	  Validators.required, 
@@ -138,7 +154,7 @@ export class PartiesAddFormComponent implements OnInit {
     ]);
     this.phone = new FormControl('', [
       Validators.required,
-      Validators.pattern("[0-9]*")
+      Validators.pattern("[ -()+0-9]*")
     ]);
     this.comment = new FormControl('', [
       Validators.required
@@ -159,7 +175,10 @@ export class PartiesAddFormComponent implements OnInit {
     });
 
     this.newPartyForm.reset();
+  }
 
+  addTag(name) {
+    return { id: name, text: name };
   }
 
   onChange(change) {
