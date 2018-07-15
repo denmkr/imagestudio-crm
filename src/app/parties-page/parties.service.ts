@@ -55,10 +55,7 @@ export class PartiesService {
       }
     };
 
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party);
     
   }
 

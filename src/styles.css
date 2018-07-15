@@ -520,7 +520,6 @@ table tbody tr {
 	min-width: 0 !important;
 }
 
-
 .select-blocks .ng-select.grey {
 	background: #555;
 	background-color: #555;
@@ -549,8 +548,16 @@ table tbody tr {
 }
 
 .ng-dropdown-panel {
-	border: none;
-	border-radius: 0;
+	box-shadow: none !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items {
+	margin-bottom: 0 !important;
+}
+
+.ng-dropdown-panel, .ng-dropdown-panel .ng-option {
+	border: none !important;
+	border-radius: 0 !important;
 }
 
 .ng-select#typeSelect {

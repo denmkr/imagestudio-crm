@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { PartiesService } from '../../parties.service';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
@@ -10,6 +10,8 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
   providers: [PartiesService]
 })
 export class PartiesEditFormComponent implements OnInit {
+
+  @HostBinding('class.validation') validationClass: boolean = false;
 
   public party;
 
@@ -62,6 +64,7 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   hideWindow() {
+    this.validationClass = false;
     this.eventEmitter.emit(true);
   }
 
@@ -86,14 +89,38 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   editParty(event) {
-    if (this.editPartyForm.controls.email.valid) {
-      this.editPartyForm.controls.organization;
-  	  this.partiesService.updateParty(this.party.id, this.editPartyForm.get("type").value, this.editPartyForm.get("category").value, 
-      this.editPartyForm.get("organization").value, this.editPartyForm.get("email").value, this.editPartyForm.get("contact").value,
-      this.editPartyForm.get("position").value, this.editPartyForm.get("phone").value, this.editPartyForm.get("comment").value);
-      
-      this.editPartyForm.reset();
-      this.eventEmitter.emit(true);
+    if (this.editPartyForm.valid) {
+      let organization_id = this.editPartyForm.get("organization").value;
+
+      if (isNaN(this.organization.value)) {
+        this.partiesService.createOrganization(this.organization.value).subscribe(result => {
+          organization_id = result.organization.id;
+
+          this.partiesService.updateParty(this.party.id, this.editPartyForm.get("type").value, this.editPartyForm.get("category").value, 
+          organization_id, this.editPartyForm.get("email").value, this.editPartyForm.get("contact").value,
+          this.editPartyForm.get("position").value, this.editPartyForm.get("phone").value, this.editPartyForm.get("comment").value).subscribe(
+            res => { 
+              this.editPartyForm.reset();
+              this.eventEmitter.emit(true);
+            },
+            err => { console.log(err) }
+          );
+        }, err => { console.log(err); });
+      }
+  	  else {
+        this.partiesService.updateParty(this.party.id, this.editPartyForm.get("type").value, this.editPartyForm.get("category").value, 
+        organization_id, this.editPartyForm.get("email").value, this.editPartyForm.get("contact").value, this.editPartyForm.get("position").value, 
+        this.editPartyForm.get("phone").value, this.editPartyForm.get("comment").value).subscribe(
+          res => { 
+            this.editPartyForm.reset();
+            this.eventEmitter.emit(true);
+          },
+          err => { console.log(err) }
+        );
+      }
+    }
+    else {
+      this.validationClass = true;
     }
   }
 
@@ -135,7 +162,7 @@ export class PartiesEditFormComponent implements OnInit {
     ]);
     this.phone = new FormControl('', [
       Validators.required,
-      Validators.pattern("[0-9]*")
+      Validators.pattern("[ -()+0-9]*")
     ]);
     this.comment = new FormControl('', [
       Validators.required

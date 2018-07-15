@@ -30,7 +30,7 @@ export class PartiesSearchComponent implements OnInit {
   updateParties() {
     // if (this.category.value === "all") this.category.setValue(null);
     if (this.search.value === "") this.search.setValue(null);
-    this.router.navigate(['/parties'], { queryParams: { search: this.search.value }, queryParamsHandling: 'merge' });
+    this.router.navigate(['/parties'], { queryParams: { search: this.search.value, page: "1" }, queryParamsHandling: 'merge' });
 
     this.filterEmitter.emit(this.filterForm);
   }

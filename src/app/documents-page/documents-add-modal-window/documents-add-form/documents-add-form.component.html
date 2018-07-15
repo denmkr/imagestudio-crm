@@ -2,8 +2,7 @@
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select #{{select.id}} [items]="this[select.items]" bindValue="value" placeholder="{{select.placeholder}}"
-        (data)="select.designation=($event.id)">
+      <ng-select #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}">
       </ng-select>
       <input type="hidden" [(ngModel)]="select.designation" formControlName="{{select.name}}" name="{{select.name}}">
     </div>
