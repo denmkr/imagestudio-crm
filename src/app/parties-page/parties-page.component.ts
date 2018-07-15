@@ -44,6 +44,10 @@ export class PartiesPageComponent implements OnInit {
     this.addModalWindowComponent.show();
   }
 
+  refreshTable() {
+    this.partiesTableComponent.refreshParties();
+  }
+
   showEditModal(party) {
     this.editModalWindowComponent.show(party);
   }

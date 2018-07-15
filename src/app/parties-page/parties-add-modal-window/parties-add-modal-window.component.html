@@ -1,5 +1,5 @@
 <div class="modal-container" [ngClass]="{'active' : activeClass}" (click)="hide()"></div>
 <div class="modal new-party-modal" [ngClass]="{'active' : activeClass}">
 	<div class="title">{{title}}</div>
- 	<parties-add-form (eventEmitter)="hide()"></parties-add-form>
+ 	<parties-add-form (eventEmitter)="hide()" (refreshTableEvent)="refresh()"></parties-add-form>
 </div>

@@ -1,5 +1,6 @@
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, Output, EventEmitter } from '@angular/core';
 import { PartiesEditFormComponent } from './parties-edit-form/parties-edit-form.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'parties-edit-modal-window',
@@ -11,16 +12,24 @@ export class PartiesEditModalWindowComponent implements OnInit {
   @ViewChild(PartiesEditFormComponent) partiesEditFormComponent: PartiesEditFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
+
   title = "Редактировать контрагента";
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
   }
 
+  refresh() {
+    this.refreshTableEvent.emit(true);
+  }
+
   show(party) {
-  	this.activeClass = true;
-    this.partiesEditFormComponent.updateValues(party);
+    if (party.author_id === this.authService.getUserId()) {
+      this.activeClass = true;
+      this.partiesEditFormComponent.updateValues(party);
+    }
   }
 
   hide() {

@@ -18,6 +18,7 @@ export class PartiesTableComponent {
 
   parties = [];
   currentType: string;
+  currentPage: string;
   // currentCategory: string;
   currentContact: string;
   currentSearch: string;
@@ -25,6 +26,7 @@ export class PartiesTableComponent {
   constructor(private partiesService: PartiesService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentType = params['type'];
+        this.currentPage = params['page'];
         // this.currentCategory = params['category'];
         this.currentContact = params['contact'];
         this.currentSearch = params['search'];
@@ -61,9 +63,8 @@ export class PartiesTableComponent {
   }
 
   refreshParties() {
-    if (params['page'] != null && params['page'] != undefined) page = params['page'];
-    else page = 1;
-    this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, page.toString()).subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
+    if (this.currentPage === null || this.currentPage === undefined || this.currentPage === "") this.currentPage = 1;
+    this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, this.currentPage.toString()).subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
   }
 
   showAllParties() {

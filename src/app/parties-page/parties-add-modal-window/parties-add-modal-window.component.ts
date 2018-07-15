@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
 import { PartiesAddFormComponent } from './parties-add-form/parties-add-form.component';
 
 @Component({
@@ -11,11 +11,17 @@ export class PartiesAddModalWindowComponent implements OnInit {
   @ViewChild(PartiesAddFormComponent) partiesAddFormComponent: PartiesAddFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
+
   title = "Новый контрагент";
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.refreshTableEvent.emit(true);
   }
 
   show() {

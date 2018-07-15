@@ -29,10 +29,7 @@ export class PartiesService {
   }
 
   removeParty(id: string) {
-    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    ); 
+    return this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id);
   }
 
   updateParty(id: string, type: string, category: string, organization: string, email: string, contact: string, 
@@ -112,7 +109,8 @@ export class PartiesService {
 
       let parties = result.counterparties.map(party => ({
         id: party.id,
-        author: party.user.first_name
+        author: party.user.first_name,
+        author_id: party.user.id,
         organization: party.organization.name,
         organization_id: party.organization.id,
         contact: party.contact_name,

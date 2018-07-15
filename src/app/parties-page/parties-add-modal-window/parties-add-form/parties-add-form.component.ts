@@ -71,6 +71,7 @@ export class PartiesAddFormComponent implements OnInit {
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   hideWindow() {
     this.validationClass = false;
@@ -92,7 +93,8 @@ export class PartiesAddFormComponent implements OnInit {
           this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value).subscribe(
             res => { 
               this.newPartyForm.reset();
-              this.eventEmitter.emit(true); 
+              this.refreshTableEvent.emit(true);
+              this.eventEmitter.emit(true);
             },
             err => { console.log(err) }
           );
@@ -104,6 +106,7 @@ export class PartiesAddFormComponent implements OnInit {
         this.newPartyForm.get("position").value, this.newPartyForm.get("phone").value, this.newPartyForm.get("comment").value).subscribe(
           res => { 
             this.newPartyForm.reset();
+            this.refreshTableEvent.emit(true);
             this.eventEmitter.emit(true);
           },
           err => { console.log(err) }

@@ -57,10 +57,18 @@ export class PartiesEditFormComponent implements OnInit {
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   removeParty() {
-    this.partiesService.removeParty(this.party.id);
-    this.eventEmitter.emit(true);
+    if (confirm("Удалить данного контрагента?")) {
+      this.partiesService.removeParty(this.party.id).subscribe(
+        res => { 
+          this.eventEmitter.emit(true);
+          this.refreshTableEvent.emit(true);
+        },
+        err => { console.log(err) }
+      ); 
+    }
   }
 
   hideWindow() {
@@ -70,7 +78,7 @@ export class PartiesEditFormComponent implements OnInit {
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
-  getAllOrganizations() {
+  getCurrentOrganization() {
     this.partiesService.getOrganizations(this.party.organization).subscribe(organizations => { this.organizations = organizations });
   }
 
@@ -85,7 +93,7 @@ export class PartiesEditFormComponent implements OnInit {
     this.phone.setValue(party.contact_phone);
     this.comment.setValue(party.comment);
 
-    this.getAllOrganizations();
+    this.getCurrentOrganization();
   }
 
   editParty(event) {
@@ -102,6 +110,7 @@ export class PartiesEditFormComponent implements OnInit {
             res => { 
               this.editPartyForm.reset();
               this.eventEmitter.emit(true);
+              this.refreshTableEvent.emit(true);
             },
             err => { console.log(err) }
           );
@@ -114,6 +123,7 @@ export class PartiesEditFormComponent implements OnInit {
           res => { 
             this.editPartyForm.reset();
             this.eventEmitter.emit(true);
+            this.refreshTableEvent.emit(true);
           },
           err => { console.log(err) }
         );
