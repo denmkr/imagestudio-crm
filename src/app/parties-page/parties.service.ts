@@ -25,11 +25,11 @@ export class PartiesService {
       name: name
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', params);
+    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', params);
   }
 
   removeParty(id: string) {
-    return this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id);
+    return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id);
   }
 
   updateParty(id: string, type: string, category: string, organization: string, email: string, contact: string, 
@@ -52,7 +52,7 @@ export class PartiesService {
       }
     };
 
-    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party);
+    return this.http.put<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party);
     
   }
 
@@ -75,7 +75,7 @@ export class PartiesService {
       }
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party);
+    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party);
     
   }
 

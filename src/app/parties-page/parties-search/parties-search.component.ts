@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, Route } from '@angular/router';
 import { PartiesPageComponent } from '../parties-page.component';
@@ -11,6 +11,7 @@ import { PartiesPageComponent } from '../parties-page.component';
 export class PartiesSearchComponent implements OnInit {
 
   @Output() filterEmitter = new EventEmitter<FormGroup>();
+  @HostBinding('class.active') showClearButtonClass: boolean = false;
 
   filterForm: FormGroup;
   search: FormControl;
@@ -27,7 +28,15 @@ export class PartiesSearchComponent implements OnInit {
 
   constructor(private formbuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router) { }
 
+  clearInput() {
+    this.filterForm.reset();
+    this.updateParties();
+  }
+
   updateParties() {
+    if (this.search.value != "" && this.search.value != undefined && this.search.value != null) this.showClearButtonClass = true;
+    else this.showClearButtonClass = false;
+
     // if (this.category.value === "all") this.category.setValue(null);
     if (this.search.value === "") this.search.setValue(null);
     this.router.navigate(['/parties'], { queryParams: { search: this.search.value, page: "1" }, queryParamsHandling: 'merge' });
@@ -48,6 +57,8 @@ export class PartiesSearchComponent implements OnInit {
         this.search.setValue(params['search']);
         // this.category.setValue(params['category']);
     });
+
+    if (this.search.value != "" && this.search.value != undefined && this.search.value != null) this.showClearButtonClass = true;
   }
 
 }

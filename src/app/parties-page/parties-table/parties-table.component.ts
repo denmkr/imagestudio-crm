@@ -63,8 +63,8 @@ export class PartiesTableComponent {
   }
 
   refreshParties() {
-    if (this.currentPage === null || this.currentPage === undefined || this.currentPage === "") this.currentPage = 1;
-    this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, this.currentPage.toString()).subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
+    if (this.currentPage === null || this.currentPage === undefined || this.currentPage === "") this.currentPage = "1";
+    this.partiesService.getPartiesByParams(this.currentType, this.currentContact, this.currentSearch, this.currentPage).subscribe(result => { this.parties = result[0]; this.partiesTablePaginationComponent.paginator = result[1];  });
   }
 
   showAllParties() {

@@ -1,5 +1,13 @@
 <form [formGroup]="filterForm" (ngSubmit)="updateParties()">
-	<input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateParties()">
+  <div class="input-container">
+    <input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateParties()">
+    <div [ngClass]="{'active' : showClearButtonClass}" (click)="clearInput()" class="clear-input">
+      <i class="material-icons">
+        close
+      </i>
+    </div>
+  </div>
+	
   <!--
 	<ng-select #categorySelect [items]="categories" bindValue="category" placeholder="Категория" (data)="categorySelect.designation=($event.id);" >
     </ng-select>

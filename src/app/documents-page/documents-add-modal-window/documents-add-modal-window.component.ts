@@ -11,7 +11,7 @@ export class DocumentsAddModalWindowComponent implements OnInit {
   @ViewChild(DocumentsAddFormComponent) documentsAddFormComponent: DocumentsAddFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
-  title = "Новый документ №3424";
+  title = "Новый документ";
 
   constructor() { }
 

@@ -1,0 +1,24 @@
+.input-container {
+	position: relative;
+}
+
+.input-container .clear-input {
+	position: absolute;
+	right: 10px;
+	top: 11px;
+	cursor: pointer;
+	display: none;
+}
+
+.input-container .clear-input.active {
+	display: block;
+}
+
+.input-container .clear-input i {
+	color: #333;
+	font-size: 16px;
+}
+
+.input-container input {
+	padding-right: 30px;
+}

@@ -19,11 +19,3 @@
   opacity: 0;
   cursor: pointer;
 }
-
-.ng-select#typeSelect {
-  width: 160px;
-}
-
-.ng-select#categorySelect {
-  width: 190px;
-}
