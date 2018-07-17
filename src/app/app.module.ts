@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 /*import { SelectModule } from 'ng2-select';*/
 import { NgSelectModule } from '@ng-select/ng-select';
 
+import { OnlyNumberDirective } from './directives/only-number.directive';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavComponent } from './nav/nav.component';
@@ -69,7 +70,8 @@ import { DealsCreatingFormComponent } from './deals-page/deals-creating/deals-cr
     DealsTablePaginationComponent,
     DealsSearchComponent,
     DealsCreatingComponent,
-    DealsCreatingFormComponent
+    DealsCreatingFormComponent,
+    OnlyNumberDirective
   ],
   imports: [
     LoadingBarHttpClientModule,

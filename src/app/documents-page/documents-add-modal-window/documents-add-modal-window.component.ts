@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
 import { DocumentsAddFormComponent } from './documents-add-form/documents-add-form.component';
 
 @Component({
@@ -11,11 +11,17 @@ export class DocumentsAddModalWindowComponent implements OnInit {
   @ViewChild(DocumentsAddFormComponent) documentsAddFormComponent: DocumentsAddFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
+
   title = "Новый документ";
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  refresh() {
+    this.refreshTableEvent.emit(true);
   }
 
   show() {
@@ -24,7 +30,7 @@ export class DocumentsAddModalWindowComponent implements OnInit {
 
   hide() {
     this.activeClass = false;
-    let timeoutClear = setTimeout(() => { this.documentsAddFormComponent.newDocumentForm.reset(); clearTimeout(timeoutClear); }, 300);
+    let timeoutClear = setTimeout(() => { this.documentsAddFormComponent.resetForm(); clearTimeout(timeoutClear); }, 300);
   }
   
 }

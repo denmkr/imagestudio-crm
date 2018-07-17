@@ -1,10 +1,11 @@
+
 table tr .square {
 	display: inline-block;
 	padding: 2px 5px;
 	color: #fff;
 	text-transform: uppercase;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 11px;
 }
 
 table tr .square.orange {
@@ -19,10 +20,34 @@ table tr .square.purple {
 	background: purple;
 }
 
+table tr .status {
+	min-width: 100px;
+}
+
 table tr .date {
 	color: #999;
+	min-width: 110px;
+}
+
+table tr .file {
+	min-width: 70px;
 }
 
 table tr .file a {
 	color: #999;
+	font-size: 12px;
+}
+
+table tr .file i, table tr .file a {
+	display: inline-block;
+	vertical-align: middle;
+} 
+
+table tr .file i {
+	font-size: 20px;
+	margin-right: 2px;
+}
+
+.additional-attributes .organization {
+	color: #ababab;
 }

@@ -13,7 +13,6 @@ export class PartiesAddFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
-
   loading = false;
 
   /*

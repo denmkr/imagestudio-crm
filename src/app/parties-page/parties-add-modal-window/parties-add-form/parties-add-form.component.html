@@ -1,14 +1,4 @@
 <form [ngClass]="{'validation' : validationClass}" [formGroup]="newPartyForm" (ngSubmit)="createParty($event)">
-<!--
-  <ng-select #typeSelect [items]="types"
-        bindLabel="text"
-        bindValue="id"
-        (change)="onChange($event)"
-        formControlName="type"
-        placeholder="Тип"
-        notFoundText="Не найдено">
-  </ng-select>
--->
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -38,11 +28,6 @@
               </div>
           </ng-template>
         </ng-select>
-        <!--
-        <div class="select-add-button">
-          <div [ngClass]="{'active' : activeClass}" class="button" (click)="createOrganization()">Добавить</div>
-        </div>
-      -->
       </div>
     </div>
 

@@ -1,5 +1,12 @@
 <form [formGroup]="filterForm" (ngSubmit)="updateDocuments()">
-	<input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateDocuments()">
+  <div class="input-container">
+    <input formControlName="search" name="search" type="text" placeholder="Поиск" (keyup)="updateDocuments()">
+    <div [ngClass]="{'active' : showClearButtonClass}" (click)="clearInput()" class="clear-input">
+      <i class="material-icons">
+        close
+      </i>
+    </div>
+  </div>
   <!--
 	<ng-select #categorySelect [items]="categories" bindValue="category" placeholder="Категория" (data)="categorySelect.designation=($event.id);" >
     </ng-select>

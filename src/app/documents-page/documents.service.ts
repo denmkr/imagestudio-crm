@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import 'rxjs/add/operator/map';
@@ -8,10 +8,7 @@ export class DocumentsService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   removeDocument(id: string) {
-    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    ); 
+    return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id);
   }
 
   updateDocument(id: string, type: string, category: string, organization: string, email: string, contact: string, 
@@ -41,23 +38,35 @@ export class DocumentsService {
     
   }
 
-  createNewDocument(type: string, category: string, counterparty: string, comment: string) {
+  generateUrlForFile(name: string, type: string) {
+    const file = {
+      file_name: name,
+      file_type: type
+    };
 
+    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/generate_presigned_url/', file);
+  }
+
+  createNewDocument(type: string, category: string, counterparty: string, orderNumber: string, url: string, comment: string) {
     const document = {
+      number: orderNumber,
       kind: type,
       category: category,
-      counterparty: counterparty,
+      url: url,
       comment: comment,
-      user: {
-        id: this.authService.getUserId()
+      counterparty: {
+        id: counterparty
       }
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/', document).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
-    
+    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/', document);
+  }
+
+  uploadfileAWSS3(presignedUrl: string, contentType: string, file: File) { 
+    let httpHeaders = new HttpHeaders({'Content-Type': contentType});
+    httpHeaders = httpHeaders.set('InterceptorSkipHeader', '');
+
+    return this.http.put<any>(presignedUrl, file, { headers: httpHeaders });
   }
 
   getDocumentsByParams(category: string, contact: string, search: string, page: string) {
@@ -66,7 +75,7 @@ export class DocumentsService {
     if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
-    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '5');
+    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
@@ -74,10 +83,10 @@ export class DocumentsService {
       result.documents.map(document => {
         switch (document.category) {
           case "spending":
-            document.category = "Расход";
+            document.categoryName = "Расход";
             break;
           case "income":
-            document.category = "Доход";
+            document.categoryName = "Доход";
             break;
           default:
             break;
@@ -85,25 +94,25 @@ export class DocumentsService {
 
         switch (document.kind) {
           case "act":
-            document.kind = "Акт";
+            document.kindName = "Акт";
             break;
           case "layout":
-            document.kind = "Макет";
+            document.kindName = "Макет";
             break;
           case "check":
-            document.kind = "Счет";
+            document.kindName = "Счет";
             break;
           case "agreement":
-            document.kind = "Договор";
+            document.kindName = "Договор";
             break;
           case "invoice":
-            document.kind = "Накладная";
+            document.kindName = "Накладная";
             break;
           case "other":
-            document.kind = "Прочее";
+            document.kindName = "Прочее";
             break;
-          case "offer":
-            document.kind = "Коммерческое предложение";
+          case "commercial_proposal":
+            document.kindName = "Коммерческое предложение";
             break;
           default:
             break;
@@ -111,10 +120,10 @@ export class DocumentsService {
 
         switch (document.status) {
           case "pending":
-            document.status = "Не оплачено";
+            document.statusName = "Не оплачено";
             break;
           case "complete":
-            document.status = "Оплачено";
+            document.statusName = "Оплачено";
             break;
           default:
             break;
@@ -124,11 +133,16 @@ export class DocumentsService {
       let documents = result.documents.map(document => ({
         id: document.id,
         organization: document.counterparty.organization.name,
+        counterparty: document.counterparty.contact_name,
+        counterparty_id: document.counterparty.id,
+        categoryName: document.categoryName,
         category: document.category,
+        typeName: document.kindName,
         type: document.kind,
         number: document.number,
-        status: document.status,
-        comment: document.comment
+        statusName: document.statusName,
+        comment: document.comment,
+        date: document.created_at
       }));
 
       return [documents, result.meta];

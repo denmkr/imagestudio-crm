@@ -20,12 +20,14 @@ export class DocumentsTableComponent {
   currentCategory: string;
   currentContact: string;
   currentSearch: string;
+  currentPage: string;
 
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentCategory = params['category'];
         this.currentContact = params['contact'];
         this.currentSearch = params['search'];
+        this.currentPage = params['page'];
     });
   }
 
@@ -40,6 +42,11 @@ export class DocumentsTableComponent {
       }
       else this.showAllDocuments();
     });
+  }
+
+  refreshDocuments() {
+    if (this.currentPage === null || this.currentPage === undefined || this.currentPage === "") this.currentPage = "1";
+    this.documentsService.getDocumentsByParams(this.currentCategory, this.currentContact, this.currentSearch, this.currentPage).subscribe(result => { this.documents = result[0]; this.documentsTablePaginationComponent.paginator = result[1];  });
   }
 
   showDocumentsByPage(page: number) {

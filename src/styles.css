@@ -385,6 +385,7 @@ table tbody tr {
 	/*background: #fff;*/
 	box-shadow: none;
 	min-width: 350px;
+	width: 350px;
 	display: inline-block;
 	vertical-align: middle;
 	box-sizing: border-box;
@@ -558,14 +559,6 @@ table tbody tr {
 .ng-dropdown-panel, .ng-dropdown-panel .ng-option {
 	border: none !important;
 	border-radius: 0 !important;
-}
-
-.ng-select#typeSelect {
-	width: 100px;
-}
-
-.ng-select#categorySelect {
-	width: 150px;
 }
 
 .ng-select .ng-clear-wrapper {

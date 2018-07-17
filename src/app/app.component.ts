@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { fadeAnimation } from './animations/fade.animation';
 
@@ -12,11 +13,16 @@ export class AppComponent {
 
 	private isAuth: boolean;
 
-	constructor(private authService: AuthService) { }
+	constructor(private authService: AuthService, private router: Router) { }
 
-	ngOnInit() { 
-
-	}
+    ngOnInit() {
+        this.router.events.subscribe((evt) => {
+            if (!(evt instanceof NavigationEnd)) {
+                return;
+            }
+            window.scrollTo(0, 0)
+        });
+    }
 
 	refresh() {
 	    this.isAuth = this.authService.isAuthenticated();
@@ -24,6 +30,6 @@ export class AppComponent {
 
 	public getRouterOutletState(outlet) {
 	    return outlet.isActivated ? outlet.activatedRoute : '';
-	  }
+	}
 
 }

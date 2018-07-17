@@ -1,5 +1,6 @@
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
 import { DocumentsEditFormComponent } from './documents-edit-form/documents-edit-form.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'documents-edit-modal-window',
@@ -11,16 +12,24 @@ export class DocumentsEditModalWindowComponent implements OnInit {
   @ViewChild(DocumentsEditFormComponent) documentsEditFormComponent: DocumentsEditFormComponent;
   @HostBinding('class.active') activeClass: boolean = false;
 
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
+
   title = "Редактировать документ";
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
   }
 
+  refresh() {
+    this.refreshTableEvent.emit(true);
+  }
+
   show(document) {
-  	this.activeClass = true;
-    this.documentsEditFormComponent.updateValues(document);
+    //if (document.author_id === this.authService.getUserId()) {
+      this.activeClass = true;
+      this.documentsEditFormComponent.updateValues(document);
+    //}
   }
 
   hide() {

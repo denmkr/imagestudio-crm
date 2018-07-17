@@ -1,7 +1,7 @@
 <table>
   <thead>
     <tr>
-      <th>Организация</th>
+      <th>Контрагент</th>
       <th>Тип</th>
       <th>Документ</th>
       <th>Номер</th>
@@ -14,15 +14,27 @@
   </thead>
   <tbody>
     <tr *ngFor="let document of documents" (click)="showEditModal(document)">
-      <td>{{ document.organization }}</td>
-      <td><div class="square orange">{{ document.category }}</div></td>
-      <td><div class="square green">{{ document.type }}</div></td>
-      <td>{{ document.number }}</td>
-      <td>{{ document.order }}</td>
-      <td><div class="file"><img src=""><a>2Mb</a></div></td>
+      <td>
+        <div>{{ document.counterparty }}</div>
+        <div class="additional-attributes">
+          <div class="organization">{{ document.organization }}</div>
+        </div>
+      </td>
+      <td><div class="square orange">{{ document.categoryName }}</div></td>
+      <td><div class="square green">{{ document.typeName }}</div></td>
+      <td>№{{ document.id }}</td>
+      <td>#{{ document.number }}</td>
+      <td>
+        <div class="file">
+          <i class="material-icons">
+            insert_drive_file
+          </i>
+          <a>Скачать</a>
+        </div>
+      </td>
       <td>{{ document.comment }}</td>
-      <td><div class="square purple">{{ document.status }}</div></td>
-      <td>12 нояб. 2017</td>
+      <td class="status"><div class="square purple">{{ document.statusName }}</div></td>
+      <td class="date">12 нояб. 2017</td>
     </tr>
   </tbody>
 </table>

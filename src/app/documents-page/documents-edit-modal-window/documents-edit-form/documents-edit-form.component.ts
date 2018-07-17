@@ -1,20 +1,27 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, ChangeDetectorRef, ElementRef, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
+import { PartiesService } from '../../../parties-page/parties.service';
 
 @Component({
   selector: 'documents-edit-form',
   templateUrl: './documents-edit-form.component.html',
   styleUrls: ['./documents-edit-form.component.css'],
-  providers: [DocumentsService]
+  providers: [DocumentsService, PartiesService]
 })
 export class DocumentsEditFormComponent implements OnInit {
 
   public document;
 
+  @HostBinding('class.validation') validationClass: boolean = false;
+  loading = false;
+
+  @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
+
   public selects = [
-    {items: "types", name: "type", placeholder: "Тип документа", id: "typeSelect"},
-    {items: "categories", name: "category", placeholder: "Категория", id: "categorySelect"}
+    {items: "types", name: "type", placeholder: "Тип документа", id: "docTypeSelect"},
+    {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"}
   ];
 
   public counterparties = [];
@@ -24,52 +31,75 @@ export class DocumentsEditFormComponent implements OnInit {
   ];
 
   public inputs = [
-    {name: "order", type: "text", title: "Заказ", placeholder: "Заказ", small: true},
+    {name: "orderNumber", type: "text", title: "Заказ", placeholder: "Номер", small: true, onlyNumber: true},
     {name: "comment", type: "text", placeholder: "Комментарий", big: true}
   ];
 
   public types = [
-    {text: 'Счет', id: 'invoice'}
+    {text: 'Счет', id: 'check'},
+    {text: 'Акт', id: 'act'},
+    {text: 'Договор', id: 'agreement'},
+    {text: 'Накладная', id: 'invoice'},
+    {text: 'Прочее', id: 'other'},
+    {text: 'Макет', id: 'layout'},
+    {text: 'Коммерческое предложение', id: 'offer'}
   ];
 
   public categories = [
-    {text: 'Расход', id: "expense"}, 
+    {text: 'Расход', id: "spending"}, 
     {text: 'Доход', id: "income"}
   ];
 
   editDocumentForm: FormGroup;
 
+  fileName: string;
+  fileType: string;
+
   type: FormControl;
   category: FormControl;
   counterparty: FormControl;
-  order: FormControl;
+  orderNumber: FormControl;
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
+  @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   removeDocument() {
-    this.documentsService.removeDocument(this.document.id);
-    this.eventEmitter.emit(true);
+    if (confirm("Удалить данный документ?")) {
+      this.documentsService.removeDocument(this.document.id).subscribe(
+        res => { 
+          this.eventEmitter.emit(true);
+          this.refreshTableEvent.emit(true);
+        },
+        err => { console.log(err) }
+      ); 
+    }
   }
 
   hideWindow() {
     this.eventEmitter.emit(true);
   }
 
-  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService) { }
+  getCurrentParty() {
+    this.partiesService.getPartiesBySearch(this.document.counterparty).subscribe(counterparties => { this.counterparties = counterparties });
+  }
+
+  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
   updateValues(document) {
     this.document = document;
-    //this.type.setValue(document.type);
-    //this.category.setValue(document.category);
-    // this.organization.setValue(document.organization);
+
+    this.type.setValue(document.type);
+    this.category.setValue(document.category);
+    this.counterparty.setValue(document.counterparty_id);
+    this.orderNumber.setValue(document.number);
     this.comment.setValue(document.comment);
 
+    this.getCurrentParty();
   }
 
-  editDocument(event) {
-    if (this.editDocumentForm.controls.email.valid) {
-      this.editDocumentForm.controls.organization;
+  editDocument() {
+    if (this.editDocumentForm.valid) {
   	  this.documentsService.updateDocument(this.document.id, this.editDocumentForm.get("type").value, this.editDocumentForm.get("category").value, 
       this.editDocumentForm.get("organization").value, this.editDocumentForm.get("email").value, this.editDocumentForm.get("contact").value,
       this.editDocumentForm.get("position").value, this.editDocumentForm.get("phone").value, this.editDocumentForm.get("comment").value);
@@ -79,9 +109,40 @@ export class DocumentsEditFormComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  partiesTypeahead = new EventEmitter<string>();
 
-  	this.type = new FormControl('', [
+  private serverSideSearch() {
+    this.partiesTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.partiesService.getPartiesBySearch(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.counterparties = x;
+    }, (err) => {
+        console.log(err);
+        this.counterparties = [];
+    });
+  }
+
+  onFileChange(event) {
+    if (event.target.files.length > 0) {
+      let file = event.target.files[0];
+      this.fileName = file.name;
+      this.fileType = file.type;
+
+      this.addFileButtonText.nativeElement.innerHTML = this.fileName;
+    }
+  }
+
+  addTag(name) {
+    return { id: name, text: name };
+  }
+
+  ngOnInit() {
+    this.serverSideSearch();
+
+    this.type = new FormControl('', [
       Validators.required
     ]);
     this.category = new FormControl('', [
@@ -90,8 +151,9 @@ export class DocumentsEditFormComponent implements OnInit {
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
-    this.order = new FormControl('', [
-      Validators.required
+    this.orderNumber = new FormControl('', [
+      Validators.required,
+      Validators.pattern("[0-9]*")
     ]);
     this.comment = new FormControl('', [
       Validators.required
@@ -101,7 +163,7 @@ export class DocumentsEditFormComponent implements OnInit {
       type: this.type,
       category: this.category,
       counterparty: this.counterparty,
-      order: this.order,
+      orderNumber: this.orderNumber,
       comment: this.comment
     });
   }

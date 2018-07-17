@@ -14,7 +14,12 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(public auth: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    
+
+    if (request.headers.has('InterceptorSkipHeader')) {
+      const headers = request.headers.delete('InterceptorSkipHeader');
+      return next.handle(request.clone({ headers }));
+    }
+
     request = request.clone({
       setHeaders: {
         authorization: `${this.auth.getToken()}`,

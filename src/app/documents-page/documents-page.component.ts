@@ -52,6 +52,10 @@ export class DocumentsPageComponent implements OnInit {
     this.filersActive = !this.filersActive;
   }
 
+  refreshTable() {
+    this.documentsTableComponent.refreshDocuments();
+  }
+  
   showExpenseDocuments() {
     if (!this.expenseActive) {
       this.documentsTableComponent.showDocumentsByCategory("spending");
