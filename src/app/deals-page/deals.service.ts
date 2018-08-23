@@ -135,7 +135,7 @@ export class DealsService {
         names = "";
         switch (order.status) {
           case "new":
-            order.status = "Новая заявка";
+            order.status = "Новое";
             break;
           case "lead":
             order.status = "Лид";
@@ -157,10 +157,8 @@ export class DealsService {
         };
 
         order.orders_positions.map(position => {
-          position.orders_items.map(item => {
-            if (names != "") names += ", ";
-            names += item.product.name;
-          });
+          if (names != "") names += ", ";
+          names += position.product.name;
         });
         order.names = names;
       });
@@ -168,12 +166,15 @@ export class DealsService {
       let deals = result.orders.map(order => ({
         id: order.id,
         names: order.names,
-        client: order.counterparty.organization.name,
+        organization: order.counterparty.organization.name,
+        client: order.counterparty.contact_name,
         number: order.number,
         status: order.status,
         price: order.price,
         profit: order.profit,
+        orders_positions: order.orders_positions,
         deadline: order.must_be_finished_at,
+        readiness: order.readiness
       }));
 
       return [deals, result.meta];

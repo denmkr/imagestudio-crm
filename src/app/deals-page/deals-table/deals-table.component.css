@@ -26,3 +26,87 @@ table tr .date {
 table tr .file a {
 	color: #999;
 }
+
+.additional-attributes {
+	margin-top: 2px;
+}
+
+.additional-attributes .date {
+	display: inline-block;
+	font-size: 12px;
+}
+
+.additional-attributes .number {
+	background: rgb(255, 121, 61);
+	display: inline-block;
+	padding: 3px 5px;
+	font-size: 12px;
+	color: #fff;
+	font-weight: 700;
+	margin-right: 4px;
+}
+
+.additional-attributes .client {
+	background: rgb(133, 212, 240);
+	display: inline-block;
+	padding: 3px 5px;
+	font-size: 12px;
+	color: #fff;
+	font-weight: 700;
+	text-transform: capitalize;
+	margin-right: 2px;
+}
+
+.additional-attributes .amount {
+	color: #ababab;
+}
+
+table tbody tr {
+	border-top: 12px solid #eef0ef;
+	border-bottom: 0;
+}
+
+table tbody tr:first-child {
+	border-top: 0;
+}
+
+table tbody tr:last-child {
+	border-bottom: 12px solid #eef0ef;
+}
+
+table tr.child-row {
+	border-width: 6px !important;
+	display: none;
+}
+
+table tr.child-row.show {
+	display: table-row;
+}
+
+table tr td.status {
+	min-width: 120px;
+	color: #777;
+}
+
+table tr td.status .square {
+	margin-right: 5px;
+}
+
+table tr td.arrow {
+	vertical-align: middle;
+}
+
+table tr td.arrow i {
+	color: #777;
+	font-size: 18px;
+}
+
+table tr td.arrow i.active {
+	-webkit-transform: rotate(180deg);
+	        transform: rotate(180deg);
+}
+
+table tr.child-row td:first-child, table tr.child-row td:nth-child(2) {
+	background: #eef0ef;
+}
+

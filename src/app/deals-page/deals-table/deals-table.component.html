@@ -1,9 +1,8 @@
 <table>
   <thead>
     <tr>
-      <th>Клиент</th>
-      <th>Номер</th>
-      <th>Время</th>
+      <th></th>
+      <th>Клиент, Номер, Время</th>
       <th>Наименования</th>
       <th>Дедлайн</th>
       <th>Сумма</th>
@@ -12,16 +11,41 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let deal of deals" (click)="showEditModal(deal)">
-      <td>{{ deal.client }}</td>
-      <td>{{ deal.number }}</td>
-      <td>{{ deal.time }}</td>
-      <td>{{ deal.names }}</td>
-      <td>{{ deal.deadline }}</td>
-      <td>{{ deal.price }}</td>
-      <td>{{ deal.profit }}</td>
-      <td><div class="square purple">{{ deal.status }}</div></td>
-    </tr>
+    <ng-container *ngFor="let deal of deals">
+      <tr id="deal{{ deal.id }}">
+        <td class="arrow">
+          <i (click)="revealDeal($event)" class="material-icons">
+          keyboard_arrow_down
+          </i>
+        </td>
+        <td>
+          <div>{{ deal.organization }}</div>
+          <div class="additional-attributes">
+            <div class="client">{{ deal.client }}</div>
+            <div class="number">{{ deal.number }}</div>
+            <div class="date">{{ deal.deadline }}</div>
+          </div>
+        </td>
+        <td>{{ deal.names }}</td>
+        <td>{{ deal.deadline }}</td>
+        <td>{{ deal.price }} Р</td>
+        <td>{{ deal.profit }} Р</td>
+        <td class="status"><div class="square purple">{{ deal.status }}</div>{{ deal.readiness }}40%</td>
+      </tr>
+      <tr id="childdeal{{ deal.id }}" *ngFor="let order_position of deal.orders_positions" class="child-row">
+        <td></td>
+        <td></td>
+        <td>{{ order_position.product.name }}
+          <div class="additional-attributes">
+            <div class="amount">{{ order_position.count }} шт.</div>
+          </div>
+        </td>
+        <td>{{ order_position.must_be_finished_at }}</td>
+        <td>{{ order_position.price }}</td>
+        <td>{{ order_position.profit }}</td>
+        <td class="status"><div class="square purple">В работе</div>40%</td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
 <deals-table-pagination (eventEmitter)="showDealsByPage($event)"></deals-table-pagination>

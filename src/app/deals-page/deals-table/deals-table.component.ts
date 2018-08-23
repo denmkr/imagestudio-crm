@@ -55,6 +55,18 @@ export class DealsTableComponent {
     );
   }
 
+  revealDeal(event) {
+    let id = event.target.parentNode.parentNode.id;
+    if (document.getElementById('child' + id).classList.contains('show')) {
+      document.getElementById('child' + id).classList.remove("show");
+      event.target.classList.remove("active");
+    }
+    else {
+      document.getElementById('child' + id).classList.add("show");
+      event.target.classList.add("active");
+    }
+  }
+
   showAllDeals() {
     this.dealsService.getDealsByParams(this.currentStatus, this.currentSearch, "1", this.currentUserId).subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
   }
