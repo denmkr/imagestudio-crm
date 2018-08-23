@@ -11,30 +11,21 @@ export class DocumentsService {
     return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id);
   }
 
-  updateDocument(id: string, type: string, category: string, organization: string, email: string, contact: string, 
-    position: string, phone: string, comment: string) {
+  updateDocument(id: string, type: string, category: string, counterparty: string, orderNumber: string, url: string, 
+    comment: string) {
 
     const document = {
-      id: id,
+      number: orderNumber,
       kind: type,
       category: category,
-      organization: {
-        id: organization
+      counterparty: {
+        id: counterparty
       },
-      email: email,
-      contact_name: contact,
-      position: position,
-      contact_phone: phone,
-      comment: comment,
-      user: {
-        id: this.authService.getUserId()
-      }
+      url: url,
+      comment: comment
     };
 
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id, document).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.put<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id, document);
     
   }
 
@@ -140,6 +131,7 @@ export class DocumentsService {
         typeName: document.kindName,
         type: document.kind,
         number: document.number,
+        url: document.url,
         statusName: document.statusName,
         comment: document.comment,
         date: document.created_at

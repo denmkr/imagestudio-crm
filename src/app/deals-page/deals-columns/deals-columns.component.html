@@ -1,0 +1,52 @@
+<div class="columns">
+	<div class="row">
+		<div class="col-2">
+			<div class="title">Новая заявка</div>
+			<div *ngFor="let deal of newDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Лид</div>
+			<div *ngFor="let deal of leadDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">В работе</div>
+			<div *ngFor="let deal of workDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Не оплачено</div>
+			<div *ngFor="let deal of debtDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Выполнено</div>
+			<div *ngFor="let deal of doneDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Слив</div>
+			<div *ngFor="let deal of dumbDeals" class="columns-row">
+			  <div class="name">{{ deal.names }}</div>
+			  <div class="client">{{ deal.client }}</div>
+			  <div class="date">{{ deal.deadline }}</div>
+			</div>
+		</div>
+	</div>
+</div>

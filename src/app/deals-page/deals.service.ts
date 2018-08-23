@@ -28,7 +28,7 @@ export class DealsService {
   }
 
   removeDeal(id: string) {
-    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/deals/' + id).subscribe(
+    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     ); 
@@ -54,7 +54,7 @@ export class DealsService {
       }
     };
 
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/deals/' + id, document).subscribe(
+    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, document).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -73,82 +73,107 @@ export class DealsService {
       }
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/deals/', document).subscribe(
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', document).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
     
   }
 
-  getDealsByParams(category: string, contact: string, search: string, page: string) {
-
+  getColumnDealsByParams(status: string, search: string, user_id: string) {
     let httpParams = new HttpParams();
-    if (category != null && category != undefined) { httpParams = httpParams.set('category', category); }
+    if (status != null && status != undefined) { httpParams = httpParams.set('status', status); }
+    if (user_id != null && user_id != undefined) { httpParams = httpParams.set('user_id', user_id); }
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
-    if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
-    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '5');
+    httpParams = httpParams.set('page[size]', '25');
 
-
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
-      result.documents.map(document => {
-        switch (document.category) {
-          case "spending":
-            document.category = "Расход";
-            break;
-          case "income":
-            document.category = "Доход";
-            break;
-          default:
-            break;
-        }
 
-        switch (document.kind) {
-          case "act":
-            document.kind = "Акт";
-            break;
-          case "layout":
-            document.kind = "Макет";
-            break;
-          case "check":
-            document.kind = "Счет";
-            break;
-          case "agreement":
-            document.kind = "Договор";
-            break;
-          case "invoice":
-            document.kind = "Накладная";
-            break;
-          case "other":
-            document.kind = "Прочее";
-            break;
-          case "offer":
-            document.kind = "Коммерческое предложение";
-            break;
-          default:
-            break;
-        }
+      let names;
 
-        switch (document.status) {
-          case "pending":
-            document.status = "Не оплачено";
-            break;
-          case "complete":
-            document.status = "Оплачено";
-            break;
-          default:
-            break;
-        }
+      result.orders.map(order => {
+        names = "";
+
+        order.orders_positions.map(position => {
+          position.orders_items.map(item => {
+            if (names != "") names += ", ";
+            names += item.product.name;
+          });
+        });
+        order.names = names;
       });
 
-      let deals = result.documents.map(document => ({
-        id: document.id,
-        organization: document.counterparty.organization.name,
-        category: document.category,
-        type: document.kind,
-        number: document.number,
-        status: document.status,
-        comment: document.comment
+      let deals = result.orders.map(order => ({
+        id: order.id,
+        names: order.names,
+        client: order.counterparty.organization.name,
+        deadline: order.must_be_finished_at
+      }));
+
+      return deals;
+
+    });
+
+  }
+
+  getDealsByParams(status: string, search: string, page: string, user_id: string) {
+
+    let httpParams = new HttpParams();
+    if (status != null && status != undefined) { httpParams = httpParams.set('status', status); }
+    if (user_id != null && user_id != undefined) { httpParams = httpParams.set('user_id', user_id); }
+    if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
+    if (page != null && page != undefined) httpParams = httpParams.set('page[number]', page);
+    if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
+
+
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    .map(result => {
+      let names;
+
+      result.orders.map(order => {
+        names = "";
+        switch (order.status) {
+          case "new":
+            order.status = "Новая заявка";
+            break;
+          case "lead":
+            order.status = "Лид";
+            break;
+          case "work":
+            order.status = "В работе";
+            break;
+          case "debt":
+            order.status = "Не оплачено";
+            break;
+          case "done":
+            order.status = "Выполнено";
+            break;
+          case "dumb":
+            order.status = "Слив";
+            break;
+          default:
+            break;
+        };
+
+        order.orders_positions.map(position => {
+          position.orders_items.map(item => {
+            if (names != "") names += ", ";
+            names += item.product.name;
+          });
+        });
+        order.names = names;
+      });
+
+      let deals = result.orders.map(order => ({
+        id: order.id,
+        names: order.names,
+        client: order.counterparty.organization.name,
+        number: order.number,
+        status: order.status,
+        price: order.price,
+        profit: order.profit,
+        deadline: order.must_be_finished_at,
       }));
 
       return [deals, result.meta];

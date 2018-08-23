@@ -13,13 +13,13 @@
   </thead>
   <tbody>
     <tr *ngFor="let deal of deals" (click)="showEditModal(deal)">
-      <td>{{ deal.organization }}</td>
+      <td>{{ deal.client }}</td>
       <td>{{ deal.number }}</td>
-      <td>23.05</td>
-      <td><div class="square orange">{{ deal.category }}</div></td>
-      <td>{{ deal.order }}</td>
-      <td><div class="file"><img src=""><a>2Mb</a></div></td>
-      <td>{{ deal.order }}</td>
+      <td>{{ deal.time }}</td>
+      <td>{{ deal.names }}</td>
+      <td>{{ deal.deadline }}</td>
+      <td>{{ deal.price }}</td>
+      <td>{{ deal.profit }}</td>
       <td><div class="square purple">{{ deal.status }}</div></td>
     </tr>
   </tbody>

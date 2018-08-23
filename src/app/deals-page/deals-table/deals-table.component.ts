@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 import { DealsService } from '../deals.service';
 import { DealsTablePaginationComponent } from './deals-table-pagination/deals-table-pagination.component';
@@ -17,15 +18,15 @@ export class DealsTableComponent {
   @Output() eventEmitter = new EventEmitter<any>();
 
   deals = [];
-  currentCategory: string;
-  currentContact: string;
+  currentStatus: string;
   currentSearch: string;
+  currentUserId: string;
 
-  constructor(private dealsService: DealsService, private activatedRoute: ActivatedRoute) { 
+  constructor(private dealsService: DealsService, private activatedRoute: ActivatedRoute, private authService: AuthService) { 
     this.activatedRoute.queryParams.subscribe(params => {
-        this.currentCategory = params['category'];
-        this.currentContact = params['contact'];
+        this.currentStatus = params['status'];
         this.currentSearch = params['search'];
+        this.currentUserId = params['author'];
     });
   }
 
@@ -35,6 +36,9 @@ export class DealsTableComponent {
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
+      if (this.currentUserId == "user") this.currentUserId = this.authService.getUserId();
+      else this.currentUserId = null;
+
       if (params['page'] != null && params['page'] != undefined) {
         this.showDealsByPage(params['page']);
       }
@@ -43,7 +47,7 @@ export class DealsTableComponent {
   }
 
   showDealsByPage(page: number) {
-    this.dealsService.getDealsByParams(this.currentCategory, this.currentContact, this.currentSearch, page.toString()).subscribe(
+    this.dealsService.getDealsByParams(this.currentStatus, this.currentSearch, page.toString(), this.currentUserId).subscribe(
       result => { 
         this.deals = result[0]; 
         this.dealsTablePaginationComponent.paginator = result[1]; 
@@ -52,18 +56,18 @@ export class DealsTableComponent {
   }
 
   showAllDeals() {
-    this.dealsService.getDealsByParams(this.currentCategory, this.currentContact, this.currentSearch, "1").subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
+    this.dealsService.getDealsByParams(this.currentStatus, this.currentSearch, "1", this.currentUserId).subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
   }
 
-  showDealsByPossess(own: string) {
-  	this.dealsService.getDealsByParams(own, this.currentContact, this.currentSearch, "1").subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
+  showDealsByPossess(user_id: string) {
+  	this.dealsService.getDealsByParams(this.currentStatus, this.currentSearch, "1", user_id).subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
   }
 
-  showDealsByCategory(category: string) {
-    this.dealsService.getDealsByParams(category, this.currentContact, this.currentSearch, "1").subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
+  showDealsByStatus(status: string) {
+    this.dealsService.getDealsByParams(status, this.currentSearch, "1", this.currentUserId).subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
   }
 
   showDealsByFilterForm(formGroup: FormGroup) {
-    this.dealsService.getDealsByParams(this.currentCategory, this.currentContact, formGroup.get("search").value, "1").subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
+    this.dealsService.getDealsByParams(this.currentStatus, formGroup.get("search").value, "1", this.currentUserId).subscribe(result => { this.deals = result[0]; this.dealsTablePaginationComponent.paginator = result[1];  });
   }
 }

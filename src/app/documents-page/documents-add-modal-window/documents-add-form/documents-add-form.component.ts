@@ -40,7 +40,7 @@ export class DocumentsAddFormComponent implements OnInit {
     {text: 'Накладная', id: 'invoice'},
     {text: 'Прочее', id: 'other'},
     {text: 'Макет', id: 'layout'},
-    {text: 'Коммерческое предложение', id: 'offer'}
+    {text: 'Коммерческое предложение', id: 'commercial_proposal'}
   ];
 
   public categories = [
@@ -76,6 +76,7 @@ export class DocumentsAddFormComponent implements OnInit {
 
         let types = this.fileType.split("/");
         let type = types[types.length - 1];
+        console.log(type);
 
         this.documentsService.generateUrlForFile(this.fileName, type).subscribe(
           res => { 

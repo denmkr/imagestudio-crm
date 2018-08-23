@@ -42,7 +42,7 @@ export class DocumentsEditFormComponent implements OnInit {
     {text: 'Накладная', id: 'invoice'},
     {text: 'Прочее', id: 'other'},
     {text: 'Макет', id: 'layout'},
-    {text: 'Коммерческое предложение', id: 'offer'}
+    {text: 'Коммерческое предложение', id: 'commercial_proposal'}
   ];
 
   public categories = [
@@ -100,12 +100,15 @@ export class DocumentsEditFormComponent implements OnInit {
 
   editDocument() {
     if (this.editDocumentForm.valid) {
-  	  this.documentsService.updateDocument(this.document.id, this.editDocumentForm.get("type").value, this.editDocumentForm.get("category").value, 
-      this.editDocumentForm.get("organization").value, this.editDocumentForm.get("email").value, this.editDocumentForm.get("contact").value,
-      this.editDocumentForm.get("position").value, this.editDocumentForm.get("phone").value, this.editDocumentForm.get("comment").value);
-      
-      this.editDocumentForm.reset();
-      this.eventEmitter.emit(true);
+  	  this.documentsService.updateDocument(this.document.id, this.type.value, this.category.value, this.counterparty.value, 
+            this.orderNumber.value, this.document.url, this.comment.value).subscribe(
+        res => { 
+          this.editDocumentForm.reset();
+          this.refreshTableEvent.emit(true);
+          this.eventEmitter.emit(true);
+        },
+        err => { console.log(err) }
+      );
     }
   }
 
