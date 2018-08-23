@@ -1,12 +1,14 @@
-import { Component, OnInit, EventEmitter, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, ViewChild, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
+import { PartiesService } from '../../../parties-page/parties.service';
 
 @Component({
   selector: 'deals-creating-form',
   templateUrl: './deals-creating-form.component.html',
   styleUrls: ['./deals-creating-form.component.css'],
-  providers: [DealsService]
+  providers: [DealsService, PartiesService]
 })
 export class DealsCreatingFormComponent implements OnInit {
 
@@ -26,37 +28,43 @@ export class DealsCreatingFormComponent implements OnInit {
   public organizations;
 
   public selects = [
-    {items: "status", name: "status", placeholder: "Статус", id: "statusSelect"},
-    
+    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
+    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect"},
   ];
 
   public selectInputs = [
-    {items: "users", name: "user", placeholder: "Ответственный", id: "userSelect"}
+    {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
   ];
 
-  public inputs = [
-    {name: "comment", type: "text", placeholder: "Комментарий", big: true}
+  public textAreas = [
+    {name: "comment", placeholder: "Комментарий к заказу", big: true}
   ];
 
-  public types = [
-    {text: 'Партнер', id: 'partner'}, 
-    {text: 'Клиент', id: 'client'}
+  public statuses = [
+    {text: 'Новое', id: 'new'}, 
+    {text: 'Лид', id: 'lead'},
+    {text: 'В работе', id: 'work'},
+    {text: 'Долг', id: 'debt'},
+    {text: 'Сделано', id: 'done'},
+    {text: 'Слив', id: 'dumb'}
   ];
 
-  public categories = [
-    {text: 'Государство', id: "state"}, 
-    {text: 'Бизнес', id: "business"},
-    {text: 'Частное лицо', id: "individual"}
+  public users = [
+    {text: 'Ильдан', id: "1"}, 
+    {text: 'Максим', id: "2"},
+    {text: 'Андрей', id: "3"}
   ];
 
   newDealForm: FormGroup;
 
-  type: FormControl;
-  category: FormControl;
+  status: FormControl;
   counterparty: FormControl;
+  user: FormControl;
   comment: FormControl;
 
-  constructor(public formbuilder: FormBuilder, private dealsService: DealsService, private elRef: ElementRef, private renderer: Renderer) { }
+  public counterparties = [];
+
+  constructor(public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
     if (this.newDealForm.controls.email.valid) {
@@ -67,37 +75,50 @@ export class DealsCreatingFormComponent implements OnInit {
     }
   }
 
-  createOrganization() {
-    // this.partiesService.createOrganization();
+  partiesTypeahead = new EventEmitter<string>();
+
+  private serverSideSearch() {
+    this.partiesTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.partiesService.getPartiesBySearch(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.counterparties = x;
+    }, (err) => {
+        console.log(err);
+        this.counterparties = [];
+    });
   }
 
-  getAllOrganizations() {
-    this.dealsService.getOrganizations().subscribe(organizations => { this.organizations = organizations });
+  addTag(name) {
+    return { id: name, text: name };
   }
 
   ngOnInit() {
- 
-    this.getAllOrganizations();
+    this.serverSideSearch();
 
-    this.category = new FormControl('', [
+    this.status = new FormControl('', [
       Validators.required
     ]);
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
-    this.comment = new FormControl('', [
+    this.user = new FormControl('', [
       Validators.required
     ]);
-    this.type = new FormControl('', [
+    this.comment = new FormControl('', [
       Validators.required
     ]);
 
   	this.newDealForm = new FormGroup({
-      type: this.type,
-      category: this.category,
-      counterparty: this.counterparty,
+      status: this.status,
+      user: this.user,
       comment: this.comment,
+      counterparty: this.counterparty
     });
+
+    this.newDealForm.reset();
   }
 
 }

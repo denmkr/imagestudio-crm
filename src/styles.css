@@ -276,11 +276,11 @@ table tbody tr {
 	cursor: pointer;
 }
 
-.modal .select-blocks input {
+.select-blocks input {
 	min-width: auto;
 }
 
-.modal .select-blocks .select-field-block .ui-select-placeholder, .select-blocks .select-field-block .ui-select-match-text, .select-blocks .select-field-block .ui-select-search  {
+.select-blocks .select-field-block .ui-select-placeholder, .select-blocks .select-field-block .ui-select-match-text, .select-blocks .select-field-block .ui-select-search  {
 	background: #666;
 	color: #fff;
 	font-weight: 700;
@@ -294,11 +294,11 @@ table tbody tr {
 	padding-right: 30px;
 }
 
-.modal .select-blocks .select-field-block .ui-select-placeholder {
+.select-blocks .select-field-block .ui-select-placeholder {
 	color: #bbb;
 }
 
-.modal .select-blocks .select-field-block .ui-select-choices {
+.select-blocks .select-field-block .ui-select-choices {
 	background: #fff;
 	position: absolute;
 	left: 0px;
@@ -307,80 +307,80 @@ table tbody tr {
 	z-index: 100;
 }
 
-.modal .select-blocks .ui-select-container {
+.select-blocks .ui-select-container {
 	width: 160px;
 	position: relative;
 }
 
-.modal .select-blocks .select-field-block input {
+.select-blocks .select-field-block input {
 	width: 160px;
 }
 
-.modal .select-blocks .select-field-block {
+.select-blocks .select-field-block {
 	margin-right: 14px;
 	display: inline-block;
 	vertical-align: middle;
 	cursor: pointer;
 }
 
-.modal .select-blocks ng-select .dropdown-item {
+.select-blocks ng-select .dropdown-item {
 	padding: 8px 13px !important;
 }
 
-.modal .select-blocks ng-select .ui-select-choices-row .dropdown-item * {
+.select-blocks ng-select .ui-select-choices-row .dropdown-item * {
 	font-size: 12px;
 	text-transform: uppercase;
 }
 
-.modal .select-blocks ng-select .ui-select-choices-row.active .dropdown-item {
+.select-blocks ng-select .ui-select-choices-row.active .dropdown-item {
 	background: #2d4d8a !important;
 }
 
-.modal .select-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
+.select-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
 	color: #fff !important;
 }
 
-.modal .select-blocks ng-select * {
+.select-blocks ng-select * {
 	outline: none !important;
 }
 
-.modal .select-blocks ng-select .ui-select-match {
+.select-blocks ng-select .ui-select-match {
 	font-size: 0;
 }
 
-.modal .select-blocks ng-select .ui-select-match-text, .modal .select-blocks ng-select .ui-select-toggle {
+.select-blocks ng-select .ui-select-match-text, .select-blocks ng-select .ui-select-toggle {
 	width: 160px;
 	display: inline-block;
 	max-width: none;
 }
 
-.modal .input-blocks {
+.input-blocks {
 	min-width: 680px;
 }
 
-.modal .input-blocks .select-container {
+.input-blocks .select-container {
 	position: relative;
 	display: inline-block;
 	font-size: 0
 }
 
-.modal .input-blocks .select-container .select-add-button {
+.input-blocks .select-container .select-add-button {
 	position: absolute;
 	right: -3px;
 	top: 7px;
 }
 
-.modal .input-blocks .select-container .select-add-button .button {
+.input-blocks .select-container .select-add-button .button {
 	padding: 5px;
 	font-size: 9px;
 	display: none;
 }
 
-.modal .input-blocks .select-container .select-add-button .button.active {
+.input-blocks .select-container .select-add-button .button.active {
 	display: block;
 }
 
-.modal .input-blocks ng-select {
+.input-blocks ng-select {
 	/*border: 1px solid #fff;*/
 	/*background: #fff;*/
 	box-shadow: none;
@@ -391,11 +391,11 @@ table tbody tr {
 	box-sizing: border-box;
 }
 
-.modal .input-blocks ng-select * {
+.input-blocks ng-select * {
 	outline: none !important;
 }
 
-.modal .input-blocks ng-select ul.ui-select-choices {
+.input-blocks ng-select ul.ui-select-choices {
 	position: absolute;
 	background: #fff;
 	left: -1px;
@@ -404,69 +404,69 @@ table tbody tr {
 	width: auto;
 }
 
-.modal .input-blocks ng-select .ui-select-container {
+.input-blocks ng-select .ui-select-container {
 	position: relative;
 }
 
-.modal .input-blocks ng-select .ui-select-match {
+.input-blocks ng-select .ui-select-match {
 	padding: 8px 13px;
 }
 
-.modal .input-blocks ng-select .ui-select-placeholder {
+.input-blocks ng-select .ui-select-placeholder {
 	padding-bottom: 8px;
 	color: #999;
 }
 
-.modal .input-blocks ng-select .ui-select-search {
+.input-blocks ng-select .ui-select-search {
 	border: none;
 }
 
-.modal .input-blocks ng-select .dropdown-item {
+.input-blocks ng-select .dropdown-item {
 	padding: 8px 13px !important;
 }
 
-.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item {
+.input-blocks ng-select .ui-select-choices-row.active .dropdown-item {
 	background: #2d4d8a !important;
 }
 
-.modal .input-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
+.input-blocks ng-select .ui-select-choices-row.active .dropdown-item * {
 	color: #fff !important;
 }
 
-.modal .input-blocks .input-field-block {
+.input-blocks .input-field-block {
 	font-size: 0;
 }
 
-.modal .input-blocks .input-field-block.inline {
+.input-blocks .input-field-block.inline {
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 20px;
 }
 
-.modal .input-blocks .input-field-block.small {
+.input-blocks .input-field-block.small {
 	margin-right: 0;
 }
 
-.modal .input-blocks .input-field-block.small input {
+.input-blocks .input-field-block.small input {
 	min-width: 180px;
 	width: 180px;
 }
 
-.modal .input-blocks .input-field-block.big input {
+.input-blocks .input-field-block.big input {
 	width: 100%;
 	min-width: 100%;
 }
 
-.modal .input-blocks .input-field-block .form-control-feedback {
+.input-blocks .input-field-block .form-control-feedback {
 	display: none !important;
 }
 
-.modal .select-blocks {
+.select-blocks {
 	margin-bottom: 15px;
 	padding-left: 130px;
 }
 
-.modal .input-blocks input {
+.input-blocks input {
 	border: 1px solid #fff;
 	background: #fff;
 	box-shadow: none;
@@ -478,7 +478,7 @@ table tbody tr {
 	box-sizing: border-box;
 }
 
-.modal .input-blocks .input-title {
+.input-blocks .input-title {
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 15px;
@@ -507,7 +507,7 @@ table tbody tr {
 	border-color: red;
 }
 
-.modal .input-blocks .input-field-block {
+.input-blocks .input-field-block {
 	margin-bottom: 15px;
 }
 

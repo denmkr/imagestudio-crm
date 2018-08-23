@@ -1,0 +1,30 @@
+.ng-select#statusSelect {
+	width: 120px;
+}
+
+.ng-select#userSelect {
+	width: 170px;
+}
+
+.select-blocks {
+	padding-left: 0;
+}
+
+.input-blocks {
+	background: #eef0ef;
+	padding: 25px;
+	padding-bottom: 10px;
+	display: inline-block;
+	min-width: 0;
+}
+
+textarea {
+	resize: none;
+	border: none;
+	border-radius: 0;
+	background: #fff;
+	width: 480px;
+	height: 100px;
+	box-sizing: border-box;
+	padding: 10px;
+}
