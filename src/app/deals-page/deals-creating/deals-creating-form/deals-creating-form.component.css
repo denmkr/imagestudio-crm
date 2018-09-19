@@ -16,6 +16,7 @@
 	padding-bottom: 10px;
 	display: inline-block;
 	min-width: 0;
+	margin-bottom: 15px;
 }
 
 textarea {
@@ -28,3 +29,109 @@ textarea {
 	box-sizing: border-box;
 	padding: 10px;
 }
+
+.positions {
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+
+.positions .title {
+	font-size: 18px;
+	font-weight: 700;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 15px;
+}
+
+.positions .add-button {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 8px 13px;
+	background: #aaa;
+}
+
+.positions .add-button a {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.positions .add-button i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 8px;
+	color: #fff;
+	font-size: 17px;
+}
+
+.documents {
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+
+.documents .title {
+	font-size: 18px;
+	font-weight: 700;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 15px;
+}
+
+.documents .add-button {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 8px 13px;
+	background: #aaa;
+	margin-right: 20px;
+}
+
+.documents .add-button a {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.documents .add-button i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 8px;
+	color: #fff;
+	font-size: 17px;
+}
+
+.documents .types {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.documents .type {
+	margin-right: 15px;
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: 700;
+	color: #999;
+	cursor: pointer;
+}
+
+.new-party-button {
+	background: #2d4d8a;
+	color: #fff;
+	padding: 4px 6px;
+	font-size: 12px;
+	font-weight: 600;
+	display: inline-block;
+	vertical-align: middle;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
+}
+

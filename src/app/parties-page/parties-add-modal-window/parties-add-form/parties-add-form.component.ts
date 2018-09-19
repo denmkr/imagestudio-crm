@@ -79,6 +79,10 @@ export class PartiesAddFormComponent implements OnInit {
 
   constructor(public formbuilder: FormBuilder, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
+  setName(name) {
+    this.newPartyForm.get("contact").setValue(name);
+  }
+
   createParty(event) {
     if (this.newPartyForm.valid) {
       let organization_id = this.newPartyForm.get("organization").value;

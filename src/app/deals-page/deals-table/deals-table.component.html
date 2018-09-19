@@ -30,7 +30,17 @@
         <td>{{ deal.deadline }}</td>
         <td>{{ deal.price }} Р</td>
         <td>{{ deal.profit }} Р</td>
-        <td class="status"><div class="square purple">{{ deal.status }}</div>{{ deal.readiness }}40%</td>
+        <td class="status">
+          <div class="select-blocks">
+            <div class="select-field-block">
+              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
+                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status">
+                </ng-select>
+              </form>
+            </div>
+          </div>
+          <div class="percent">{{ deal.readiness }}%</div>
+        </td>
       </tr>
       <tr id="childdeal{{ deal.id }}" *ngFor="let order_position of deal.orders_positions" class="child-row">
         <td></td>
@@ -41,9 +51,19 @@
           </div>
         </td>
         <td>{{ order_position.must_be_finished_at }}</td>
-        <td>{{ order_position.price }}</td>
-        <td>{{ order_position.profit }}</td>
-        <td class="status"><div class="square purple">В работе</div>40%</td>
+        <td>{{ order_position.price }} Р</td>
+        <td>{{ order_position.profit }} Р</td>
+        <td class="status">
+          <div class="select-blocks">
+            <div class="select-field-block">
+              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
+                <ng-select class="green" id={{statusSelect.id}} [items]="order_position.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [(ngModel)]="order_position.status" [clearable]="false">
+                </ng-select>
+              </form>
+            </div>
+          </div>
+          <div class="percent">{{ order_position.readiness }}</div>
+        </td>
       </tr>
     </ng-container>
   </tbody>

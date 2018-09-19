@@ -134,7 +134,7 @@ h1.title {
 	left: 0;
 	right: 0;
 	background: rgba(0, 0, 0, 0.6);
-	z-index: 100;
+	z-index: 10000;
 	cursor: pointer;
 	visibility: hidden;
 	opacity: 0;
@@ -154,7 +154,7 @@ h1.title {
 	top: 50%;
 	left: 50%;
 	background: #eef0ef;
-	z-index: 101;
+	z-index: 10001;
 	opacity: 0;
 	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
@@ -471,7 +471,7 @@ table tbody tr {
 	background: #fff;
 	box-shadow: none;
 	outline: none;
-	padding: 8px 13px;
+	padding: 8px 11px;
 	min-width: 350px;
 	display: inline-block;
 	vertical-align: middle;
@@ -485,6 +485,40 @@ table tbody tr {
 	font-weight: 700;
 	margin-right: 10px;
 	min-width: 120px;
+}
+
+.ng-select.ng-select-single.blue .ng-select-container {
+	height: 30px;
+	min-height: 30px;
+}
+
+.ng-select.ng-select-single.green .ng-select-container {
+	height: 30px;
+	min-height: 30px;
+}
+
+.ng-select.blue .ng-arrow-wrapper .ng-arrow {
+	border-color: #fff transparent transparent;
+}
+
+.ng-select.blue.ng-select-opened>.ng-select-container .ng-arrow {
+	border-color: transparent transparent #fff;
+}
+
+.ng-select.blue .ng-select-container .ng-value-container .ng-placeholder {
+	color: #fff !important;
+}
+
+.ng-select.green .ng-arrow-wrapper .ng-arrow {
+	border-color: #fff transparent transparent;
+}
+
+.ng-select.green.ng-select-opened>.ng-select-container .ng-arrow {
+	border-color: transparent transparent #fff;
+}
+
+.ng-select.green .ng-select-container .ng-value-container .ng-placeholder {
+	color: #fff !important;
 }
 
 .modal form .input-blocks input {
@@ -529,6 +563,40 @@ table tbody tr {
 .select-blocks .ng-select.grey * {
 	background: #555 !important;
 	background-color: #555 !important;
+	color: #fff;
+}
+
+.select-blocks .ng-select.green {
+	background: #63ba9a;
+	background-color: #63ba9a;
+}
+
+.select-blocks .ng-select.green * {
+	background: #63ba9a !important;
+	background-color: #63ba9a !important;
+	color: #fff;
+}
+
+.select-blocks .ng-select.green .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked, .ng-select.green .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+	background-color: #63ba9a !important;
+}
+
+.select-blocks .ng-select.green .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked .ng-option-label {
+	background-color: #63ba9a !important;
+}
+
+.select-blocks .ng-select.green .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+	background-color: #63ba9a !important;
+}
+
+.select-blocks .ng-select.blue {
+	background: #3257a1;
+	background-color: #3257a1;
+}
+
+.select-blocks .ng-select.blue * {
+	background: #3257a1 !important;
+	background-color: #3257a1 !important;
 	color: #fff;
 }
 

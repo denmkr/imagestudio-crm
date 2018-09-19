@@ -28,6 +28,11 @@ export class PartiesAddModalWindowComponent implements OnInit {
   	this.activeClass = true;
   }
 
+  showWithName(name) {
+    this.partiesAddFormComponent.setName(name);
+    this.activeClass = true;
+  }
+
   hide() {
     this.activeClass = false;
     let timeoutClear = setTimeout(() => { this.partiesAddFormComponent.newPartyForm.reset(); clearTimeout(timeoutClear); }, 300);

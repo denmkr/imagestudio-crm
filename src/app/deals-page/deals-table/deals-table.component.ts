@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core
 import { FormGroup } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { DealsService } from '../deals.service';
 import { DealsTablePaginationComponent } from './deals-table-pagination/deals-table-pagination.component';
@@ -21,6 +22,22 @@ export class DealsTableComponent {
   currentStatus: string;
   currentSearch: string;
   currentUserId: string;
+
+  selectedId = 'Лид';
+
+  statusForm: FormGroup;
+  status: FormControl;
+
+  public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
+
+  public statuses = [
+    {text: 'Новое', id: 'new'}, 
+    {text: 'Лид', id: 'lead'},
+    {text: 'В работе', id: 'work'},
+    {text: 'Долг', id: 'debt'},
+    {text: 'Сделано', id: 'done'},
+    {text: 'Слив', id: 'dumb'}
+  ];
 
   constructor(private dealsService: DealsService, private activatedRoute: ActivatedRoute, private authService: AuthService) { 
     this.activatedRoute.queryParams.subscribe(params => {
@@ -44,6 +61,16 @@ export class DealsTableComponent {
       }
       else this.showAllDeals();
     });
+
+    this.status = new FormControl('', [
+      Validators.required
+    ]);
+
+    this.statusForm = new FormGroup({
+      status: this.status
+    });
+
+    this.statusForm.reset();
   }
 
   showDealsByPage(page: number) {

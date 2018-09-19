@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
   selector: 'documents-add-form',
@@ -13,6 +14,7 @@ import { PartiesService } from '../../../parties-page/parties.service';
 export class DocumentsAddFormComponent implements OnInit {
 
   @HostBinding('class.validation') validationClass: boolean = false;
+  @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
   loading = false;
 
   @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
@@ -147,8 +149,8 @@ export class DocumentsAddFormComponent implements OnInit {
     this.fileType = "";
   }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewParty(name) {
+    this.partiesAddModalWindowComponent.showWithName(name);
   }
 
   ngOnInit() {

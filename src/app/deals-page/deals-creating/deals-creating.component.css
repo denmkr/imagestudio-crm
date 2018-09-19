@@ -20,4 +20,5 @@
 .cancel-button {
 	font-weight: 700;
 	color: #777;
+	cursor: pointer;
 }

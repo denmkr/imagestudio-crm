@@ -1,3 +1,20 @@
+.ng-select#statusSelect {
+	width: 100px;
+	height: 30px;
+}
+
+.select-blocks {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0;
+	margin: 0;
+	margin-right: 5px;
+}
+
+.select-blocks .select-field-block {
+	margin-right: 0;
+}
+
 table tr .square {
 	display: inline-block;
 	padding: 2px 5px;
@@ -84,7 +101,13 @@ table tr.child-row.show {
 }
 
 table tr td.status {
-	min-width: 120px;
+	min-width: 160px;
+	color: #777;
+}
+
+table tr td.status .percent {
+	display: inline-block;
+	vertical-align: middle;
 	color: #777;
 }
 

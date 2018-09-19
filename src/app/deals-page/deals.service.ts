@@ -133,6 +133,7 @@ export class DealsService {
 
       result.orders.map(order => {
         names = "";
+        
         switch (order.status) {
           case "new":
             order.status = "Новое";
@@ -156,11 +157,97 @@ export class DealsService {
             break;
         };
 
+        let events: any[] = [];
+
+        order.available_events.map(available_event => {
+          switch (available_event) {
+            case "new":
+              events.push("Новое");
+              break;
+            case "accept":
+              events.push("Лид");
+              break;
+            case "work":
+              events.push("В работе");
+              break;
+            case "debt":
+              events.push("Не оплачено");
+              break;
+            case "done":
+              events.push("Выполнено");
+              break;
+            case "archive":
+              events.push("Слив");
+              break;
+            default:
+              break;
+          };
+        });
+
+        order.available_events = events;
+        order.available_events.push(order.status);
+
         order.orders_positions.map(position => {
           if (names != "") names += ", ";
           names += position.product.name;
+
+          let position_events: any[] = [];
+
+          switch (position.status) {
+            case "new":
+              position.status = "Новое";
+              break;
+            case "lead":
+              position.status = "Лид";
+              break;
+            case "work":
+              position.status = "В работе";
+              break;
+            case "debt":
+              position.status = "Не оплачено";
+              break;
+            case "done":
+              position.status = "Выполнено";
+              break;
+            case "dumb":
+              position.status = "Слив";
+              break;
+            default:
+              break;
+          };
+
+          position.available_events.map(available_event => {
+            switch (available_event) {
+              case "new":
+                position_events.push("Новое");
+                break;
+              case "accept":
+                position_events.push("Лид");
+                break;
+              case "work":
+                position_events.push("В работе");
+                break;
+              case "debt":
+                position_events.push("Не оплачено");
+                break;
+              case "done":
+                position_events.push("Выполнено");
+                break;
+              case "archive":
+                position_events.push("Слив");
+                break;
+              default:
+                break;
+            };
+          });
+
+          position.available_events = position_events;
+          position.available_events.push(position.status);
+
         });
+
         order.names = names;
+
       });
 
       let deals = result.orders.map(order => ({
@@ -174,7 +261,8 @@ export class DealsService {
         profit: order.profit,
         orders_positions: order.orders_positions,
         deadline: order.must_be_finished_at,
-        readiness: order.readiness
+        readiness: order.readiness,
+        available_events: order.available_events
       }));
 
       return [deals, result.meta];

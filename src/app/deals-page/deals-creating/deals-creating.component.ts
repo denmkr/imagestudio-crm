@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 declare var require: any;
+
 @Component({
   selector: 'app-deals-creating',
   templateUrl: './deals-creating.component.html',

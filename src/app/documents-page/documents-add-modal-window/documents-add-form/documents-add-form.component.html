@@ -11,7 +11,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -19,7 +19,7 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Не найдено для "{{searchTerm}}"
+                  Не найдено для "{{searchTerm}}" <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -64,3 +64,5 @@
   </div>
   
 </form>
+
+<parties-add-modal-window></parties-add-modal-window>

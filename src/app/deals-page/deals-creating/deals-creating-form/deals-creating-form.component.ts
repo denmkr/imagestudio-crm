@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
   selector: 'deals-creating-form',
@@ -13,6 +14,9 @@ import { PartiesService } from '../../../parties-page/parties.service';
 export class DealsCreatingFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
+  @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
+
+  cancelLink = "/deals";
 
   @HostListener('document:keyup', ['$event'])
   handleClick(event: Event) {
@@ -87,12 +91,13 @@ export class DealsCreatingFormComponent implements OnInit {
         this.counterparties = x;
     }, (err) => {
         console.log(err);
+        
         this.counterparties = [];
     });
   }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewParty(name) {
+    this.partiesAddModalWindowComponent.showWithName(name);
   }
 
   ngOnInit() {

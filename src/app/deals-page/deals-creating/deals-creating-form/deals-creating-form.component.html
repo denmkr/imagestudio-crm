@@ -11,7 +11,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -19,7 +19,7 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Не найдено для "{{searchTerm}}"
+                  Не найдено для "{{searchTerm}}" <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -46,9 +46,42 @@
     </div>
   </div>
 
+  <div class="positions">
+    <div class="top">
+      <div class="title">Товары / Услуги</div>
+      <div class="add-button">
+        <a>Добавить товар</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+    </div>
+    
+  </div>
+
+
+  <div class="documents">
+    <div class="top">
+      <div class="title">Документы</div>
+      <div class="add-button">
+        <a>Добавить файл</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+      <div class="types">
+        <div class="type">Юр. документы</div>
+        <div class="type">Макеты</div>
+      </div>
+    </div>
+    
+  </div>
+
   <div class="buttons-block">
     <button class="button save-button" type="submit">Сохранить</button>
-    <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+    <div class="button cancel-button" routerLink="{{cancelLink}}">Отмена</div>
   </div>
   
 </form>
+
+<parties-add-modal-window></parties-add-modal-window>
