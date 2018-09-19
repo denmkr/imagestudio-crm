@@ -34,7 +34,7 @@
           <div class="select-blocks">
             <div class="select-field-block">
               <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
-                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status">
+                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status" (change)="changeDealStatus(deal.id, $event)">
                 </ng-select>
               </form>
             </div>
@@ -57,7 +57,7 @@
           <div class="select-blocks">
             <div class="select-field-block">
               <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
-                <ng-select class="green" id={{statusSelect.id}} [items]="order_position.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [(ngModel)]="order_position.status" [clearable]="false">
+                <ng-select class="green" id={{statusSelect.id}} [items]="order_position.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [(ngModel)]="order_position.status" [clearable]="false" (change)="changePositionStatus(deal.id, $event)">
                 </ng-select>
               </form>
             </div>

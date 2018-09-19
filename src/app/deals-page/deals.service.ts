@@ -27,6 +27,74 @@ export class DealsService {
     );
   }
 
+  updateDealStatusByOrderId(newStatus: string, id: string) {
+    switch (newStatus) {
+      case "Новое":
+        newStatus = "new";
+        break;
+      case "Лид":
+        newStatus = "lead";
+        break;
+      case "В работе":
+        newStatus = "work";
+        break;
+      case "Не оплачено":
+        newStatus = "debt";
+        break;
+      case "Выполнено":
+        newStatus = "done";
+        break;
+      case "Слив":
+        newStatus = "dumb";
+        break;
+      default:
+        break;
+    };
+
+    const status = {
+      event: newStatus
+    };
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', status).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+  }
+
+  updatePositionStatusByOrderId(newStatus: string, id: string) {
+    switch (newStatus) {
+      case "Новое":
+        newStatus = "new";
+        break;
+      case "Лид":
+        newStatus = "lead";
+        break;
+      case "В работе":
+        newStatus = "work";
+        break;
+      case "Не оплачено":
+        newStatus = "debt";
+        break;
+      case "Выполнено":
+        newStatus = "done";
+        break;
+      case "Слив":
+        newStatus = "dumb";
+        break;
+      default:
+        break;
+    };
+
+    const status = {
+      event: newStatus
+    };
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', status).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+  }
+
   removeDeal(id: string) {
     this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id).subscribe(
       res => { console.log(res) },

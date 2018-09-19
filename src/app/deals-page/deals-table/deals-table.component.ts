@@ -82,6 +82,14 @@ export class DealsTableComponent {
     );
   }
 
+  changeDealStatus(id, event) {
+    this.dealsService.updateDealStatusByOrderId(event, id);
+  }
+
+  changePositionStatus(id, event) {
+    this.dealsService.updatePositionStatusByOrderId(event, id);
+  }
+
   revealDeal(event) {
     let id = event.target.parentNode.parentNode.id;
     if (document.getElementById('child' + id).classList.contains('show')) {
