@@ -49,13 +49,52 @@
   <div class="positions">
     <div class="top">
       <div class="title">Товары / Услуги</div>
-      <div class="add-button">
+      <div (click)="addNewDealsPosition()" class="add-button">
         <a>Добавить товар</a>
         <i class="material-icons">
         add_circle
         </i>
       </div>
     </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Наименование</th>
+          <th>Количество</th>
+          <th>Дедлайн</th>
+          <th>Себестоимость</th>
+          <th>Цена (руб.)</th>
+          <th>Сумма</th>
+          <th>Статус</th>
+          <th>Прибыль</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Толстовка с вышивкой</td>
+          <td>1000</td>
+          <td>21.01.2017</td>
+          <td>567 Р</td>
+          <td>900 Р</td>
+          <td>12320 Р</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>2450 Р</td>
+        </tr>
+        <ng-container *ngFor="let position of orders_positions">
+          <tr>
+            <td>{{ position.name }}</td>
+            <td>{{ position.amount }}</td>
+            <td>{{ position.deadline }}</td>
+            <td>{{ position.prime_price }}</td>
+            <td>{{ position.price }}</td>
+            <td>{{ position.full_price }}</td>
+            <td>{{ position.status }}</td>
+            <td>{{ position.profit }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
     
   </div>
 
@@ -74,6 +113,43 @@
         <div class="type">Макеты</div>
       </div>
     </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Номер документа</th>
+          <th>Тип</th>
+          <th>Статус</th>
+          <th>Комментарий</th>
+          <th>Файл / Ссылка</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>№1</td>
+          <td>Юр. документ</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>Комментарий Тест</td>
+          <td>http://link_to_file</td>
+        </tr>
+        <tr>
+          <td>№2</td>
+          <td>Макет</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>Комментарий Тест</td>
+          <td>http://link_to_file</td>
+        </tr>
+        <ng-container *ngFor="let document of documents">
+          <tr>
+            <td>{{ document.number }}</td>
+            <td>{{ document.category }}</td>
+            <td>{{ document.status }}</td>
+            <td>{{ document.comment }}</td>
+            <td>{{ document.url }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
     
   </div>
 
@@ -85,3 +161,4 @@
 </form>
 
 <parties-add-modal-window></parties-add-modal-window>
+<deals-positions-add-modal-window></deals-positions-add-modal-window>

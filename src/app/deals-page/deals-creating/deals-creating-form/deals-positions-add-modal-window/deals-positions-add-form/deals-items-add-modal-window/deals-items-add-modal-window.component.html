@@ -1,0 +1,5 @@
+<div class="modal-container" [ngClass]="{'active' : activeClass}" (click)="hide()"></div>
+<div class="modal new-deals-item-modal" [ngClass]="{'active' : activeClass}">
+	<div class="title">{{title}}</div>
+ 	<deals-items-add-form (eventEmitter)="hide()" (refreshTableEvent)="refresh()"></deals-items-add-form>
+</div>

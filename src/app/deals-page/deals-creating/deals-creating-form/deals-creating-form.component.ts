@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { DealsPositionsAddModalWindowComponent } from './deals-positions-add-modal-window/deals-positions-add-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
@@ -15,6 +16,7 @@ export class DealsCreatingFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
+  @ViewChild(DealsPositionsAddModalWindowComponent) dealsPositionsAddModalWindowComponent: DealsPositionsAddModalWindowComponent;
 
   cancelLink = "/deals";
 
@@ -124,6 +126,10 @@ export class DealsCreatingFormComponent implements OnInit {
     });
 
     this.newDealForm.reset();
+  }
+
+  addNewDealsPosition() {
+    this.dealsPositionsAddModalWindowComponent.show();
   }
 
 }

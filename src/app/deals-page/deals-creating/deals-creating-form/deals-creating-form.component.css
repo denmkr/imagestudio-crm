@@ -32,7 +32,7 @@ textarea {
 
 .positions {
 	margin-top: 10px;
-	margin-bottom: 25px;
+	margin-bottom: 35px;
 }
 
 .positions .title {
@@ -134,4 +134,50 @@ textarea {
 	top: 5px;
 	cursor: pointer;
 }
+
+.documents table {
+	margin-top: 20px;
+}
+
+.documents table tbody tr {
+	border-bottom: none;
+}
+
+.documents table tbody tr td {
+	padding: 11px 15px;
+}
+
+.positions table {
+	margin-top: 20px;
+}
+
+.positions table tbody tr {
+	border-bottom: none;
+}
+
+.positions table tbody tr td {
+	padding: 11px 15px;
+}
+
+table tr .square {
+	display: inline-block;
+	padding: 2px 5px;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+table tr .square.orange {
+	background: orange;
+}
+
+table tr .square.green {
+	background: green;
+}
+
+table tr .square.purple {
+	background: purple;
+}
+
 

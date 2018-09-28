@@ -43,6 +43,10 @@ import { DealsSearchComponent } from './deals-page/deals-search/deals-search.com
 import { DealsCreatingComponent } from './deals-page/deals-creating/deals-creating.component';
 import { DealsCreatingFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-creating-form.component';
 import { DealsColumnsComponent } from './deals-page/deals-columns/deals-columns.component';
+import { DealsPositionsAddModalWindowComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-modal-window.component';
+import { DealsItemsAddModalWindowComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-modal-window.component';
+import { DealsPositionsAddFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-positions-add-form.component';
+import { DealsItemsAddFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-form/deals-items-add-form.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +77,11 @@ import { DealsColumnsComponent } from './deals-page/deals-columns/deals-columns.
     DealsCreatingComponent,
     DealsCreatingFormComponent,
     OnlyNumberDirective,
-    DealsColumnsComponent
+    DealsColumnsComponent,
+    DealsPositionsAddModalWindowComponent,
+    DealsItemsAddModalWindowComponent,
+    DealsPositionsAddFormComponent,
+    DealsItemsAddFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

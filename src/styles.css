@@ -437,10 +437,31 @@ table tbody tr {
 	font-size: 0;
 }
 
+.input-blocks.big {
+	width: 940px;
+}
+
+.input-blocks.small {
+	min-width: 500px;
+}
+
+.input-blocks.big .input-field-block.inline {
+	margin-right: 40px;
+}
+
 .input-blocks .input-field-block.inline {
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 20px;
+}
+
+.input-blocks .input-field-block .input-title.small {
+	min-width: 70px;
+}
+
+.input-blocks .input-field-block.tiny input {
+	min-width: 90px;
+	width: 90px;
 }
 
 .input-blocks .input-field-block.small {
