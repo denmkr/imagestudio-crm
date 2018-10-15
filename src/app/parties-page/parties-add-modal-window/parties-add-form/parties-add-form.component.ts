@@ -137,6 +137,14 @@ export class PartiesAddFormComponent implements OnInit {
     });
   }
 
+  addTag(name) {
+    return { id: name, text: name };
+  }
+
+  onChange(change) {
+    // console.log(this.type.value);
+  }
+
   ngOnInit() {
 
     //this.partiesService.getOrganizations("auth").subscribe(organizations => { this.organizations = organizations; });
@@ -181,14 +189,6 @@ export class PartiesAddFormComponent implements OnInit {
     });
 
     this.newPartyForm.reset();
-  }
-
-  addTag(name) {
-    return { id: name, text: name };
-  }
-
-  onChange(change) {
-    // console.log(this.type.value);
   }
 
 }

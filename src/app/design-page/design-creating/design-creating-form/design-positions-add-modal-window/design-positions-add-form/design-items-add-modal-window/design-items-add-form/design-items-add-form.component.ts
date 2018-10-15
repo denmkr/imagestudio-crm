@@ -5,12 +5,12 @@ import { PartiesService } from '../../../../../../../parties-page/parties.servic
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
 
 @Component({
-  selector: 'deals-items-add-form',
-  templateUrl: './deals-items-add-form.component.html',
-  styleUrls: ['./deals-items-add-form.component.css'],
+  selector: 'design-items-add-form',
+  templateUrl: './design-items-add-form.component.html',
+  styleUrls: ['./design-items-add-form.component.css'],
   providers: [WarehouseService, PartiesService]
 })
-export class DealsItemsAddFormComponent implements OnInit {
+export class DesignItemsAddFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;

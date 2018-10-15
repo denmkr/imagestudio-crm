@@ -47,6 +47,18 @@ import { DealsPositionsAddModalWindowComponent } from './deals-page/deals-creati
 import { DealsItemsAddModalWindowComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-modal-window.component';
 import { DealsPositionsAddFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-positions-add-form.component';
 import { DealsItemsAddFormComponent } from './deals-page/deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-form/deals-items-add-form.component';
+import { WarehousePageComponent } from './warehouse-page/warehouse-page.component';
+import { DesignPageComponent } from './design-page/design-page.component';
+import { DesignTableComponent } from './design-page/design-table/design-table.component';
+import { DesignTablePaginationComponent } from './design-page/design-table/design-table-pagination/design-table-pagination.component';
+import { DesignSearchComponent } from './design-page/design-search/design-search.component';
+import { DesignColumnsComponent } from './design-page/design-columns/design-columns.component';
+import { DesignCreatingComponent } from './design-page/design-creating/design-creating.component';
+import { DesignCreatingFormComponent } from './design-page/design-creating/design-creating-form/design-creating-form.component';
+import { DesignPositionsAddModalWindowComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-modal-window.component';
+import { DesignPositionsAddFormComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-positions-add-form.component';
+import { DesignItemsAddModalWindowComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-items-add-modal-window/design-items-add-modal-window.component';
+import { DesignItemsAddFormComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-items-add-modal-window/design-items-add-form/design-items-add-form.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +93,19 @@ import { DealsItemsAddFormComponent } from './deals-page/deals-creating/deals-cr
     DealsPositionsAddModalWindowComponent,
     DealsItemsAddModalWindowComponent,
     DealsPositionsAddFormComponent,
-    DealsItemsAddFormComponent
+    DealsItemsAddFormComponent,
+    WarehousePageComponent,
+    DesignPageComponent,
+    DesignTableComponent,
+    DesignTablePaginationComponent,
+    DesignSearchComponent,
+    DesignColumnsComponent,
+    DesignCreatingComponent,
+    DesignCreatingFormComponent,
+    DesignPositionsAddModalWindowComponent,
+    DesignPositionsAddFormComponent,
+    DesignItemsAddModalWindowComponent,
+    DesignItemsAddFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

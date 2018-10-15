@@ -4,9 +4,8 @@ import { AuthService } from '../auth/auth.service';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class DealsService {
+export class DesignService {
   constructor(private http: HttpClient, private authService: AuthService) {}
-
 
   createOrganization(name: string) {
     let httpParams = new HttpParams();

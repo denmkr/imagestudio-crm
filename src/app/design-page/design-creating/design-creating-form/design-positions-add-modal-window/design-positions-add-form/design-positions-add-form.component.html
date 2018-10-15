@@ -1,0 +1,88 @@
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
+
+  <div class="select-blocks">
+    <div *ngFor="let select of selects" class="select-field-block">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      </ng-select>
+    </div>
+  </div>
+   
+   <div class="input-blocks" [ngClass]="{'big' : bigWindow}">
+    <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
+      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+         'has-danger': newDealsPositionForm.get(input.name).invalid && newDealsPositionForm.get(input.name).dirty, 
+         'has-success': newDealsPositionForm.get(input.name).valid && newDealsPositionForm.get(input.name).dirty
+       }">
+      <div class="form-control-feedback"
+         *ngIf="newDealsPositionForm.get(input.name).errors && (newDealsPositionForm.get(input.name).dirty || newDealsPositionForm.get(input.name).touched)">
+         <p>Заполните поле</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="orders_items">
+    <div class="top">
+      <div (click)="addNewDealsItem()" class="add-button">
+        <a>Создать товар</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Наименование</th>
+          <th>Где</th>
+          <th>Цена</th>
+          <th>Статус</th>
+          <th>Тех. задание</th>
+          <th>Счет</th>
+          <th>Макет</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Толстовка</td>
+          <td>ООО "Донкоттон"</td>
+          <td>62 113 Р</td>
+          <td><div class="status purple square">Готов</div></td>
+          <td>Красный, 2XL-5</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Вышивка</td>
+          <td>ООО "Донкоттон"</td>
+          <td>62 113 Р</td>
+          <td><div class="status purple square">В работе</div></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <ng-container *ngFor="let item of orders_items">
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.deadline }}</td>
+            <td>{{ item.prime_price }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.full_price }}</td>
+            <td>{{ item.status }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    
+  </div>
+
+  <div class="buttons-block">
+    <button class="button save-button" type="submit">Сохранить</button>
+    <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+  </div>
+  
+</form>
+
+<design-items-add-modal-window></design-items-add-modal-window>

@@ -1,0 +1,164 @@
+<form [formGroup]="newDealForm" (ngSubmit)="createDeal($event)">
+
+  <div class="select-blocks">
+    <div *ngFor="let select of selects" class="select-field-block">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      </ng-select>
+    </div>
+  </div>
+
+  <div class="input-blocks">
+    <div *ngFor="let select of selectInputs" class="input-field-block">
+      <div class="select-container">
+        <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Не найдено для "{{searchTerm}}" <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Загрузка "{{searchTerm}}"
+              </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.contact}} <br />
+            <small>{{item.organization}}</small>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div *ngFor="let input of textAreas" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+        <textarea formControlName="{{input.name}}" name="{{input.name}}" placeholder="{{input.placeholder}}" [ngClass]="{
+           'has-danger': newDealForm.get(input.name).invalid && newDealForm.get(input.name).dirty, 
+           'has-success': newDealForm.get(input.name).valid && newDealForm.get(input.name).dirty
+         }"></textarea>
+        <div class="form-control-feedback"
+           *ngIf="newDealForm.get(input.name).errors && (newDealForm.get(input.name).dirty || newDealForm.get(input.name).touched)">
+           <p>Заполните поле</p>
+        </div>
+    </div>
+  </div>
+
+  <div class="positions">
+    <div class="top">
+      <div class="title">Товары / Услуги</div>
+      <div (click)="addNewDealsPosition()" class="add-button">
+        <a>Добавить товар</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Наименование</th>
+          <th>Количество</th>
+          <th>Дедлайн</th>
+          <th>Себестоимость</th>
+          <th>Цена (руб.)</th>
+          <th>Сумма</th>
+          <th>Статус</th>
+          <th>Прибыль</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Толстовка с вышивкой</td>
+          <td>1000</td>
+          <td>21.01.2017</td>
+          <td>567 Р</td>
+          <td>900 Р</td>
+          <td>12320 Р</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>2450 Р</td>
+        </tr>
+        <ng-container *ngFor="let position of orders_positions">
+          <tr>
+            <td>{{ position.name }}</td>
+            <td>{{ position.amount }}</td>
+            <td>{{ position.deadline }}</td>
+            <td>{{ position.prime_price }}</td>
+            <td>{{ position.price }}</td>
+            <td>{{ position.full_price }}</td>
+            <td>{{ position.status }}</td>
+            <td>{{ position.profit }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    
+  </div>
+
+
+  <div class="documents">
+    <div class="top">
+      <div class="title">Документы</div>
+      <div class="add-button">
+        <a>Добавить файл</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+      <div class="types">
+        <div class="type">Юр. документы</div>
+        <div class="type">Макеты</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Номер документа</th>
+          <th>Тип</th>
+          <th>Статус</th>
+          <th>Комментарий</th>
+          <th>Файл / Ссылка</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>№1</td>
+          <td>Юр. документ</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>Комментарий Тест</td>
+          <td>http://link_to_file</td>
+        </tr>
+        <tr>
+          <td>№2</td>
+          <td>Макет</td>
+          <td><div class="status purple square">Новое</div></td>
+          <td>Комментарий Тест</td>
+          <td>http://link_to_file</td>
+        </tr>
+        <ng-container *ngFor="let document of documents">
+          <tr>
+            <td>{{ document.number }}</td>
+            <td>{{ document.category }}</td>
+            <td>{{ document.status }}</td>
+            <td>{{ document.comment }}</td>
+            <td>{{ document.url }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    
+  </div>
+
+  <div class="buttons-block">
+    <button class="button save-button" type="submit">Сохранить</button>
+    <div class="button cancel-button" routerLink="{{cancelLink}}">Отмена</div>
+  </div>
+  
+</form>
+
+<parties-add-modal-window></parties-add-modal-window>
+<design-positions-add-modal-window></design-positions-add-modal-window>

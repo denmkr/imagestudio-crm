@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
-import { DealsItemsAddModalWindowComponent } from './deals-items-add-modal-window/deals-items-add-modal-window.component';
+import { DesignItemsAddModalWindowComponent } from './design-items-add-modal-window/design-items-add-modal-window.component';
 
 @Component({
-  selector: 'deals-positions-add-form',
-  templateUrl: './deals-positions-add-form.component.html',
-  styleUrls: ['./deals-positions-add-form.component.css']
+  selector: 'design-positions-add-form',
+  templateUrl: './design-positions-add-form.component.html',
+  styleUrls: ['./design-positions-add-form.component.css']
 })
-export class DealsPositionsAddFormComponent implements OnInit {
+export class DesignPositionsAddFormComponent implements OnInit {
 
-  @ViewChild(DealsItemsAddModalWindowComponent) dealsItemsAddModalWindowComponent: DealsItemsAddModalWindowComponent;
+  @ViewChild(DesignItemsAddModalWindowComponent) designItemsAddModalWindowComponent: DesignItemsAddModalWindowComponent;
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
@@ -57,7 +57,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
   }
 
   addNewDealsItem() {
-    this.dealsItemsAddModalWindowComponent.show();
+    this.designItemsAddModalWindowComponent.show();
   }
 
   addDealsPositions() {

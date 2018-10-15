@@ -1,0 +1,49 @@
+<div class="top-block">
+	<div class="row middle">
+		<div class="col-6 left">
+			<h1 class="title">{{title}}</h1>
+			<div class="display">
+				<div (click)="setColumnsMode()" [ngClass]="{'active' : verticalMode}" class="vert"><i class="material-icons">menu</i></div>
+				<div (click)="setTableMode()" class="hor" [ngClass]="{'active' : !verticalMode}"><i class="material-icons">menu</i></div>
+			</div>
+			<div *ngIf="verticalMode; then button"></div>
+			<ng-template #button>
+				<div routerLink="{{creatingLink}}" class="column-button button create-button">Создать заявку</div>
+			</ng-template>
+		</div>
+		<div class="col-6 right">
+			<div class="own">
+				<div (click)="showMyDeals()" [ngClass]="{'active' : mineActive}" class="item">Мои</div>
+				<div (click)="showAllDeals()" [ngClass]="{'active' : allActive}" class="item">Все</div>
+			</div>
+			<div [ngClass]="{'active' : filersActive}" class="filters">
+				<design-search (filterEmitter)="updateTableByFilterForm($event)"></design-search>
+			</div>
+    		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
+		</div>
+	</div>
+	<div *ngIf="!verticalMode; then buttons"></div>
+	<ng-template #buttons>
+		<div class="row middle">
+			<div class="col-8 left">
+				<div class="buttons">
+					<div routerLink="{{creatingLink}}" class="button create-button">Создать заявку</div>
+					<div (click)="showNewDeals()" [ngClass]="{'active' : newActive}" class="button grey">Новое</div>
+					<div (click)="showLeadDeals()" [ngClass]="{'active' : leadActive}" class="button grey">Лид</div>
+					<div (click)="showWorkDeals()" [ngClass]="{'active' : workActive}" class="button grey">В работе</div>
+					<div (click)="showDebtDeals()" [ngClass]="{'active' : debtActive}" class="button grey">Долг</div>
+					<div (click)="showDoneDeals()" [ngClass]="{'active' : doneActive}" class="button grey">Сделано</div>
+					<div (click)="showDumbDeals()" [ngClass]="{'active' : dumbActive}" class="button grey">Слив</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+</div>
+
+<div *ngIf="verticalMode; then columns else table"></div>
+<ng-template #table>
+	<design-table [ngClass]="{'hide' : tableHide}" (eventEmitter)="showEditModal($event)"></design-table>
+</ng-template>
+<ng-template #columns>
+	<design-columns></design-columns>
+</ng-template>

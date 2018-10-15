@@ -1,0 +1,47 @@
+.columns {
+	width: 100%;
+	overflow-x: scroll;
+}
+
+.columns .row {
+	white-space: nowrap;
+}
+
+.columns .row > * {
+	white-space: normal;
+}
+
+.columns .title {
+	font-size: 20px;
+	text-align: center;
+	font-weight: 700;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
+
+.columns .columns-row {
+	background: #ddd;
+	box-sizing: border-box;
+	padding: 15px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.columns .col-2 {
+	box-sizing: border-box;
+	padding: 0 5px;
+	min-width: 280px;
+}
+
+.columns .columns-row .name {
+	font-weight: 700;
+	margin-bottom: 6px;
+}
+
+.columns .columns-row .client {
+	font-size: 12px;
+}
+
+.columns .columns-row .date {
+	font-size: 12px;
+}

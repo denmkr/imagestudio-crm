@@ -1,0 +1,71 @@
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Клиент, Номер, Время</th>
+      <th>Наименования</th>
+      <th>Дедлайн</th>
+      <th>Сумма</th>
+      <th>Прибыль</th>
+      <th>Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let deal of deals">
+      <tr id="deal{{ deal.id }}">
+        <td class="arrow">
+          <i (click)="revealDeal($event)" class="material-icons">
+          keyboard_arrow_down
+          </i>
+        </td>
+        <td>
+          <div>{{ deal.organization }}</div>
+          <div class="additional-attributes">
+            <div class="client">{{ deal.client }}</div>
+            <div class="number">{{ deal.number }}</div>
+            <div class="date">{{ deal.deadline }}</div>
+          </div>
+        </td>
+        <td>{{ deal.names }}</td>
+        <td>{{ deal.deadline }}</td>
+        <td>{{ deal.price }} Р</td>
+        <td>{{ deal.profit }} Р</td>
+        <td class="status">
+          <div class="select-blocks">
+            <div class="select-field-block">
+              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
+                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status" (change)="changeDealStatus(deal.id, $event)">
+                </ng-select>
+              </form>
+            </div>
+          </div>
+          <div class="percent">{{ deal.readiness }}%</div>
+        </td>
+      </tr>
+      <tr id="childdeal{{ deal.id }}" *ngFor="let order_position of deal.orders_positions" class="child-row">
+        <td></td>
+        <td></td>
+        <td>{{ order_position.product.name }}
+          <div class="additional-attributes">
+            <div class="amount">{{ order_position.count }} шт.</div>
+          </div>
+        </td>
+        <td>{{ order_position.must_be_finished_at }}</td>
+        <td>{{ order_position.price }} Р</td>
+        <td>{{ order_position.profit }} Р</td>
+        <td class="status">
+          <div class="select-blocks">
+            <div class="select-field-block">
+              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
+                <ng-select class="green" id={{statusSelect.id}} [items]="order_position.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [(ngModel)]="order_position.status" [clearable]="false" (change)="changePositionStatus(deal.id, $event)">
+                </ng-select>
+              </form>
+            </div>
+          </div>
+          <div class="percent">{{ order_position.readiness }}</div>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+<design-table-pagination (eventEmitter)="showDealsByPage($event)"></design-table-pagination>
