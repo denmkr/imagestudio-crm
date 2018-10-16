@@ -508,6 +508,11 @@ table tbody tr {
 	min-width: 120px;
 }
 
+.ng-select.ng-select-single.purple .ng-select-container {
+	height: 30px;
+	min-height: 30px;
+}
+
 .ng-select.ng-select-single.blue .ng-select-container {
 	height: 30px;
 	min-height: 30px;
@@ -516,6 +521,18 @@ table tbody tr {
 .ng-select.ng-select-single.green .ng-select-container {
 	height: 30px;
 	min-height: 30px;
+}
+
+.ng-select.purple .ng-arrow-wrapper .ng-arrow {
+	border-color: #fff transparent transparent;
+}
+
+.ng-select.purple.ng-select-opened>.ng-select-container .ng-arrow {
+	border-color: transparent transparent #fff;
+}
+
+.ng-select.purple .ng-select-container .ng-value-container .ng-placeholder {
+	color: #fff !important;
 }
 
 .ng-select.blue .ng-arrow-wrapper .ng-arrow {
@@ -618,6 +635,17 @@ table tbody tr {
 .select-blocks .ng-select.blue * {
 	background: #3257a1 !important;
 	background-color: #3257a1 !important;
+	color: #fff;
+}
+
+.select-blocks .ng-select.purple {
+	background: purple;
+	background-color: purple;
+}
+
+.select-blocks .ng-select.purple * {
+	background: purple !important;
+	background-color: purple !important;
 	color: #fff;
 }
 

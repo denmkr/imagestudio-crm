@@ -36,6 +36,10 @@
   width: 120px;
 }
 
+.ng-select#statusSelect {
+  width: 120px;
+}
+
 small.ng-star-inserted {
   line-height: 2.2;
   font-size: 12px;
@@ -50,4 +54,8 @@ small.ng-star-inserted {
   display: inline-block;
   vertical-align: middle;
   display: inline-block;
+}
+
+.select-blocks {
+  padding-left: 0;
 }

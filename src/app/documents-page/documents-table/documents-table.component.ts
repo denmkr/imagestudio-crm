@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Route, ActivatedRoute } from '@angular/router';
 
 import { DocumentsService } from '../documents.service';
@@ -22,6 +23,22 @@ export class DocumentsTableComponent {
   currentSearch: string;
   currentPage: string;
 
+  selectedId = 'Лид';
+
+  statusForm: FormGroup;
+  status: FormControl;
+
+  public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
+
+  public statuses = [
+    {text: 'Новое', id: 'new'}, 
+    {text: 'Лид', id: 'lead'},
+    {text: 'В работе', id: 'work'},
+    {text: 'Долг', id: 'debt'},
+    {text: 'Сделано', id: 'done'},
+    {text: 'Слив', id: 'dumb'}
+  ];
+
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentCategory = params['category'];
@@ -42,6 +59,20 @@ export class DocumentsTableComponent {
       }
       else this.showAllDocuments();
     });
+
+    this.status = new FormControl('', [
+      Validators.required
+    ]);
+
+    this.statusForm = new FormGroup({
+      status: this.status
+    });
+
+    this.statusForm.reset();
+  }
+
+  changeDocumentStatus(id, event) {
+    this.documentsService.updateDocumentStatusByDocumentId(event, id);
   }
 
   refreshDocuments() {

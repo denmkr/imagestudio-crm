@@ -21,10 +21,20 @@ export class DocumentsEditFormComponent implements OnInit {
 
   public selects = [
     {items: "types", name: "type", placeholder: "Тип документа", id: "docTypeSelect"},
-    {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"}
+    {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"},
+    {items: "document.available_events", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
 
   public counterparties = [];
+
+  public statuses = [
+    {text: 'Новое', id: 'new'}, 
+    {text: 'Лид', id: 'lead'},
+    {text: 'В работе', id: 'work'},
+    {text: 'Долг', id: 'debt'},
+    {text: 'Сделано', id: 'done'},
+    {text: 'Слив', id: 'dumb'}
+  ];
 
   public selectInputs = [
     {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
@@ -55,6 +65,7 @@ export class DocumentsEditFormComponent implements OnInit {
   fileName: string;
   fileType: string;
 
+  status: FormControl;
   type: FormControl;
   category: FormControl;
   counterparty: FormControl;
@@ -89,6 +100,7 @@ export class DocumentsEditFormComponent implements OnInit {
   updateValues(document) {
     this.document = document;
 
+    this.status.setValue(document.status);
     this.type.setValue(document.type);
     this.category.setValue(document.category);
     this.counterparty.setValue(document.counterparty_id);
@@ -145,6 +157,9 @@ export class DocumentsEditFormComponent implements OnInit {
   ngOnInit() {
     this.serverSideSearch();
 
+    this.status = new FormControl('', [
+      Validators.required
+    ]);
     this.type = new FormControl('', [
       Validators.required
     ]);
@@ -163,6 +178,7 @@ export class DocumentsEditFormComponent implements OnInit {
     ]);
 
     this.editDocumentForm = new FormGroup({
+      status: this.status,
       type: this.type,
       category: this.category,
       counterparty: this.counterparty,

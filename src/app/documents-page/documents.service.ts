@@ -29,6 +29,40 @@ export class DocumentsService {
     
   }
 
+  updateDocumentStatusByDocumentId(newStatus: string, id: string) {
+    switch (newStatus) {
+      case "Новое":
+        newStatus = "new";
+        break;
+      case "Лид":
+        newStatus = "lead";
+        break;
+      case "В работе":
+        newStatus = "work";
+        break;
+      case "Не оплачено":
+        newStatus = "debt";
+        break;
+      case "Выполнено":
+        newStatus = "done";
+        break;
+      case "Слив":
+        newStatus = "dumb";
+        break;
+      default:
+        break;
+    };
+
+    const status = {
+      event: newStatus
+    };
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id + '/process_event', status).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+  }
+
   generateUrlForFile(name: string, type: string) {
     const file = {
       file_name: name,

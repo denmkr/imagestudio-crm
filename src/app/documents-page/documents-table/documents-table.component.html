@@ -10,10 +10,11 @@
       <th>Примечание</th>
       <th>Статус</th>
       <th>Создано</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let document of documents" (click)="showEditModal(document)">
+    <tr *ngFor="let document of documents">
       <td>
         <div>{{ document.counterparty }}</div>
         <div class="additional-attributes">
@@ -33,8 +34,22 @@
         </div>
       </td>
       <td>{{ document.comment }}</td>
-      <td class="status"><div class="square purple">{{ document.statusName }}</div></td>
-      <td class="date">12 нояб. 2017</td>
+      <td class="status">
+        <div class="select-blocks">
+          <div class="select-field-block">
+            <form [formGroup]="statusForm" (ngSubmit)="changeDocumentStatus(deal.id, $event)">
+              <ng-select class="purple" id={{statusSelect.id}} [items]="document.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="document.status" (change)="changeDocumentStatus(deal.id, $event)">
+              </ng-select>
+            </form>
+          </div>
+        </div>
+      </td>
+      <td class="date">{{ document.date }}</td>
+      <td class="arrow">
+        <i class="material-icons" (click)="showEditModal(document)">
+        keyboard_arrow_right
+        </i>
+      </td>
     </tr>
   </tbody>
 </table>

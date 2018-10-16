@@ -1,3 +1,6 @@
+table tbody tr {
+	cursor: default;
+}
 
 table tr .square {
 	display: inline-block;
@@ -29,8 +32,22 @@ table tr .date {
 	min-width: 110px;
 }
 
+table tr .arrow {
+	min-width: 18px;
+	position: relative;
+	cursor: pointer;
+}
+
+table tr .arrow i {
+	position: absolute;
+	top: 50%;
+	margin-top: -15px;
+	width: 24px;
+}
+
 table tr .file {
 	min-width: 70px;
+	cursor: pointer;
 }
 
 table tr .file a {
@@ -50,4 +67,30 @@ table tr .file i {
 
 .additional-attributes .organization {
 	color: #ababab;
+}
+
+table tr td.status {
+	min-width: 110px;
+	color: #777;
+}
+
+table tr td.status .square {
+	margin-right: 5px;
+}
+
+.ng-select#statusSelect {
+	width: 100px;
+	height: 30px;
+}
+
+.select-blocks {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0;
+	margin: 0;
+	margin-right: 5px;
+}
+
+.select-blocks .select-field-block {
+	margin-right: 0;
 }

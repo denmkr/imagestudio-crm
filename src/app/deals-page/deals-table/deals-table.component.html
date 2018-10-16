@@ -33,7 +33,7 @@
         <td class="status">
           <div class="select-blocks">
             <div class="select-field-block">
-              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
+              <form [formGroup]="statusForm" (ngSubmit)="changeDealStatus(deal.id, $event)">
                 <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status" (change)="changeDealStatus(deal.id, $event)">
                 </ng-select>
               </form>
