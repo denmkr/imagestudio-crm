@@ -9,6 +9,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /*import { SelectModule } from 'ng2-select';*/
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Ng2CloudinaryModule } from 'ng2-cloudinary';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { AppComponent } from './app.component';
@@ -114,8 +116,10 @@ import { DesignItemsAddFormComponent } from './design-page/design-creating/desig
     BrowserAnimationsModule,
     HttpModule,
     ReactiveFormsModule,
+    Ng2CloudinaryModule,
     /*SelectModule,*/
     NgSelectModule,
+    FileUploadModule,
     routing
   ],
   providers: [

@@ -106,7 +106,6 @@ export class DocumentsService {
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
     .map(result => {
-      console.log(result);
       result.documents.map(document => {
         switch (document.category) {
           case "spending":

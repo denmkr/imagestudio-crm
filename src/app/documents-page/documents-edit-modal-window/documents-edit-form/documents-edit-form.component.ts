@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { CloudinaryOptions, CloudinaryUploader } from 'ng2-cloudinary';
+import { FileUploader } from 'ng2-file-upload';
 
 @Component({
   selector: 'documents-edit-form',
@@ -13,6 +15,12 @@ import { PartiesService } from '../../../parties-page/parties.service';
 export class DocumentsEditFormComponent implements OnInit {
 
   public document;
+
+  uploader: CloudinaryUploader = new CloudinaryUploader(
+    new CloudinaryOptions({ cloudName: 'eldarkikcloudinary', uploadPreset: 'default_preset' })
+  );
+ 
+  fileLoading: any;
 
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
@@ -55,6 +63,7 @@ export class DocumentsEditFormComponent implements OnInit {
 
   fileName: string;
   fileType: string;
+  fileUrl: string;
 
   available_events: any[] = [];
 
@@ -104,10 +113,31 @@ export class DocumentsEditFormComponent implements OnInit {
     this.getCurrentParty();
   }
 
+  upload(event) {
+    this.fileLoading = true;
+    this.addFileButtonText.nativeElement.textContent = "Загрузка...";
+    this.uploader.uploadAll();
+
+    this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any): any => {
+      let res: any = JSON.parse(response);
+      console.log(res);
+
+      this.fileLoading = false;
+      this.addFileButtonText.nativeElement.innerHTML = res.original_filename;
+      this.fileName = res.original_filename;
+      this.fileType = res.format;
+      this.fileUrl = res.url;
+    }
+
+    this.uploader.onErrorItem = function(fileItem, response, status, headers) {
+      console.info('onErrorItem', fileItem, response, status, headers);
+    };
+  }
+
   editDocument() {
     if (this.editDocumentForm.valid) {
   	  this.documentsService.updateDocument(this.document.id, this.type.value, this.category.value, this.status.value, this.counterparty.value, 
-            this.orderNumber.value, this.document.url, this.comment.value).subscribe(
+            this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
         res => { 
           this.editDocumentForm.reset();
           this.refreshTableEvent.emit(true);

@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { CloudinaryOptions, CloudinaryUploader } from 'ng2-cloudinary';
+import { FileUploader } from 'ng2-file-upload';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
@@ -12,6 +14,12 @@ import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-ad
   providers: [DocumentsService, PartiesService]
 })
 export class DocumentsAddFormComponent implements OnInit {
+
+  uploader: CloudinaryUploader = new CloudinaryUploader(
+    new CloudinaryOptions({ cloudName: 'eldarkikcloudinary', uploadPreset: 'default_preset' })
+  );
+ 
+  fileLoading: any;
 
   @HostBinding('class.validation') validationClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
@@ -53,6 +61,7 @@ export class DocumentsAddFormComponent implements OnInit {
   newDocumentForm: FormGroup;
 
   fileName: string;
+  fileUrl: string;
   fileType: string;
   file: File;
 
@@ -72,33 +81,37 @@ export class DocumentsAddFormComponent implements OnInit {
 
   constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private elRef: ElementRef, private renderer: Renderer, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
+  upload(event) {
+    this.fileLoading = true;
+    this.addFileButtonText.nativeElement.textContent = "Загрузка...";
+    this.uploader.uploadAll();
+
+    this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any): any => {
+      let res: any = JSON.parse(response);
+      console.log(res);
+
+      this.fileLoading = false;
+      this.addFileButtonText.nativeElement.innerHTML = res.original_filename;
+      this.fileName = res.original_filename;
+      this.fileType = res.format;
+      this.fileUrl = res.url;
+    }
+
+    this.uploader.onErrorItem = function(fileItem, response, status, headers) {
+      console.info('onErrorItem', fileItem, response, status, headers);
+    };
+  }
+
   createDocument() {
     if (this.newDocumentForm.valid) {
       if (this.fileName != "" && this.fileName != null && this.fileName != undefined) {
 
-        let types = this.fileType.split("/");
-        let type = types[types.length - 1];
-        console.log(type);
-
-        this.documentsService.generateUrlForFile(this.fileName, type).subscribe(
+        this.documentsService.createNewDocument(this.type.value, this.category.value, this.counterparty.value, 
+        this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
           res => { 
-            console.log(res.result.upload_url);
-            this.documentsService.uploadfileAWSS3(res.result.upload_url, this.fileType, this.file).subscribe(
-              res => { 
-                console.log(res)
-              },
-              err => { console.log(err.error) }
-            );
-
-            this.documentsService.createNewDocument(this.type.value, this.category.value, this.counterparty.value, 
-            this.orderNumber.value, res.result.public_url, this.comment.value).subscribe(
-              res => { 
-                this.newDocumentForm.reset();
-                this.refreshTableEvent.emit(true);
-                this.eventEmitter.emit(true);
-              },
-              err => { console.log(err) }
-            );
+            this.newDocumentForm.reset();
+            this.refreshTableEvent.emit(true);
+            this.eventEmitter.emit(true);
           },
           err => { console.log(err) }
         );

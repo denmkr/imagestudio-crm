@@ -37,11 +37,11 @@
 
     <div class="input-field-block">
       <div class="upload-button">
-        <button class="button">
+        <button [disabled]="fileLoading" (click)="upload()" class="button">
           <a #addFileButtonText>Добавить файл</a>
           <i class="material-icons">insert_drive_file</i>
         </button>
-        <input (change)="onFileChange($event)" type="file" name="myfile" />
+        <input type="file" ng2FileSelect [uploader]="uploader" (change)="upload()">
       </div>
     </div>
 
