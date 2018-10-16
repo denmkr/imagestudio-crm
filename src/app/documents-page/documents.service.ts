@@ -11,7 +11,7 @@ export class DocumentsService {
     return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id);
   }
 
-  updateDocument(id: string, type: string, category: string, counterparty: string, orderNumber: string, url: string, 
+  updateDocument(id: string, type: string, category: string, status: string, counterparty: string, orderNumber: string, url: string, 
     comment: string) {
 
     const document = {
@@ -21,6 +21,7 @@ export class DocumentsService {
       counterparty: {
         id: counterparty
       },
+      status: status,
       url: url,
       comment: comment
     };
@@ -105,6 +106,7 @@ export class DocumentsService {
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
     .map(result => {
+      console.log(result);
       result.documents.map(document => {
         switch (document.category) {
           case "spending":
@@ -144,15 +146,32 @@ export class DocumentsService {
         }
 
         switch (document.status) {
-          case "pending":
-            document.statusName = "Не оплачено";
-            break;
           case "complete":
-            document.statusName = "Оплачено";
+            document.status = "Оплачено";
+            break;
+          case "pending":
+            document.status = "Не оплачено";
             break;
           default:
             break;
-        }
+        };
+
+        let events: any[] = [];
+
+        switch (document.available_event) {
+          case "complete":
+            events.push("Оплачено");
+            break;
+          case "pending":
+            events.push("Не оплачено");
+            break;
+          default:
+            break;
+        };
+
+        document.available_events = events;
+        document.available_events.push(document.status);
+
       });
 
       let documents = result.documents.map(document => ({
@@ -166,9 +185,10 @@ export class DocumentsService {
         type: document.kind,
         number: document.number,
         url: document.url,
-        statusName: document.statusName,
+        status: document.status,
         comment: document.comment,
-        date: document.created_at
+        date: document.created_at,
+        available_events: document.available_events
       }));
 
       return [documents, result.meta];

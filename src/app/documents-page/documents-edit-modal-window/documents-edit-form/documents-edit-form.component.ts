@@ -22,19 +22,10 @@ export class DocumentsEditFormComponent implements OnInit {
   public selects = [
     {items: "types", name: "type", placeholder: "Тип документа", id: "docTypeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"},
-    {items: "document.available_events", name: "status", placeholder: "Статус", id: "statusSelect"},
+    {items: "available_events", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
 
   public counterparties = [];
-
-  public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
-  ];
 
   public selectInputs = [
     {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
@@ -64,6 +55,8 @@ export class DocumentsEditFormComponent implements OnInit {
 
   fileName: string;
   fileType: string;
+
+  available_events: any[] = [];
 
   status: FormControl;
   type: FormControl;
@@ -100,6 +93,7 @@ export class DocumentsEditFormComponent implements OnInit {
   updateValues(document) {
     this.document = document;
 
+    this.available_events = document.available_events;
     this.status.setValue(document.status);
     this.type.setValue(document.type);
     this.category.setValue(document.category);
@@ -112,7 +106,7 @@ export class DocumentsEditFormComponent implements OnInit {
 
   editDocument() {
     if (this.editDocumentForm.valid) {
-  	  this.documentsService.updateDocument(this.document.id, this.type.value, this.category.value, this.counterparty.value, 
+  	  this.documentsService.updateDocument(this.document.id, this.type.value, this.category.value, this.status.value, this.counterparty.value, 
             this.orderNumber.value, this.document.url, this.comment.value).subscribe(
         res => { 
           this.editDocumentForm.reset();

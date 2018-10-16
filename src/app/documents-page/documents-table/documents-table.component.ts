@@ -31,12 +31,8 @@ export class DocumentsTableComponent {
   public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
 
   public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
+    {text: 'Не оплачено', id: 'pending'}, 
+    {text: 'Оплачено', id: 'complete'}
   ];
 
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
