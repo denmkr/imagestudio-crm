@@ -38,7 +38,7 @@
         <div class="select-blocks">
           <div class="select-field-block">
             <form [formGroup]="statusForm" (ngSubmit)="changeDocumentStatus(deal.id, $event)">
-              <ng-select class="purple" id={{statusSelect.id}} [items]="document.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="document.status" (change)="changeDocumentStatus(deal.id, $event)">
+              <ng-select class="blue" id={{statusSelect.id}} [items]="document.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="document.status" (change)="changeDocumentStatus(deal.id, $event)">
               </ng-select>
             </form>
           </div>

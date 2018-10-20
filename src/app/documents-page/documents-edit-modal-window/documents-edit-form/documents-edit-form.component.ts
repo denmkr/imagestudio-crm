@@ -3,14 +3,16 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { DealsService } from '../../../deals-page/deals.service';
 import { CloudinaryOptions, CloudinaryUploader } from 'ng2-cloudinary';
 import { FileUploader } from 'ng2-file-upload';
+import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
   selector: 'documents-edit-form',
   templateUrl: './documents-edit-form.component.html',
   styleUrls: ['./documents-edit-form.component.css'],
-  providers: [DocumentsService, PartiesService]
+  providers: [DocumentsService, PartiesService, DealsService]
 })
 export class DocumentsEditFormComponent implements OnInit {
 
@@ -25,6 +27,7 @@ export class DocumentsEditFormComponent implements OnInit {
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
 
+  @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
   @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
 
   public selects = [
@@ -34,13 +37,17 @@ export class DocumentsEditFormComponent implements OnInit {
   ];
 
   public counterparties = [];
+  public orders = [];
 
   public selectInputs = [
     {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
   ];
 
+  public orderSelectInputs = [
+    {name: "orderNumber", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
+  ];
+
   public inputs = [
-    {name: "orderNumber", type: "text", title: "Заказ", placeholder: "Номер", small: true, onlyNumber: true},
     {name: "comment", type: "text", placeholder: "Комментарий", big: true}
   ];
 
@@ -97,7 +104,7 @@ export class DocumentsEditFormComponent implements OnInit {
     this.partiesService.getPartiesBySearch(this.document.counterparty).subscribe(counterparties => { this.counterparties = counterparties });
   }
 
-  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
+  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private dealsService: DealsService, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
   updateValues(document) {
     this.document = document;
@@ -149,6 +156,21 @@ export class DocumentsEditFormComponent implements OnInit {
   }
 
   partiesTypeahead = new EventEmitter<string>();
+  ordersTypeahead = new EventEmitter<string>();
+
+  private ordersServerSideSearch() {
+    this.ordersTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.dealsService.getDealsBySearch(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.orders = x;
+    }, (err) => {
+        console.log(err);
+        this.orders = [];
+    });
+  }
 
   private serverSideSearch() {
     this.partiesTypeahead.pipe(
@@ -174,12 +196,13 @@ export class DocumentsEditFormComponent implements OnInit {
     }
   }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewParty(name) {
+    this.partiesAddModalWindowComponent.showWithName(name);
   }
 
   ngOnInit() {
     this.serverSideSearch();
+    this.ordersServerSideSearch();
 
     this.status = new FormControl('', [
       Validators.required

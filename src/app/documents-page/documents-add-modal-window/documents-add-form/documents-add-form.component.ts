@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DocumentsService } from '../../documents.service';
 import { PartiesService } from '../../../parties-page/parties.service';
+import { DealsService } from '../../../deals-page/deals.service';
 import { CloudinaryOptions, CloudinaryUploader } from 'ng2-cloudinary';
 import { FileUploader } from 'ng2-file-upload';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
@@ -11,7 +12,7 @@ import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-ad
   selector: 'documents-add-form',
   templateUrl: './documents-add-form.component.html',
   styleUrls: ['./documents-add-form.component.css'],
-  providers: [DocumentsService, PartiesService]
+  providers: [DocumentsService, PartiesService, DealsService]
 })
 export class DocumentsAddFormComponent implements OnInit {
 
@@ -33,13 +34,17 @@ export class DocumentsAddFormComponent implements OnInit {
   ];
 
   public counterparties = [];
+  public orders = [];
 
   public selectInputs = [
     {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
   ];
 
+  public orderSelectInputs = [
+    {name: "orderNumber", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
+  ];
+
   public inputs = [
-    {name: "orderNumber", type: "text", title: "Заказ", placeholder: "Номер", small: true, onlyNumber: true},
     {name: "comment", type: "text", placeholder: "Комментарий", big: true}
   ];
 
@@ -79,7 +84,7 @@ export class DocumentsAddFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private elRef: ElementRef, private renderer: Renderer, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
+  constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private dealsService: DealsService, private elRef: ElementRef, private renderer: Renderer, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
 
   upload(event) {
     this.fileLoading = true;
@@ -129,6 +134,21 @@ export class DocumentsAddFormComponent implements OnInit {
   }
 
   partiesTypeahead = new EventEmitter<string>();
+  ordersTypeahead = new EventEmitter<string>();
+
+  private ordersServerSideSearch() {
+    this.ordersTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.dealsService.getDealsBySearch(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.orders = x;
+    }, (err) => {
+        console.log(err);
+        this.orders = [];
+    });
+  }
 
   private serverSideSearch() {
     this.partiesTypeahead.pipe(
@@ -168,6 +188,7 @@ export class DocumentsAddFormComponent implements OnInit {
 
   ngOnInit() {
     this.serverSideSearch();
+    this.ordersServerSideSearch();
 
     this.type = new FormControl('', [
       Validators.required
@@ -179,8 +200,7 @@ export class DocumentsAddFormComponent implements OnInit {
       Validators.required
     ]);
     this.orderNumber = new FormControl('', [
-      Validators.required,
-      Validators.pattern("[0-9]*")
+      Validators.required
     ]);
     this.comment = new FormControl('', [
       Validators.required

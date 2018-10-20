@@ -30,6 +30,7 @@ export class DocumentsAddModalWindowComponent implements OnInit {
 
   hide() {
     this.activeClass = false;
+    this.documentsAddFormComponent.partiesAddModalWindowComponent.hide();
     let timeoutClear = setTimeout(() => { this.documentsAddFormComponent.resetForm(); clearTimeout(timeoutClear); }, 300);
   }
   

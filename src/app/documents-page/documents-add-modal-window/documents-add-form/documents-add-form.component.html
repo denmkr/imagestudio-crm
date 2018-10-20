@@ -35,6 +35,33 @@
       </div>
     </div>
 
+    <div *ngFor="let select of orderSelectInputs" class="input-field-block">
+      <div class="select-container">
+        <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+        <ng-select [loading]="loading" [typeahead]="ordersTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="number" bindValue="number" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Не найдено для "{{searchTerm}}"
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Загрузка "{{searchTerm}}"
+              </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.number}} <br />
+            <small>{{item.organization}}</small>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
     <div class="input-field-block">
       <div class="upload-button">
         <button [disabled]="fileLoading" (click)="upload()" class="button">

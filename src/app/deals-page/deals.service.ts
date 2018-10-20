@@ -18,6 +18,30 @@ export class DealsService {
     );
   }
 
+  getDealsBySearch(search: string) {
+
+    let httpParams = new HttpParams();
+    if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
+    httpParams = httpParams.set('page[number]', '1');
+    httpParams = httpParams.set('page[size]', '2500');
+
+
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    .map(result => {
+
+      let orders = result.orders.map(order => ({
+        id: order.id,
+        organization: order.counterparty.organization.name,
+        client: order.counterparty.contact_name,
+        number: order.number
+      }));
+
+      console.log(orders);
+
+      return orders;
+    });
+  }
+
   updateDealStatusByOrderId(newStatus: string, id: string) {
     switch (newStatus) {
       case "Новое":
