@@ -34,8 +34,8 @@ export class DealsCreatingFormComponent implements OnInit {
   public organizations;
 
   public selects = [
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
-    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect"},
+    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "text", bindValue: "id"},
+    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
   ];
 
   public selectInputs = [
@@ -45,6 +45,10 @@ export class DealsCreatingFormComponent implements OnInit {
   public textAreas = [
     {name: "comment", placeholder: "Комментарий к заказу", big: true}
   ];
+
+  public inputs = [
+    {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
+  ]
 
   public statuses = [
     {text: 'Новое', id: 'new'}, 
@@ -67,6 +71,7 @@ export class DealsCreatingFormComponent implements OnInit {
   counterparty: FormControl;
   user: FormControl;
   comment: FormControl;
+  deadline: FormControl;
 
   public counterparties = [];
 
@@ -105,6 +110,12 @@ export class DealsCreatingFormComponent implements OnInit {
   ngOnInit() {
     this.serverSideSearch();
 
+    this.dealsService.getManagers().subscribe(
+      result => { 
+        this.users = result;
+      }
+    );
+
     this.status = new FormControl('', [
       Validators.required
     ]);
@@ -112,6 +123,9 @@ export class DealsCreatingFormComponent implements OnInit {
       Validators.required
     ]);
     this.user = new FormControl('', [
+      Validators.required
+    ]);
+    this.deadline = new FormControl('', [
       Validators.required
     ]);
     this.comment = new FormControl('', [
@@ -122,6 +136,7 @@ export class DealsCreatingFormComponent implements OnInit {
       status: this.status,
       user: this.user,
       comment: this.comment,
+      deadline: this.deadline,
       counterparty: this.counterparty
     });
 

@@ -2,7 +2,7 @@
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="{{select.bindLabel}}" bindValue="{{select.bindValue}}" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
     </div>
   </div>
@@ -34,6 +34,12 @@
         </ng-select>
       </div>
     </div>
+
+    <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
+      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">
+    </div>
+
     <div *ngFor="let input of textAreas" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
         <textarea formControlName="{{input.name}}" name="{{input.name}}" placeholder="{{input.placeholder}}" [ngClass]="{
            'has-danger': newDealForm.get(input.name).invalid && newDealForm.get(input.name).dirty, 
@@ -44,6 +50,7 @@
            <p>Заполните поле</p>
         </div>
     </div>
+
   </div>
 
   <div class="positions">

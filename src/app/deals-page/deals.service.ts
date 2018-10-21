@@ -18,13 +18,29 @@ export class DealsService {
     );
   }
 
+  getManagers() {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('page[number]', '1');
+    httpParams = httpParams.set('page[size]', '2500');
+
+    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/users/", { params: httpParams, reportProgress: true })
+    .map(result => {
+
+      let users = result.users.map(user => ({
+        id: user.id,
+        name: user.first_name + " " + user.last_name
+      }));
+
+      return users;
+    });
+  }
+
   getDealsBySearch(search: string) {
 
     let httpParams = new HttpParams();
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     httpParams = httpParams.set('page[number]', '1');
     httpParams = httpParams.set('page[size]', '2500');
-
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
@@ -35,8 +51,6 @@ export class DealsService {
         client: order.counterparty.contact_name,
         number: order.number
       }));
-
-      console.log(orders);
 
       return orders;
     });

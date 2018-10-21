@@ -20,4 +20,12 @@ export class WarehouseService {
     });
   }
 
+  createProduct(id: number, name: string) {
+    const product = {
+      name: name
+    };
+
+    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/products/', product);
+  }
+
 }
