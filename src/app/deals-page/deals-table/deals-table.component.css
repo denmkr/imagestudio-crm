@@ -3,6 +3,11 @@
 	height: 30px;
 }
 
+.ng-select#positionStatusSelect {
+	width: 100px;
+	height: 30px;
+}
+
 .select-blocks {
 	display: inline-block;
 	vertical-align: middle;

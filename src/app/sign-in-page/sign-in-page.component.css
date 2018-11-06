@@ -69,3 +69,7 @@
 .sign-in-content form .buttons-block button {
 	margin-right: 0;
 }
+
+.sign-in-container .input-blocks {
+	min-width: 0;
+}

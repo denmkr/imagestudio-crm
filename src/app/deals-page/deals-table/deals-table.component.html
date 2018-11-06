@@ -33,8 +33,8 @@
         <td class="status">
           <div class="select-blocks">
             <div class="select-field-block">
-              <form [formGroup]="statusForm" (ngSubmit)="changeDealStatus(deal.id, $event)">
-                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="deal.status" (change)="changeDealStatus(deal.id, $event)">
+              <form [formGroup]="statusForm">
+                <ng-select class="blue" id={{statusSelect.id}} [items]="deal.available_events" bindLabel="name" bindValue="id" placeholder="{{deal.status.name}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changeDealStatus(deal.id, $event)" notFoundText="Нет событий">
                 </ng-select>
               </form>
             </div>
@@ -56,8 +56,8 @@
         <td class="status">
           <div class="select-blocks">
             <div class="select-field-block">
-              <form [formGroup]="statusForm" (ngSubmit)="changeStatus()">
-                <ng-select class="green" id={{statusSelect.id}} [items]="order_position.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [(ngModel)]="order_position.status" [clearable]="false" (change)="changePositionStatus(deal.id, $event)">
+              <form [formGroup]="positionStatusForm">
+                <ng-select class="green" id={{positionStatusSelect.id}} [items]="order_position.available_events" bindLabel="name" bindValue="id" placeholder="{{order_position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(deal.id, $event)" notFoundText="Нет событий">
                 </ng-select>
               </form>
             </div>
@@ -68,4 +68,5 @@
     </ng-container>
   </tbody>
 </table>
-<deals-table-pagination (eventEmitter)="showDealsByPage($event)"></deals-table-pagination>
+<!-- (eventEmitter)="showDealsByPage($event)" -->
+<deals-table-pagination></deals-table-pagination>

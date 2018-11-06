@@ -2,11 +2,13 @@ import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetecto
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsAddModalWindowComponent } from './deals-items-add-modal-window/deals-items-add-modal-window.component';
+import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
 
 @Component({
   selector: 'deals-positions-add-form',
   templateUrl: './deals-positions-add-form.component.html',
-  styleUrls: ['./deals-positions-add-form.component.css']
+  styleUrls: ['./deals-positions-add-form.component.css'],
+  providers: [ WarehouseService ]
 })
 export class DealsPositionsAddFormComponent implements OnInit {
 
@@ -17,6 +19,12 @@ export class DealsPositionsAddFormComponent implements OnInit {
   bigWindow = true;
 
   orders_items = [];
+
+  public products = [];
+
+  public selectInputs = [
+    {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"}
+  ];
 
   public selects = [
     {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
@@ -32,10 +40,9 @@ export class DealsPositionsAddFormComponent implements OnInit {
   ];
 
   public inputs = [
-    {name: "name", type: "text", inline: true, placeholder: "Толстовка с вышивкой", title: "Название"},
+    {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
     {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true},
-    {name: "amount", type: "text", title: "Количество", tiny: true},
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ];
 
@@ -64,9 +71,30 @@ export class DealsPositionsAddFormComponent implements OnInit {
   	console.log("ADD");
   }
 
-  constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  productsTypeahead = new EventEmitter<string>();
+
+  private serverSideSearchForProducts() {
+    this.productsTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.warehouseService.getProducts(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.products = x;
+    }, (err) => {
+        console.log(err);
+        this.products = [];
+    });
+  }
+
+  constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+
+  addTag(name) {
+    return { id: name, text: name };
+  }
 
   ngOnInit() {
+    this.serverSideSearchForProducts();
 
     this.status = new FormControl('', [
       Validators.required

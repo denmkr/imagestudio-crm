@@ -56,69 +56,24 @@ export class DealsService {
     });
   }
 
-  updateDealStatusByOrderId(newStatus: string, id: string) {
-    switch (newStatus) {
-      case "Новое":
-        newStatus = "new";
-        break;
-      case "Лид":
-        newStatus = "lead";
-        break;
-      case "В работе":
-        newStatus = "work";
-        break;
-      case "Не оплачено":
-        newStatus = "debt";
-        break;
-      case "Выполнено":
-        newStatus = "done";
-        break;
-      case "Слив":
-        newStatus = "dumb";
-        break;
-      default:
-        break;
+  updateDealStatusByOrderId(eventId: string, id: string) {
+
+    const params = {
+      event: eventId
     };
 
-    const status = {
-      event: newStatus
-    };
-
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', status).subscribe(
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', params).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
   }
 
-  updatePositionStatusByOrderId(newStatus: string, id: string) {
-    switch (newStatus) {
-      case "Новое":
-        newStatus = "new";
-        break;
-      case "Лид":
-        newStatus = "lead";
-        break;
-      case "В работе":
-        newStatus = "work";
-        break;
-      case "Не оплачено":
-        newStatus = "debt";
-        break;
-      case "Выполнено":
-        newStatus = "done";
-        break;
-      case "Слив":
-        newStatus = "dumb";
-        break;
-      default:
-        break;
+  updatePositionStatusByOrderId(eventId: string, id: string) {
+    const params = {
+      event: eventId
     };
 
-    const status = {
-      event: newStatus
-    };
-
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', status).subscribe(
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', params).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -230,25 +185,28 @@ export class DealsService {
 
       result.orders.map(order => {
         names = "";
-        
+
         switch (order.status) {
           case "new":
-            order.status = "Новое";
+            order.status = {name: "Новое", id: "new"};
             break;
           case "lead":
-            order.status = "Лид";
+            order.status = {name: "Лид", id: "lead"};
             break;
-          case "work":
-            order.status = "В работе";
+          case "in_progress":
+            order.status = {name: "В работе", id: "in_progress"};
             break;
-          case "debt":
-            order.status = "Не оплачено";
+          case "payed":
+            order.status = {name: "Оплачено", id: "payed"};
             break;
           case "done":
-            order.status = "Выполнено";
+            order.status = {name: "Выполнено", id: "done"};
             break;
-          case "dumb":
-            order.status = "Слив";
+          case "archived":
+            order.status = {name: "Архив", id: "archived"};
+            break;
+          case "denied":
+            order.status = {name: "Слив", id: "denied"};
             break;
           default:
             break;
@@ -258,23 +216,23 @@ export class DealsService {
 
         order.available_events.map(available_event => {
           switch (available_event) {
-            case "new":
-              events.push("Новое");
-              break;
             case "accept":
-              events.push("Лид");
+              events.push({ name: "Лид", id: "accept" });
               break;
-            case "work":
-              events.push("В работе");
+            case "start":
+              events.push({ name: "В работе", id: "start" });
               break;
-            case "debt":
-              events.push("Не оплачено");
+            case "complete":
+              events.push({ name: "Выполнено", id: "complete" });
               break;
-            case "done":
-              events.push("Выполнено");
+            case "set_payed":
+              events.push({ name: "Оплачено", id: "set_payed" });
               break;
             case "archive":
-              events.push("Слив");
+              events.push({ name: "Архив", id: "archive" });
+              break;
+            case "deny":
+              events.push({ name: "Слив", id: "deny" });
               break;
             default:
               break;
@@ -282,7 +240,6 @@ export class DealsService {
         });
 
         order.available_events = events;
-        order.available_events.push(order.status);
 
         order.orders_positions.map(position => {
           if (names != "") names += ", ";
@@ -292,22 +249,34 @@ export class DealsService {
 
           switch (position.status) {
             case "new":
-              position.status = "Новое";
+              position.status = {name: "Новое", id: "new"};
               break;
-            case "lead":
-              position.status = "Лид";
+            case "pending":
+              position.status = {name: "Рассмотрение", id: "pending"};
               break;
-            case "work":
-              position.status = "В работе";
+            case "calculating":
+              position.status = {name: "Расчет", id: "calculating"};
               break;
-            case "debt":
-              position.status = "Не оплачено";
+            case "deffered":
+              position.status = {name: "Различить", id: "deffered"};
+              break;
+            case "waiting":
+              position.status = {name: "Ожидается", id: "waiting"};
+              break;
+            case "in_progress":
+              position.status = {name: "В работе", id: "in_progress"};
+              break;
+            case "ordered":
+              position.status = {name: "Заказан", id: "ordered"};
               break;
             case "done":
-              position.status = "Выполнено";
+              position.status = {name: "Завершен", id: "done"};
               break;
-            case "dumb":
-              position.status = "Слив";
+            case "payed":
+              position.status = {name: "Оплачен", id: "payed"};
+              break;
+            case "verified":
+              position.status = {name: "Проверен", id: "verified"};
               break;
             default:
               break;
@@ -315,23 +284,29 @@ export class DealsService {
 
           position.available_events.map(available_event => {
             switch (available_event) {
-              case "new":
-                position_events.push("Новое");
-                break;
               case "accept":
-                position_events.push("Лид");
+                position_events.push({ name: "Лид", id: "accept" });
                 break;
-              case "work":
-                position_events.push("В работе");
+              case "start":
+                position_events.push({ name: "В работе", id: "start" });
                 break;
-              case "debt":
-                position_events.push("Не оплачено");
+              case "put_in_wait":
+                position_events.push({ name: "Ожидание", id: "put_in_wait" });
                 break;
-              case "done":
-                position_events.push("Выполнено");
+              case "calculate":
+                position_events.push({ name: "Рассчет", id: "calculate" });
                 break;
-              case "archive":
-                position_events.push("Слив");
+              case "set_ordered":
+                position_events.push({ name: "Заказ", id: "set_ordered" });
+                break;
+              case "complete":
+                position_events.push({ name: "Выполнено", id: "complete" });
+                break;
+              case "set_payed":
+                position_events.push({ name: "Оплачено", id: "set_payed" });
+                break;
+              case "verify":
+                position_events.push({ name: "Проверено", id: "verify" });
                 break;
               default:
                 break;
@@ -339,7 +314,6 @@ export class DealsService {
           });
 
           position.available_events = position_events;
-          position.available_events.push(position.status);
 
         });
 
@@ -361,6 +335,8 @@ export class DealsService {
         readiness: order.readiness,
         available_events: order.available_events
       }));
+
+     
 
       return [deals, result.meta];
 

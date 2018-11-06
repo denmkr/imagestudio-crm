@@ -40,6 +40,7 @@ export class SignInPageComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.isAuth = this.authService.isAuthenticated();
 
   	this.email = new FormControl("", [

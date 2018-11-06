@@ -23,21 +23,14 @@ export class DealsTableComponent {
   currentSearch: string;
   currentUserId: string;
 
-  selectedId = 'Лид';
-
   statusForm: FormGroup;
   status: FormControl;
 
-  public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
+  positionStatusForm: FormGroup;
+  positionStatus: FormControl;
 
-  public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
-  ];
+  public statusSelect = {name: "status", placeholder: "Статус", id: "statusSelect"};
+  public positionStatusSelect = {name: "positionStatus", placeholder: "Статус", id: "positionStatusSelect"};
 
   constructor(private dealsService: DealsService, private activatedRoute: ActivatedRoute, private authService: AuthService) { 
     this.activatedRoute.queryParams.subscribe(params => {
@@ -70,7 +63,16 @@ export class DealsTableComponent {
       status: this.status
     });
 
+    this.positionStatus = new FormControl('', [
+      Validators.required
+    ]);
+
+    this.positionStatusForm = new FormGroup({
+      positionStatus: this.positionStatus
+    });
+
     this.statusForm.reset();
+    this.positionStatusForm.reset();
   }
 
   showDealsByPage(page: number) {
@@ -83,11 +85,11 @@ export class DealsTableComponent {
   }
 
   changeDealStatus(id, event) {
-    this.dealsService.updateDealStatusByOrderId(event, id);
+    this.dealsService.updateDealStatusByOrderId(event.id, id);
   }
 
   changePositionStatus(id, event) {
-    this.dealsService.updatePositionStatusByOrderId(event, id);
+    this.dealsService.updatePositionStatusByOrderId(event.id, id);
   }
 
   revealDeal(event) {
