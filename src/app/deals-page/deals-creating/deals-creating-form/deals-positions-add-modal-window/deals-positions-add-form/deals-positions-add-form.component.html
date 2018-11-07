@@ -12,7 +12,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -54,51 +54,35 @@
         </i>
       </div>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Наименование</th>
-          <th>Где</th>
-          <th>Цена</th>
-          <th>Статус</th>
-          <th>Тех. задание</th>
-          <th>Счет</th>
-          <th>Макет</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Толстовка</td>
-          <td>ООО "Донкоттон"</td>
-          <td>62 113 Р</td>
-          <td><div class="status purple square">Готов</div></td>
-          <td>Красный, 2XL-5</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Вышивка</td>
-          <td>ООО "Донкоттон"</td>
-          <td>62 113 Р</td>
-          <td><div class="status purple square">В работе</div></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <ng-container *ngFor="let item of orders_items">
+    
+    <ng-container *ngIf="position_items.length != 0">
+      <table>
+        <thead>
           <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.amount }}</td>
-            <td>{{ item.deadline }}</td>
-            <td>{{ item.prime_price }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.full_price }}</td>
-            <td>{{ item.status }}</td>
+            <th>Наименование</th>
+            <th>Где</th>
+            <th>Цена</th>
+            <th>Статус</th>
+            <th>Техзадание</th>
+            <th>Счет</th>
+            <th>Макет</th>
           </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of position_items">
+            <tr>
+              <td>{{ item.product.text }}</td>
+              <td>{{ item.organization.text }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.prime_price }}</td>
+              <td>{{ item.tz }}</td>
+              <td>{{ item.full_price }}</td>
+              <td>{{ item.status }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-container>
     
   </div>
 
@@ -109,4 +93,4 @@
   
 </form>
 
-<deals-items-add-modal-window></deals-items-add-modal-window>
+<deals-items-add-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-add-modal-window>

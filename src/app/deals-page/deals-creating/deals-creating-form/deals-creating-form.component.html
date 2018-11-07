@@ -64,44 +64,36 @@
       </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Наименование</th>
-          <th>Количество</th>
-          <th>Дедлайн</th>
-          <th>Себестоимость</th>
-          <th>Цена (руб.)</th>
-          <th>Сумма</th>
-          <th>Статус</th>
-          <th>Прибыль</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Толстовка с вышивкой</td>
-          <td>1000</td>
-          <td>21.01.2017</td>
-          <td>567 Р</td>
-          <td>900 Р</td>
-          <td>12320 Р</td>
-          <td><div class="status purple square">Новое</div></td>
-          <td>2450 Р</td>
-        </tr>
-        <ng-container *ngFor="let position of orders_positions">
+    <ng-container *ngIf="orders_positions.length != 0">
+      <table>
+        <thead>
           <tr>
-            <td>{{ position.name }}</td>
-            <td>{{ position.amount }}</td>
-            <td>{{ position.deadline }}</td>
-            <td>{{ position.prime_price }}</td>
-            <td>{{ position.price }}</td>
-            <td>{{ position.full_price }}</td>
-            <td>{{ position.status }}</td>
-            <td>{{ position.profit }}</td>
+            <th>Наименование</th>
+            <th>Количество</th>
+            <th>Дедлайн</th>
+            <th>Себестоимость</th>
+            <th>Цена (руб.)</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+            <th>Прибыль</th>
           </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let position of orders_positions">
+            <tr>
+              <td>{{ position.product.text }}</td>
+              <td>{{ position.amount }}</td>
+              <td>{{ position.deadline }}</td>
+              <td>{{ position.price }}</td>
+              <td>{{ position.cost }}</td>
+              <td>{{ position.full_price }}</td>
+              <td>{{ position.status }}</td>
+              <td>{{ position.profit }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-container>
     
   </div>
 
@@ -168,4 +160,4 @@
 </form>
 
 <parties-add-modal-window></parties-add-modal-window>
-<deals-positions-add-modal-window></deals-positions-add-modal-window>
+<deals-positions-add-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-add-modal-window>

@@ -35,6 +35,7 @@ export class DealsItemsAddFormComponent implements OnInit {
   organization: FormControl;
   price: FormControl;
 
+  @Output() refreshPositionItems = new EventEmitter<any>();
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
@@ -43,8 +44,8 @@ export class DealsItemsAddFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  addDealsItems() {
-  	console.log("ADD");
+  addPositionItems() {
+    this.refreshPositionItems.emit(this.newDealsItemForm.value);
   }
 
   constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }

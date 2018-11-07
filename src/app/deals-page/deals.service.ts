@@ -113,19 +113,55 @@ export class DealsService {
     
   }
 
-  createNewDeal(type: string, category: string, counterparty: string, comment: string) {
+  createNewDeal(deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>) {
+    let order_positions = [];
 
-    const document = {
-      kind: type,
-      category: category,
-      counterparty: counterparty,
+    orders_positions.map(position => {
+      let position_items = [];
+
+      position.items.map(item => {
+        let newItem = {
+          product: {
+            id: item.product.id
+          },
+          organization: {
+            id: item.organization.id
+          },
+          prime_price: item.price
+        };
+
+        position_items.push(newItem);
+      });
+
+      let newPosition = {
+        product: {
+          id: position.product.id
+        },
+        must_be_finished_at: position.deadline,
+        price: position.price,
+        count: position.amount,
+        orders_items: position_items
+      };
+
+      order_positions.push(newPosition);
+
+    });
+
+    const order = {
+      must_be_finished_at: deadline,
+      doer: {
+        id: doer_id
+      },
+      counterparty: {
+        id: counterparty_id
+      },
       comment: comment,
-      user: {
-        id: this.authService.getUserId()
-      }
+      orders_positions: order_positions
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', document).subscribe(
+    console.log(order);
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', order).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );

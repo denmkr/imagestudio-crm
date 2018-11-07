@@ -32,6 +32,7 @@ export class DealsCreatingFormComponent implements OnInit {
   }
 
   public organizations;
+  public orders_positions = [];
 
   public selects = [
     {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "text", bindValue: "id"},
@@ -78,12 +79,8 @@ export class DealsCreatingFormComponent implements OnInit {
   constructor(public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
-    if (this.newDealForm.controls.email.valid) {
-      this.newDealForm.controls.organization;
-  	  this.dealsService.createNewDeal(this.newDealForm.get("type").value, this.newDealForm.get("category").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value);
-      
-      this.newDealForm.reset();
-    }
+    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions);
+    this.newDealForm.reset();
   }
 
   partiesTypeahead = new EventEmitter<string>();
@@ -101,6 +98,11 @@ export class DealsCreatingFormComponent implements OnInit {
         
         this.counterparties = [];
     });
+  }
+
+  refreshOrderPositions(event) {
+    console.log(event);
+    this.orders_positions.push(event);
   }
 
   addNewParty(name) {

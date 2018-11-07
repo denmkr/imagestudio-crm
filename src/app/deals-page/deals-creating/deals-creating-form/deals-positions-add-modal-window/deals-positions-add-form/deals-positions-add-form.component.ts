@@ -18,8 +18,6 @@ export class DealsPositionsAddFormComponent implements OnInit {
   loading = false;
   bigWindow = true;
 
-  orders_items = [];
-
   public products = [];
 
   public selectInputs = [
@@ -39,6 +37,8 @@ export class DealsPositionsAddFormComponent implements OnInit {
     {text: 'Слив', id: 'dumb'}
   ];
 
+  public position_items = [];
+
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
     {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
@@ -49,12 +49,13 @@ export class DealsPositionsAddFormComponent implements OnInit {
   newDealsPositionForm: FormGroup;
 
   status: FormControl;
-  name: FormControl;
+  product: FormControl;
   cost: FormControl;
   price: FormControl;
   amount: FormControl;
   deadline: FormControl;
 
+  @Output() refreshOrderPositions = new EventEmitter<any>();
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
@@ -67,8 +68,15 @@ export class DealsPositionsAddFormComponent implements OnInit {
     this.dealsItemsAddModalWindowComponent.show();
   }
 
+  addPositionItems(event) {
+    this.position_items.push(event);
+  }
+
   addDealsPositions() {
-  	console.log("ADD");
+    let order_position = this.newDealsPositionForm.value;
+    order_position.items = this.position_items;
+    
+    this.refreshOrderPositions.emit(order_position);
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -99,7 +107,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
     this.status = new FormControl('', [
       Validators.required
     ]);
-    this.name = new FormControl('', [
+    this.product = new FormControl('', [
       Validators.required
     ]);
     this.cost = new FormControl('', [
@@ -117,7 +125,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
 
   	this.newDealsPositionForm = new FormGroup({
       status: this.status,
-      name: this.name,
+      product: this.product,
       cost: this.cost,
       price: this.price,
       amount: this.amount,

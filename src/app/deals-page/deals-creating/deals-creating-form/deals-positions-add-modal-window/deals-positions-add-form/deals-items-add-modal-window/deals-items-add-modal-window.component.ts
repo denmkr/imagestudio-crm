@@ -12,6 +12,7 @@ export class DealsItemsAddModalWindowComponent implements OnInit {
   @HostBinding('class.active') activeClass: boolean = false;
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
+  @Output() refreshOrderItems = new EventEmitter<any>();
 
   title = "Добавление товара";
 
@@ -29,6 +30,12 @@ export class DealsItemsAddModalWindowComponent implements OnInit {
   }
 
   hide() {
+    this.activeClass = false;
+    let timeoutClear = setTimeout(() => { this.dealsItemsAddFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
+  }
+
+  refreshPositionItems(event) {
+    this.refreshOrderItems.emit(event);
     this.activeClass = false;
     let timeoutClear = setTimeout(() => { this.dealsItemsAddFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
   }
