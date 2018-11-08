@@ -29,6 +29,8 @@ export class DealsTableComponent {
   positionStatusForm: FormGroup;
   positionStatus: FormControl;
 
+  editingLink = "/deals/edit";
+
   public statusSelect = {name: "status", placeholder: "Статус", id: "statusSelect"};
   public positionStatusSelect = {name: "positionStatus", placeholder: "Статус", id: "positionStatusSelect"};
 
@@ -40,8 +42,9 @@ export class DealsTableComponent {
     });
   }
 
-  showEditModal(document) {
-    this.eventEmitter.emit(document);
+  showEditModal(deal) {
+    console.log(deal);
+    // this.eventEmitter.emit(deal);
   }
 
   ngOnInit() {

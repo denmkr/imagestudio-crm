@@ -1,0 +1,69 @@
+.ng-select#statusSelect {
+	width: 120px;
+}
+
+table tr .square {
+	display: inline-block;
+	padding: 2px 5px;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+table tr .square.orange {
+	background: orange;
+}
+
+table tr .square.green {
+	background: green;
+}
+
+table tr .square.purple {
+	background: purple;
+}
+
+table tbody, table thead {
+	border: none;
+}
+
+table tr {
+	border-width: 5px;
+}
+
+table {
+	background: #fff;
+}
+
+.orders_items {
+	margin-top: 30px;
+}
+
+.orders_items .top {
+	margin-bottom: 10px;
+}
+
+.orders_items .add-button {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 8px 13px;
+	background: #aaa;
+}
+
+.orders_items .add-button a {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.orders_items .add-button i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 8px;
+	color: #fff;
+	font-size: 17px;
+}

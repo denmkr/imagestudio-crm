@@ -1,4 +1,4 @@
-<form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="editDealsPositionForm" (ngSubmit)="editDealsPositions($event)">
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -73,8 +73,8 @@
             <tr>
               <td>{{ item.product.text }}</td>
               <td>{{ item.organization.text }}</td>
-              <td>{{ item.prime_price }}</td>
               <td>{{ item.price }}</td>
+              <td>{{ item.prime_price }}</td>
               <td>{{ item.tz }}</td>
               <td>{{ item.full_price }}</td>
               <td>{{ item.status }}</td>
@@ -93,4 +93,4 @@
   
 </form>
 
-<deals-items-add-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-add-modal-window>
+<deals-items-edit-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-edit-modal-window>

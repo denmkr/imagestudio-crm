@@ -1,4 +1,4 @@
-<form [formGroup]="newDealForm" (ngSubmit)="createDeal($event)">
+<form [formGroup]="editDealForm" (ngSubmit)="editDeal($event)">
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -35,19 +35,18 @@
       </div>
     </div>
 
-    <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+    <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
-      <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
+      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">
     </div>
 
     <div *ngFor="let input of textAreas" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
         <textarea formControlName="{{input.name}}" name="{{input.name}}" placeholder="{{input.placeholder}}" [ngClass]="{
-           'has-danger': newDealForm.get(input.name).invalid && newDealForm.get(input.name).dirty, 
-           'has-success': newDealForm.get(input.name).valid && newDealForm.get(input.name).dirty
+           'has-danger': editDealForm.get(input.name).invalid && editDealForm.get(input.name).dirty, 
+           'has-success': editDealForm.get(input.name).valid && editDealForm.get(input.name).dirty
          }"></textarea>
         <div class="form-control-feedback"
-           *ngIf="newDealForm.get(input.name).errors && (newDealForm.get(input.name).dirty || newDealForm.get(input.name).touched)">
+           *ngIf="editDealForm.get(input.name).errors && (editDealForm.get(input.name).dirty || editDealForm.get(input.name).touched)">
            <p>Заполните поле</p>
         </div>
     </div>
@@ -160,5 +159,5 @@
   
 </form>
 
-<parties-add-modal-window></parties-add-modal-window>
-<deals-positions-add-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-add-modal-window>
+<parties-edit-modal-window></parties-edit-modal-window>
+<deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-edit-modal-window>

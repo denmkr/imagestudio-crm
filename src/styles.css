@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body {
     font-family: 'Open Sans', sans-serif;
@@ -264,7 +265,7 @@ table thead th {
 table th, table tr td {
 	text-align: left;
 	padding: 12px 15px;
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 table tr td {
@@ -497,6 +498,19 @@ table tbody tr {
 	display: inline-block;
 	vertical-align: middle;
 	box-sizing: border-box;
+}
+
+ng-datepicker input { 
+	border: 1px solid #fff !important;
+	padding: 8px 11px !important;
+}
+
+.ngx-datepicker-container .topbar-container {
+	box-sizing: border-box !important;
+}
+
+.ngx-datepicker-container .main-calendar-container {
+	box-sizing: border-box !important;
 }
 
 .input-blocks .input-title {

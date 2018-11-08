@@ -44,6 +44,7 @@ export class DealsService {
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
+      console.log(result);
 
       let orders = result.orders.map(order => ({
         id: order.id,
@@ -148,6 +149,7 @@ export class DealsService {
     });
 
     const order = {
+
       must_be_finished_at: deadline,
       doer: {
         id: doer_id
@@ -158,8 +160,6 @@ export class DealsService {
       comment: comment,
       orders_positions: order_positions
     };
-
-    console.log(order);
 
     this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', order).subscribe(
       res => { console.log(res) },
@@ -361,7 +361,7 @@ export class DealsService {
         id: order.id,
         names: order.names,
         organization: order.counterparty.organization.name,
-        client: order.counterparty.contact_name,
+        doer: order.doer.first_name,
         number: order.number,
         status: order.status,
         price: order.price,
@@ -371,8 +371,6 @@ export class DealsService {
         readiness: order.readiness,
         available_events: order.available_events
       }));
-
-     
 
       return [deals, result.meta];
 

@@ -61,6 +61,14 @@ import { DesignPositionsAddModalWindowComponent } from './design-page/design-cre
 import { DesignPositionsAddFormComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-positions-add-form.component';
 import { DesignItemsAddModalWindowComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-items-add-modal-window/design-items-add-modal-window.component';
 import { DesignItemsAddFormComponent } from './design-page/design-creating/design-creating-form/design-positions-add-modal-window/design-positions-add-form/design-items-add-modal-window/design-items-add-form/design-items-add-form.component';
+import { DealsEditingComponent } from './deals-page/deals-editing/deals-editing.component';
+import { DealsEditingFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-editing-form.component';
+import { DealsPositionsEditModalWindowComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-edit-modal-window/deals-positions-edit-modal-window.component';
+import { DealsPositionsEditFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-edit-modal-window/deals-positions-edit-form/deals-positions-edit-form.component';
+import { DealsItemsEditModalWindowComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-edit-modal-window/deals-positions-edit-form/deals-items-edit-modal-window/deals-items-edit-modal-window.component';
+import { DealsItemsEditFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-edit-modal-window/deals-positions-edit-form/deals-items-edit-modal-window/deals-items-edit-form/deals-items-edit-form.component';
+
+import { NgDatepickerModule } from 'ng2-datepicker';
 
 @NgModule({
   declarations: [
@@ -107,7 +115,13 @@ import { DesignItemsAddFormComponent } from './design-page/design-creating/desig
     DesignPositionsAddModalWindowComponent,
     DesignPositionsAddFormComponent,
     DesignItemsAddModalWindowComponent,
-    DesignItemsAddFormComponent
+    DesignItemsAddFormComponent,
+    DealsEditingComponent,
+    DealsEditingFormComponent,
+    DealsPositionsEditModalWindowComponent,
+    DealsPositionsEditFormComponent,
+    DealsItemsEditModalWindowComponent,
+    DealsItemsEditFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,
@@ -120,6 +134,8 @@ import { DesignItemsAddFormComponent } from './design-page/design-creating/desig
     /*SelectModule,*/
     NgSelectModule,
     FileUploadModule,
+    NgDatepickerModule,
+
     routing
   ],
   providers: [

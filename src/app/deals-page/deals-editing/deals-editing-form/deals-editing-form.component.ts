@@ -3,28 +3,20 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
-import { DealsPositionsAddModalWindowComponent } from './deals-positions-add-modal-window/deals-positions-add-modal-window.component';
+import { DealsPositionsEditModalWindowComponent } from './deals-positions-edit-modal-window/deals-positions-edit-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
-import { DatepickerOptions } from from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 
 @Component({
-  selector: 'deals-creating-form',
-  templateUrl: './deals-creating-form.component.html',
-  styleUrls: ['./deals-creating-form.component.css'],
+  selector: 'deals-editing-form',
+  templateUrl: './deals-editing-form.component.html',
+  styleUrls: ['./deals-editing-form.component.css'],
   providers: [DealsService, PartiesService]
 })
-export class DealsCreatingFormComponent implements OnInit {
-
-  options: DatepickerOptions = {
-    minYear: 2016,
-    placeholder: '01.01.2018',
-    displayFormat: 'D.MM.YYYY',
-    firstCalendarDay: 1
-  };
+export class DealsEditingFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
-  @ViewChild(DealsPositionsAddModalWindowComponent) dealsPositionsAddModalWindowComponent: DealsPositionsAddModalWindowComponent;
+  @ViewChild(DealsPositionsEditModalWindowComponent) dealsPositionsEditModalWindowComponent: DealsPositionsEditModalWindowComponent;
 
   cancelLink = "/deals";
 
@@ -55,7 +47,7 @@ export class DealsCreatingFormComponent implements OnInit {
     {name: "comment", placeholder: "Комментарий к заказу", big: true}
   ];
 
-  public dateInputs = [
+  public inputs = [
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ]
 
@@ -142,7 +134,7 @@ export class DealsCreatingFormComponent implements OnInit {
       Validators.required
     ]);
 
-  	this.newDealForm = new FormGroup({
+    this.newDealForm = new FormGroup({
       status: this.status,
       user: this.user,
       comment: this.comment,
@@ -154,7 +146,7 @@ export class DealsCreatingFormComponent implements OnInit {
   }
 
   addNewDealsPosition() {
-    this.dealsPositionsAddModalWindowComponent.show();
+    this.dealsPositionsEditModalWindowComponent.show();
   }
 
 }

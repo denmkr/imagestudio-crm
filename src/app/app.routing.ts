@@ -7,6 +7,7 @@ import { DealsPageComponent } from './deals-page/deals-page.component';
 import { DesignPageComponent } from './design-page/design-page.component';
 import { DesignCreatingComponent } from './design-page/design-creating/design-creating.component';
 import { DealsCreatingComponent } from './deals-page/deals-creating/deals-creating.component';
+import { DealsEditingComponent } from './deals-page/deals-editing/deals-editing.component';
 import { SignInPageComponent } from './sign-in-page/sign-in-page.component';
 import { AuthGuard } from './auth/auth.guard';
 
@@ -18,6 +19,7 @@ const routes = [
   { path: 'design/create', component: DesignCreatingComponent, canActivate: [AuthGuard] },
   { path: 'deals', component: DealsPageComponent, canActivate: [AuthGuard] },
   { path: 'deals/create', component: DealsCreatingComponent, canActivate: [AuthGuard] },
+  { path: 'deals/edit', component: DealsEditingComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
   { path: 'signin', component: SignInPageComponent }
 ];
