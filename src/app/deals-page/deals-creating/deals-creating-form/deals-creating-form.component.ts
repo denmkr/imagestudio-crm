@@ -6,6 +6,7 @@ import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsAddModalWindowComponent } from './deals-positions-add-modal-window/deals-positions-add-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
+import { DocumentsAddModalWindowComponent } from '../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
 
@@ -29,6 +30,7 @@ export class DealsCreatingFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
+  @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
   @ViewChild(DealsPositionsAddModalWindowComponent) dealsPositionsAddModalWindowComponent: DealsPositionsAddModalWindowComponent;
 
   cancelLink = "/deals";
@@ -46,10 +48,10 @@ export class DealsCreatingFormComponent implements OnInit {
 
   public organizations;
   public orders_positions = [];
+  public documents = [];
 
   public selects = [
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "text", bindValue: "id"},
-    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
+    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"}
   ];
 
   public selectInputs = [
@@ -81,7 +83,6 @@ export class DealsCreatingFormComponent implements OnInit {
 
   newDealForm: FormGroup;
 
-  status: FormControl;
   counterparty: FormControl;
   user: FormControl;
   comment: FormControl;
@@ -114,9 +115,17 @@ export class DealsCreatingFormComponent implements OnInit {
     });
   }
 
-  refreshOrderPositions(event) {
+  updateTable(event) {
     console.log(event);
+    this.documents.push(event);
+  }
+
+  refreshOrderPositions(event) {
     this.orders_positions.push(event);
+  }
+
+  addNewDocument() {
+    this.documentsAddModalWindowComponent.show();
   }
 
   addNewParty(name) {
@@ -132,9 +141,6 @@ export class DealsCreatingFormComponent implements OnInit {
       }
     );
 
-    this.status = new FormControl('', [
-      Validators.required
-    ]);
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
@@ -149,7 +155,6 @@ export class DealsCreatingFormComponent implements OnInit {
     ]);
 
   	this.newDealForm = new FormGroup({
-      status: this.status,
       user: this.user,
       comment: this.comment,
       deadline: this.deadline,

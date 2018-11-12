@@ -1,4 +1,4 @@
-<form [ngClass]="{'validation' : validationClass}" [formGroup]="editDealsPositionForm" (ngSubmit)="editDealsPositions($event)">
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -12,7 +12,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addTag" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -20,7 +20,7 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Не найдено для "{{searchTerm}}"
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -42,6 +42,12 @@
          *ngIf="newDealsPositionForm.get(input.name).errors && (newDealsPositionForm.get(input.name).dirty || newDealsPositionForm.get(input.name).touched)">
          <p>Заполните поле</p>
       </div>
+    </div>
+
+    <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
+      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
     </div>
   </div>
 
@@ -73,8 +79,8 @@
             <tr>
               <td>{{ item.product.text }}</td>
               <td>{{ item.organization.text }}</td>
-              <td>{{ item.price }}</td>
               <td>{{ item.prime_price }}</td>
+              <td>{{ item.price }}</td>
               <td>{{ item.tz }}</td>
               <td>{{ item.full_price }}</td>
               <td>{{ item.status }}</td>
@@ -93,4 +99,4 @@
   
 </form>
 
-<deals-items-edit-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-edit-modal-window>
+<deals-items-add-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-add-modal-window>

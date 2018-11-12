@@ -18,7 +18,7 @@ export class DealsItemsEditFormComponent implements OnInit {
   smallWindow = true;
 
   public selectInputs = [
-  	{name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
+    {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
     {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"}
   ];
 
@@ -46,6 +46,16 @@ export class DealsItemsEditFormComponent implements OnInit {
 
   addPositionItems() {
     this.refreshPositionItems.emit(this.newDealsItemForm.value);
+  }
+
+  addNewProduct(name) {
+    this.warehouseService.createProduct(name).subscribe(product => {
+      let fieldProduct = {
+        id: product.id,
+        text: product.name
+      };
+      this.product.setValue(fieldProduct);
+    });
   }
 
   constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
@@ -124,8 +134,8 @@ export class DealsItemsEditFormComponent implements OnInit {
   }
 
   ngOnInit() {
-  	this.serverSideSearchForOrganizations();
-  	this.serverSideSearchForProducts();
+    this.serverSideSearchForOrganizations();
+    this.serverSideSearchForProducts();
 
     this.price = new FormControl('', [
       Validators.required
@@ -137,7 +147,7 @@ export class DealsItemsEditFormComponent implements OnInit {
       Validators.required
     ]);
 
-  	this.newDealsItemForm = new FormGroup({
+    this.newDealsItemForm = new FormGroup({
       price: this.price,
       product: this.product,
       organization: this.organization

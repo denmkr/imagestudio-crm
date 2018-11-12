@@ -2,6 +2,31 @@
 	width: 120px;
 }
 
+.add-button {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 8px 13px;
+	background: #aaa;
+}
+
+.add-button a {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.add-button i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 8px;
+	color: #fff;
+	font-size: 17px;
+}
+
 table tr .square {
 	display: inline-block;
 	padding: 2px 5px;

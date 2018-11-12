@@ -44,7 +44,7 @@
           </div>
         </div>
       </td>
-      <td class="date">{{ document.date }}</td>
+      <td class="date">{{ document.date | date: 'dd.MM.yyyy' }}</td>
       <td class="arrow">
         <i class="material-icons" (click)="showEditModal(document)">
         keyboard_arrow_right

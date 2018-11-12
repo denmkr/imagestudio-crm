@@ -19,11 +19,12 @@ export class DealsItemsAddFormComponent implements OnInit {
 
   public selectInputs = [
   	{name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
-    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"}
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"},
   ];
 
   public inputs = [
-    {name: "price", type: "text", title: "Стоимость", tiny: true},
+    {name: "prime_price", type: "text", title: "Стоимость", tiny: true},
+    {name: "description", type: "text", title: "Тех. задание"},
   ];
 
   public organizations = [];
@@ -33,7 +34,8 @@ export class DealsItemsAddFormComponent implements OnInit {
 
   product: FormControl;
   organization: FormControl;
-  price: FormControl;
+  prime_price: FormControl;
+  description: FormControl;
 
   @Output() refreshPositionItems = new EventEmitter<any>();
   @Output() eventEmitter = new EventEmitter<boolean>();
@@ -133,11 +135,18 @@ export class DealsItemsAddFormComponent implements OnInit {
     return { id: name, text: name };
   }
 
+  addNewDocumentItem() {
+    console.log("sdf");
+  }
+
   ngOnInit() {
   	this.serverSideSearchForOrganizations();
   	this.serverSideSearchForProducts();
 
-    this.price = new FormControl('', [
+    this.prime_price = new FormControl('', [
+      Validators.required
+    ]);
+    this.description = new FormControl('', [
       Validators.required
     ]);
     this.product = new FormControl('', [
@@ -148,8 +157,9 @@ export class DealsItemsAddFormComponent implements OnInit {
     ]);
 
   	this.newDealsItemForm = new FormGroup({
-      price: this.price,
+      prime_price: this.prime_price,
       product: this.product,
+      description: this.description,
       organization: this.organization
     });
 

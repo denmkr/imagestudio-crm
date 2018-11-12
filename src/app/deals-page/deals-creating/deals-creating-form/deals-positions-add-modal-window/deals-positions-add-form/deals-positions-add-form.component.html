@@ -1,11 +1,14 @@
 <form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
 
+  <!--
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
       <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
     </div>
   </div>
+
+-->
    
    <div class="input-blocks" [ngClass]="{'big' : bigWindow}">
 
@@ -68,7 +71,6 @@
             <th>Наименование</th>
             <th>Где</th>
             <th>Цена</th>
-            <th>Статус</th>
             <th>Техзадание</th>
             <th>Счет</th>
             <th>Макет</th>
@@ -80,8 +82,7 @@
               <td>{{ item.product.text }}</td>
               <td>{{ item.organization.text }}</td>
               <td>{{ item.prime_price }}</td>
-              <td>{{ item.price }}</td>
-              <td>{{ item.tz }}</td>
+              <td>{{ item.description }}</td>
               <td>{{ item.full_price }}</td>
               <td>{{ item.status }}</td>
             </tr>

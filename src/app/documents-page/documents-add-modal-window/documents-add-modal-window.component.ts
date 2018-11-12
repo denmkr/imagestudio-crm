@@ -12,6 +12,7 @@ export class DocumentsAddModalWindowComponent implements OnInit {
   @HostBinding('class.active') activeClass: boolean = false;
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
+  @Output() updateTableInOrder = new EventEmitter<any>();
 
   title = "Новый документ";
 
@@ -28,9 +29,14 @@ export class DocumentsAddModalWindowComponent implements OnInit {
   	this.activeClass = true;
   }
 
+  updateOrder(event) {
+    this.updateTableInOrder.emit(event);
+  }
+
   hide() {
     this.activeClass = false;
     this.documentsAddFormComponent.partiesAddModalWindowComponent.hide();
+    
     let timeoutClear = setTimeout(() => { this.documentsAddFormComponent.resetForm(); clearTimeout(timeoutClear); }, 300);
   }
   

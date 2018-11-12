@@ -44,7 +44,6 @@ export class DealsService {
 
     return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
-      console.log(result);
 
       let orders = result.orders.map(order => ({
         id: order.id,

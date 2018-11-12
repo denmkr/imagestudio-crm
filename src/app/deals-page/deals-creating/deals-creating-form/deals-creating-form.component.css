@@ -10,6 +10,26 @@
 	padding-left: 0;
 }
 
+table tr .file {
+	min-width: 70px;
+	cursor: pointer;
+}
+
+table tr .file a {
+	color: #999;
+	font-size: 12px;
+}
+
+table tr .file i, table tr .file a {
+	display: inline-block;
+	vertical-align: middle;
+} 
+
+table tr .file i {
+	font-size: 20px;
+	margin-right: 2px;
+}
+
 ng-datepicker {
 	display: inline-block;
 	vertical-align: middle;
@@ -75,7 +95,7 @@ textarea {
 
 .documents {
 	margin-top: 10px;
-	margin-bottom: 25px;
+	margin-bottom: 35px;
 }
 
 .documents .title {

@@ -1,10 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, ViewChild, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsEditModalWindowComponent } from './deals-positions-edit-modal-window/deals-positions-edit-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
+import { DocumentsAddModalWindowComponent } from '../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
+import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
+import * as ruLocale from 'date-fns/locale/ru';
+
 
 @Component({
   selector: 'deals-editing-form',
@@ -14,8 +19,18 @@ import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-ad
 })
 export class DealsEditingFormComponent implements OnInit {
 
+  options: DatepickerOptions = {
+    barTitleIfEmpty: 'Выберите дату',
+    minYear: 2016,
+    placeholder: '01.01.2018',
+    displayFormat: 'D.MM.YYYY',
+    firstCalendarDay: 1,
+    locale: ruLocale,
+  };
+
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
+  @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
   @ViewChild(DealsPositionsEditModalWindowComponent) dealsPositionsEditModalWindowComponent: DealsPositionsEditModalWindowComponent;
 
   cancelLink = "/deals";
@@ -33,10 +48,10 @@ export class DealsEditingFormComponent implements OnInit {
 
   public organizations;
   public orders_positions = [];
+  public documents = [];
 
   public selects = [
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "text", bindValue: "id"},
-    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
+    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"}
   ];
 
   public selectInputs = [
@@ -47,7 +62,7 @@ export class DealsEditingFormComponent implements OnInit {
     {name: "comment", placeholder: "Комментарий к заказу", big: true}
   ];
 
-  public inputs = [
+  public dateInputs = [
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ]
 
@@ -68,7 +83,6 @@ export class DealsEditingFormComponent implements OnInit {
 
   newDealForm: FormGroup;
 
-  status: FormControl;
   counterparty: FormControl;
   user: FormControl;
   comment: FormControl;
@@ -76,11 +90,12 @@ export class DealsEditingFormComponent implements OnInit {
 
   public counterparties = [];
 
-  constructor(public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
     this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions);
     this.newDealForm.reset();
+    this.router.navigate([this.cancelLink]);
   }
 
   partiesTypeahead = new EventEmitter<string>();
@@ -100,9 +115,17 @@ export class DealsEditingFormComponent implements OnInit {
     });
   }
 
-  refreshOrderPositions(event) {
+  updateTable(event) {
     console.log(event);
+    this.documents.push(event);
+  }
+
+  refreshOrderPositions(event) {
     this.orders_positions.push(event);
+  }
+
+  addNewDocument() {
+    this.documentsAddModalWindowComponent.show();
   }
 
   addNewParty(name) {
@@ -118,9 +141,6 @@ export class DealsEditingFormComponent implements OnInit {
       }
     );
 
-    this.status = new FormControl('', [
-      Validators.required
-    ]);
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
@@ -135,7 +155,6 @@ export class DealsEditingFormComponent implements OnInit {
     ]);
 
     this.newDealForm = new FormGroup({
-      status: this.status,
       user: this.user,
       comment: this.comment,
       deadline: this.deadline,

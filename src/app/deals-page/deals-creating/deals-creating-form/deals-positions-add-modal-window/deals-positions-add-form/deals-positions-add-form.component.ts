@@ -35,10 +35,6 @@ export class DealsPositionsAddFormComponent implements OnInit {
     {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"}
   ];
 
-  public selects = [
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
-  ];
-
   public statuses = [
     {text: 'Новое', id: 'new'}, 
     {text: 'Лид', id: 'lead'},
@@ -62,7 +58,6 @@ export class DealsPositionsAddFormComponent implements OnInit {
 
   newDealsPositionForm: FormGroup;
 
-  status: FormControl;
   product: FormControl;
   cost: FormControl;
   price: FormControl;
@@ -124,9 +119,6 @@ export class DealsPositionsAddFormComponent implements OnInit {
   ngOnInit() {
     this.serverSideSearchForProducts();
 
-    this.status = new FormControl('', [
-      Validators.required
-    ]);
     this.product = new FormControl('', [
       Validators.required
     ]);
@@ -144,7 +136,6 @@ export class DealsPositionsAddFormComponent implements OnInit {
     ]);
 
   	this.newDealsPositionForm = new FormGroup({
-      status: this.status,
       product: this.product,
       cost: this.cost,
       price: this.price,

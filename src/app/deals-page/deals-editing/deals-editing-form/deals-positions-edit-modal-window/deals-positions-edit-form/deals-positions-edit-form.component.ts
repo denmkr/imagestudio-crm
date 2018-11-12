@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsEditModalWindowComponent } from './deals-items-edit-modal-window/deals-items-edit-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
+import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
+import * as ruLocale from 'date-fns/locale/ru';
 
 @Component({
   selector: 'deals-positions-edit-form',
@@ -11,6 +13,15 @@ import { WarehouseService } from '../../../../../warehouse-page/warehouse.servic
   providers: [ WarehouseService ]
 })
 export class DealsPositionsEditFormComponent implements OnInit {
+
+  options: DatepickerOptions = {
+    barTitleIfEmpty: 'Выберите дату',
+    minYear: 2016,
+    placeholder: '01.01.2018',
+    displayFormat: 'D.MM.YYYY',
+    firstCalendarDay: 1,
+    locale: ruLocale,
+  };
 
   @ViewChild(DealsItemsEditModalWindowComponent) dealsItemsEditModalWindowComponent: DealsItemsEditModalWindowComponent;
   @HostBinding('class.active') activeClass: boolean = false;
@@ -42,9 +53,12 @@ export class DealsPositionsEditFormComponent implements OnInit {
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
     {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
-    {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true},
-    {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
+    {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
+
+  public dateInputs = [
+    {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
+  ]
 
   newDealsPositionForm: FormGroup;
 
@@ -97,8 +111,14 @@ export class DealsPositionsEditFormComponent implements OnInit {
 
   constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewProduct(name) {
+    this.warehouseService.createProduct(name).subscribe(product => {
+      let fieldProduct = {
+        id: product.id,
+        text: product.name
+      };
+      this.product.setValue(fieldProduct);
+    });
   }
 
   ngOnInit() {
@@ -123,7 +143,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
       Validators.required
     ]);
 
-  	this.newDealsPositionForm = new FormGroup({
+    this.newDealsPositionForm = new FormGroup({
       status: this.status,
       product: this.product,
       cost: this.cost,

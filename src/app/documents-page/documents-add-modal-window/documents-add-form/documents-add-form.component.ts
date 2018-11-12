@@ -77,6 +77,7 @@ export class DocumentsAddFormComponent implements OnInit {
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
+  @Output() updateOrder = new EventEmitter<any>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   hideWindow() {
@@ -114,9 +115,12 @@ export class DocumentsAddFormComponent implements OnInit {
         this.documentsService.createNewDocument(this.type.value, this.category.value, this.counterparty.value, 
         this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
           res => { 
+            let form = this.newDocumentForm.value;
+            form.url = this.fileUrl;
+            this.updateOrder.emit(form);
             this.newDocumentForm.reset();
-            this.refreshTableEvent.emit(true);
             this.eventEmitter.emit(true);
+            this.refreshTableEvent.emit(true);
           },
           err => { console.log(err) }
         );
