@@ -48,6 +48,16 @@ export class DealsItemsAddFormComponent implements OnInit {
     this.refreshPositionItems.emit(this.newDealsItemForm.value);
   }
 
+  addNewProduct(name) {
+    this.warehouseService.createProduct(name).subscribe(product => {
+      let fieldProduct = {
+        id: product.id,
+        text: product.name
+      };
+      this.product.setValue(fieldProduct);
+    });
+  }
+
   constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createParty(event) {

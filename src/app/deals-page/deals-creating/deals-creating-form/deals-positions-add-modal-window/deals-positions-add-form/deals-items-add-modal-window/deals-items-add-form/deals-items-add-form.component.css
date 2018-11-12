@@ -67,3 +67,17 @@ table {
 	color: #fff;
 	font-size: 17px;
 }
+
+.new-product-button {
+	background: #2d4d8a;
+	color: #fff;
+	padding: 4px 6px;
+	font-size: 12px;
+	font-weight: 600;
+	display: inline-block;
+	vertical-align: middle;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
+}

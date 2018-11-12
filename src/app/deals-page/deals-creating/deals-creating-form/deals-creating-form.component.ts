@@ -1,11 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, ViewChild, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsAddModalWindowComponent } from './deals-positions-add-modal-window/deals-positions-add-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
-import { DatepickerOptions } from from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
+import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
+import * as ruLocale from 'date-fns/locale/ru';
+
 
 @Component({
   selector: 'deals-creating-form',
@@ -16,10 +19,12 @@ import { DatepickerOptions } from from 'ng2-datepicker/dist/src/ng-datepicker/co
 export class DealsCreatingFormComponent implements OnInit {
 
   options: DatepickerOptions = {
+    barTitleIfEmpty: 'Выберите дату',
     minYear: 2016,
     placeholder: '01.01.2018',
     displayFormat: 'D.MM.YYYY',
-    firstCalendarDay: 1
+    firstCalendarDay: 1,
+    locale: ruLocale,
   };
 
   @HostBinding('class.active') activeClass: boolean = false;
@@ -84,11 +89,12 @@ export class DealsCreatingFormComponent implements OnInit {
 
   public counterparties = [];
 
-  constructor(public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
     this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions);
     this.newDealForm.reset();
+    this.router.navigate([this.cancelLink]);
   }
 
   partiesTypeahead = new EventEmitter<string>();
