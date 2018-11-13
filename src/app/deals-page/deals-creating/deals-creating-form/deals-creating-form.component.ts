@@ -93,7 +93,21 @@ export class DealsCreatingFormComponent implements OnInit {
   constructor(private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
-    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions);
+    this.documents = this.documents.map(document => {
+      let newDocument = {
+        kind: document.type.id,
+        category: document.category.id,
+        url: document.url,
+        comment: document.comment,
+        counterparty: {
+          id: document.counterparty
+        }
+      };
+
+      return newDocument;
+    });
+
+    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions, this.documents);
     this.newDealForm.reset();
     this.router.navigate([this.cancelLink]);
   }
@@ -116,7 +130,7 @@ export class DealsCreatingFormComponent implements OnInit {
   }
 
   updateTable(event) {
-    console.log(event);
+
     this.documents.push(event);
   }
 
@@ -125,7 +139,7 @@ export class DealsCreatingFormComponent implements OnInit {
   }
 
   addNewDocument() {
-    this.documentsAddModalWindowComponent.show();
+    this.documentsAddModalWindowComponent.showForOrder();
   }
 
   addNewParty(name) {

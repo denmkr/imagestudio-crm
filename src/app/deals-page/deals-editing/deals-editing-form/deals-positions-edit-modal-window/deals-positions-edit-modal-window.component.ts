@@ -14,7 +14,7 @@ export class DealsPositionsEditModalWindowComponent implements OnInit {
   @Output() refreshTableEvent = new EventEmitter<boolean>();
   @Output() refreshOrderPositions = new EventEmitter<any>();
 
-  title = "Создание нового продукта в заказ";
+  title = "Редактирование продукта в заказе";
 
   constructor() { }
 

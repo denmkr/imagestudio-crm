@@ -79,13 +79,28 @@ export class DealsPositionsAddFormComponent implements OnInit {
 
   addPositionItems(event) {
     this.position_items.push(event);
+
+    let first_price: number = 0;
+    this.position_items.map(position_item => {
+      first_price += parseInt(position_item.prime_price);
+    });
+    this.cost.setValue(first_price);
   }
 
   addDealsPositions() {
-    let order_position = this.newDealsPositionForm.value;
-    order_position.items = this.position_items;
+
+    let positionForm = {
+      product: this.product.value,
+      price: this.price.value,
+      first_price: this.cost.value,
+      full_price: this.amount.value * this.cost.value,
+      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+      count: this.amount.value,
+      orders_items: this.position_items,
+      must_be_finished_at: this.deadline.value
+    };
     
-    this.refreshOrderPositions.emit(order_position);
+    this.refreshOrderPositions.emit(positionForm);
   }
 
   productsTypeahead = new EventEmitter<string>();

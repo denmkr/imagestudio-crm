@@ -14,10 +14,7 @@ export class DealsEditingComponent implements OnInit {
   private left_arrow = require("../images/left-arrow.png");
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(params => {
-	    let id = params['id'];
-	    console.log(id);
-    });
+   
   }
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) { }

@@ -21,10 +21,10 @@ export class DealsPageComponent implements OnInit {
   @HostBinding('class.active')
   newActive: boolean = false;
   leadActive: boolean = false;
-  workActive: boolean = false;
-  debtActive: boolean = false;
+  inProgressActive: boolean = false;
   doneActive: boolean = false;
-  dumbActive: boolean = false;
+  payedActive: boolean = false;
+  deniedActive: boolean = false;
   filersActive: boolean = false;
 
   mineActive: boolean = false;
@@ -46,10 +46,10 @@ export class DealsPageComponent implements OnInit {
         let status = params['status'];
         if (status == "new") this.newActive = true;
         if (status == "lead") this.leadActive = true;
-        if (status == "work") this.workActive = true;
-        if (status == "debt") this.debtActive = true;
+        if (status == "in_progress") this.inProgressActive = true;
         if (status == "done") this.doneActive = true;
-        if (status == "dumb") this.dumbActive = true;
+        if (status == "payed") this.payedActive = true;
+        if (status == "denied") this.deniedActive = true;
 
         if (localStorage.getItem('mode') == "vert") this.verticalMode = true;
     });
@@ -112,20 +112,20 @@ export class DealsPageComponent implements OnInit {
       this.dealsTableComponent.showDealsByStatus("new");
       this.newActive = true;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: "new", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.dealsTableComponent.showDealsByStatus(null);
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
@@ -135,66 +135,43 @@ export class DealsPageComponent implements OnInit {
       this.dealsTableComponent.showDealsByStatus("lead");
       this.newActive = false;
       this.leadActive = true;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: "lead", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.dealsTableComponent.showDealsByStatus(null);
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
-  showWorkDeals() {
-    if (!this.workActive) {
-      this.dealsTableComponent.showDealsByStatus("work");
+  showInProgressDeals() {
+    if (!this.inProgressActive) {
+      this.dealsTableComponent.showDealsByStatus("in_progress");
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = true;
-      this.debtActive = false;
+      this.inProgressActive = true;
       this.doneActive = false;
-      this.dumbActive = false;
-      this.router.navigate(['/deals'], { queryParams: { status: "work", page: "1" }, queryParamsHandling: 'merge' });
+      this.payedActive = false;
+      this.deniedActive = false;
+      this.router.navigate(['/deals'], { queryParams: { status: "in_progress", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.dealsTableComponent.showDealsByStatus(null);
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
-      this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
-    }
-  }
-
-  showDebtDeals() {
-    if (!this.debtActive) {
-      this.dealsTableComponent.showDealsByStatus("debt");
-      this.newActive = false;
-      this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = true;
-      this.doneActive = false;
-      this.dumbActive = false;
-      this.router.navigate(['/deals'], { queryParams: { status: "debt", page: "1" }, queryParamsHandling: 'merge' });
-    }
-    else {
-      this.dealsTableComponent.showDealsByStatus(null);
-      this.newActive = false;
-      this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
-      this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
@@ -204,43 +181,66 @@ export class DealsPageComponent implements OnInit {
       this.dealsTableComponent.showDealsByStatus("done");
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = true;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: "done", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.dealsTableComponent.showDealsByStatus(null);
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }
 
-  showDumbDeals() {
-    if (!this.dumbActive) {
-      this.dealsTableComponent.showDealsByStatus("dumb");
+  showPayedDeals() {
+    if (!this.payedActive) {
+      this.dealsTableComponent.showDealsByStatus("payed");
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = true;
-      this.router.navigate(['/deals'], { queryParams: { status: "dumb", page: "1" }, queryParamsHandling: 'merge' });
+      this.payedActive = true;
+      this.deniedActive = false;
+      this.router.navigate(['/deals'], { queryParams: { status: "payed", page: "1" }, queryParamsHandling: 'merge' });
     }
     else {
       this.dealsTableComponent.showDealsByStatus(null);
       this.newActive = false;
       this.leadActive = false;
-      this.workActive = false;
-      this.debtActive = false;
+      this.inProgressActive = false;
       this.doneActive = false;
-      this.dumbActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
+      this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
+    }
+  }
+
+  showDeniedDeals() {
+    if (!this.deniedActive) {
+      this.dealsTableComponent.showDealsByStatus("denied");
+      this.newActive = false;
+      this.leadActive = false;
+      this.inProgressActive = false;
+      this.doneActive = false;
+      this.payedActive = false;
+      this.deniedActive = true;
+      this.router.navigate(['/deals'], { queryParams: { status: "denied", page: "1" }, queryParamsHandling: 'merge' });
+    }
+    else {
+      this.dealsTableComponent.showDealsByStatus(null);
+      this.newActive = false;
+      this.leadActive = false;
+      this.inProgressActive = false;
+      this.doneActive = false;
+      this.payedActive = false;
+      this.deniedActive = false;
       this.router.navigate(['/deals'], { queryParams: { status: null, page: "1" }, queryParamsHandling: 'merge' });
     }
   }

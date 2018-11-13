@@ -113,42 +113,9 @@ export class DealsService {
     
   }
 
-  createNewDeal(deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>) {
-    let order_positions = [];
-
-    orders_positions.map(position => {
-      let position_items = [];
-
-      position.items.map(item => {
-        let newItem = {
-          product: {
-            id: item.product.id
-          },
-          organization: {
-            id: item.organization.id
-          },
-          prime_price: item.price
-        };
-
-        position_items.push(newItem);
-      });
-
-      let newPosition = {
-        product: {
-          id: position.product.id
-        },
-        must_be_finished_at: position.deadline,
-        price: position.price,
-        count: position.amount,
-        orders_items: position_items
-      };
-
-      order_positions.push(newPosition);
-
-    });
-
+  createNewDeal(deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
+ 
     const order = {
-
       must_be_finished_at: deadline,
       doer: {
         id: doer_id
@@ -157,7 +124,8 @@ export class DealsService {
         id: counterparty_id
       },
       comment: comment,
-      orders_positions: order_positions
+      orders_positions: orders_positions,
+      documents: documents
     };
 
     this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', order).subscribe(
@@ -202,6 +170,27 @@ export class DealsService {
 
     });
 
+  }
+
+  getDealById(id: string) {
+    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id);
+
+    /*
+    let newResult = {
+      price: '100',
+      comment: 'Comment',
+      status: 'new',
+      must_be_finished_at: '2014 02 02',
+      counterparty: {
+        id: 3
+      },
+      doer: {
+        id: 2
+      }
+    };
+
+    return newResult;
+    */
   }
 
   getDealsByParams(status: string, search: string, page: string, user_id: string) {
@@ -363,6 +352,8 @@ export class DealsService {
         doer: order.doer.first_name,
         number: order.number,
         status: order.status,
+        full_price: order.full_price,
+        prime_price: order.prime_price,
         price: order.price,
         profit: order.profit,
         orders_positions: order.orders_positions,

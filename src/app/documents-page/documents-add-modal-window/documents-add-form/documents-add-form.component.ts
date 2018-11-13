@@ -21,6 +21,7 @@ export class DocumentsAddFormComponent implements OnInit {
   );
  
   fileLoading: any;
+  isOrder: boolean = false;
 
   @HostBinding('class.validation') validationClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
@@ -111,19 +112,29 @@ export class DocumentsAddFormComponent implements OnInit {
   createDocument() {
     if (this.newDocumentForm.valid) {
       if (this.fileName != "" && this.fileName != null && this.fileName != undefined) {
-
-        this.documentsService.createNewDocument(this.type.value, this.category.value, this.counterparty.value, 
-        this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
-          res => { 
-            let form = this.newDocumentForm.value;
-            form.url = this.fileUrl;
-            this.updateOrder.emit(form);
-            this.newDocumentForm.reset();
-            this.eventEmitter.emit(true);
-            this.refreshTableEvent.emit(true);
-          },
-          err => { console.log(err) }
-        );
+        if (this.isOrder) {
+          let form = this.newDocumentForm.value;
+          form.url = this.fileUrl;
+          this.updateOrder.emit(form);
+          this.newDocumentForm.reset();
+          this.eventEmitter.emit(true);
+          this.refreshTableEvent.emit(true);
+        }
+        else {
+          this.documentsService.createNewDocument(this.type.value.id, this.category.value.id, this.counterparty.value, 
+          this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
+            res => { 
+              let form = this.newDocumentForm.value;
+              form.url = this.fileUrl;
+              this.updateOrder.emit(form);
+              this.newDocumentForm.reset();
+              this.eventEmitter.emit(true);
+              this.refreshTableEvent.emit(true);
+            },
+            err => { console.log(err) }
+          );
+        }
+        
       }
       else {
         //
@@ -190,6 +201,19 @@ export class DocumentsAddFormComponent implements OnInit {
     this.partiesAddModalWindowComponent.showWithName(name);
   }
 
+  forOrder() {
+    this.orderSelectInputs = [];
+
+    this.newDocumentForm = new FormGroup({
+      type: this.type,
+      category: this.category,
+      counterparty: this.counterparty,
+      comment: this.comment
+    });
+
+    this.isOrder = true;
+  }
+
   ngOnInit() {
     this.serverSideSearch();
     this.ordersServerSideSearch();
@@ -203,14 +227,14 @@ export class DocumentsAddFormComponent implements OnInit {
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
-    this.orderNumber = new FormControl('', [
-      Validators.required
-    ]);
     this.comment = new FormControl('', [
       Validators.required
     ]);
+    this.orderNumber = new FormControl('', [
+      Validators.required
+    ]);
 
-  	this.newDocumentForm = new FormGroup({
+    this.newDocumentForm = new FormGroup({
       type: this.type,
       category: this.category,
       counterparty: this.counterparty,

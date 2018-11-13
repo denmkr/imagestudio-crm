@@ -75,21 +75,25 @@
             <th>Себестоимость</th>
             <th>Цена (руб.)</th>
             <th>Сумма</th>
-            <th>Статус</th>
             <th>Прибыль</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <ng-container *ngFor="let position of orders_positions">
             <tr>
               <td>{{ position.product.text }}</td>
-              <td>{{ position.amount }}</td>
-              <td>{{ position.deadline }}</td>
+              <td>{{ position.count }}</td>
+              <td>{{ position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
+              <td>{{ position.first_price }}</td>
               <td>{{ position.price }}</td>
-              <td>{{ position.cost }}</td>
               <td>{{ position.full_price }}</td>
-              <td>{{ position.status }}</td>
               <td>{{ position.profit }}</td>
+              <td class="arrow">
+                <i class="material-icons" >
+                keyboard_arrow_right
+                </i>
+              </td>
             </tr>
           </ng-container>
         </tbody>
@@ -117,19 +121,18 @@
     <table>
       <thead>
         <tr>
-          <th>Номер документа</th>
           <th>Категория</th>
           <th>Тип</th>
           <th>Комментарий</th>
           <th>Файл / Ссылка</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let document of documents">
           <tr>
-            <td>{{ document.orderNumber }}</td>
-            <td>{{ document.category }}</td>
-            <td>{{ document.type }}</td>
+            <td><div class="square orange">{{ document.category.text }}</div></td>
+            <td><div class="square purple">{{ document.type.text }}</div></td>
             <td>{{ document.comment }}</td>
             <td>
               <div class="file">
@@ -139,6 +142,11 @@
                 <a href="{{ document.url }}" target="_blank" download>Скачать</a>
               </div>
             </td>
+            <td class="arrow">
+              <i class="material-icons" >
+              keyboard_arrow_right
+              </i>
+            </td>
           </tr>
         </ng-container>
       </tbody>
@@ -146,7 +154,6 @@
     </ng-container>
     
   </div>
-  
 
   <div class="buttons-block">
     <button class="button save-button" type="submit">Сохранить</button>
@@ -158,3 +165,4 @@
 <documents-add-modal-window (updateTableInOrder)="updateTable($event)"></documents-add-modal-window>
 <parties-add-modal-window></parties-add-modal-window>
 <deals-positions-add-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-add-modal-window>
+<deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-edit-modal-window>

@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { PartiesService } from '../../../../../../../parties-page/parties.service';
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
+import { DocumentsAddModalWindowComponent } from '../../../../../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 
 @Component({
   selector: 'deals-items-add-form',
@@ -11,6 +12,8 @@ import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.
   providers: [WarehouseService, PartiesService]
 })
 export class DealsItemsAddFormComponent implements OnInit {
+
+  @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
@@ -29,6 +32,7 @@ export class DealsItemsAddFormComponent implements OnInit {
 
   public organizations = [];
   public products = [];
+  public documents = [];
 
   newDealsItemForm: FormGroup;
 
@@ -47,7 +51,25 @@ export class DealsItemsAddFormComponent implements OnInit {
   }
 
   addPositionItems() {
-    this.refreshPositionItems.emit(this.newDealsItemForm.value);
+    let itemForm = this.newDealsItemForm.value;
+    itemForm.documents = this.documents.map(document => {
+      let newDocument = {
+        number: document.orderNumber,
+        kind: document.type.id,
+        category: document.category.id,
+        url: document.url,
+        comment: document.comment,
+        counterparty: {
+          id: document.counterparty
+        }
+      };
+
+      return newDocument;
+    });
+
+    console.log(itemForm);
+
+    this.refreshPositionItems.emit(itemForm);
   }
 
   addNewProduct(name) {
@@ -131,12 +153,12 @@ export class DealsItemsAddFormComponent implements OnInit {
     });
   }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewDocumentItem() {
+    this.documentsAddModalWindowComponent.show();
   }
 
-  addNewDocumentItem() {
-    console.log("sdf");
+  updateTable(event) {
+    this.documents.push(event);
   }
 
   ngOnInit() {

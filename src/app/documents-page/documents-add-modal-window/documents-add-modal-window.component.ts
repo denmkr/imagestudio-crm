@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, EventEmitter, Output, Input } from '@angular/core';
 import { DocumentsAddFormComponent } from './documents-add-form/documents-add-form.component';
 
 @Component({
@@ -27,6 +27,11 @@ export class DocumentsAddModalWindowComponent implements OnInit {
 
   show() {
   	this.activeClass = true;
+  }
+
+  showForOrder() {
+    this.documentsAddFormComponent.forOrder();
+    this.activeClass = true;
   }
 
   updateOrder(event) {

@@ -75,7 +75,6 @@
             <th>Себестоимость</th>
             <th>Цена (руб.)</th>
             <th>Сумма</th>
-            <th>Статус</th>
             <th>Прибыль</th>
           </tr>
         </thead>
@@ -83,12 +82,11 @@
           <ng-container *ngFor="let position of orders_positions">
             <tr>
               <td>{{ position.product.text }}</td>
-              <td>{{ position.amount }}</td>
-              <td>{{ position.deadline }}</td>
+              <td>{{ position.count }}</td>
+              <td>{{ position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
+              <td>{{ position.first_price }}</td>
               <td>{{ position.price }}</td>
-              <td>{{ position.cost }}</td>
               <td>{{ position.full_price }}</td>
-              <td>{{ position.status }}</td>
               <td>{{ position.profit }}</td>
             </tr>
           </ng-container>
@@ -117,7 +115,6 @@
     <table>
       <thead>
         <tr>
-          <th>Номер документа</th>
           <th>Категория</th>
           <th>Тип</th>
           <th>Комментарий</th>
@@ -127,9 +124,8 @@
       <tbody>
         <ng-container *ngFor="let document of documents">
           <tr>
-            <td>{{ document.orderNumber }}</td>
-            <td>{{ document.category }}</td>
-            <td>{{ document.type }}</td>
+            <td><div class="square orange">{{ document.category.text }}</div></td>
+            <td><div class="square purple">{{ document.type.text }}</div></td>
             <td>{{ document.comment }}</td>
             <td>
               <div class="file">
