@@ -1,18 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
-import { DealsItemsEditModalWindowComponent } from './deals-items-edit-modal-window/deals-items-edit-modal-window.component';
+import { DealsItemsAddModalWindowComponent } from '../../../../deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
 
 @Component({
-  selector: 'deals-positions-edit-form',
-  templateUrl: './deals-positions-edit-form.component.html',
-  styleUrls: ['./deals-positions-edit-form.component.css'],
+  selector: 'deals-positions-creating-form',
+  templateUrl: './deals-positions-creating-form.component.html',
+  styleUrls: ['./deals-positions-creating-form.component.css'],
   providers: [ WarehouseService ]
 })
-export class DealsPositionsEditFormComponent implements OnInit {
+export class DealsPositionsCreatingFormComponent implements OnInit {
 
   options: DatepickerOptions = {
     barTitleIfEmpty: 'Выберите дату',
@@ -23,7 +23,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
     locale: ruLocale,
   };
 
-  @ViewChild(DealsItemsEditModalWindowComponent) dealsItemsEditModalWindowComponent: DealsItemsEditModalWindowComponent;
+  @ViewChild(DealsItemsAddModalWindowComponent) dealsItemsAddModalWindowComponent: DealsItemsAddModalWindowComponent;
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
@@ -33,10 +33,6 @@ export class DealsPositionsEditFormComponent implements OnInit {
 
   public selectInputs = [
     {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"}
-  ];
-
-  public selects = [
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
 
   public statuses = [
@@ -62,7 +58,6 @@ export class DealsPositionsEditFormComponent implements OnInit {
 
   newDealsPositionForm: FormGroup;
 
-  status: FormControl;
   product: FormControl;
   cost: FormControl;
   price: FormControl;
@@ -79,18 +74,33 @@ export class DealsPositionsEditFormComponent implements OnInit {
   }
 
   addNewDealsItem() {
-    this.dealsItemsEditModalWindowComponent.show();
+    this.dealsItemsAddModalWindowComponent.show();
   }
 
   addPositionItems(event) {
     this.position_items.push(event);
+
+    let first_price: number = 0;
+    this.position_items.map(position_item => {
+      first_price += parseInt(position_item.prime_price);
+    });
+    this.cost.setValue(first_price);
   }
 
   addDealsPositions() {
-    let order_position = this.newDealsPositionForm.value;
-    order_position.items = this.position_items;
+
+    let positionForm = {
+      product: this.product.value,
+      price: this.price.value,
+      first_price: this.cost.value,
+      full_price: this.amount.value * this.cost.value,
+      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+      count: this.amount.value,
+      orders_items: this.position_items,
+      must_be_finished_at: this.deadline.value
+    };
     
-    this.refreshOrderPositions.emit(order_position);
+    this.refreshOrderPositions.emit(positionForm);
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -121,18 +131,9 @@ export class DealsPositionsEditFormComponent implements OnInit {
     });
   }
 
-  updateData(position) {
-    console.log(position);
-    this.cost.setValue(position.prime_price);
-    this.price.setValue(position.price);
-  }
-
   ngOnInit() {
     this.serverSideSearchForProducts();
 
-    this.status = new FormControl('', [
-      Validators.required
-    ]);
     this.product = new FormControl('', [
       Validators.required
     ]);
@@ -149,8 +150,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
       Validators.required
     ]);
 
-    this.newDealsPositionForm = new FormGroup({
-      status: this.status,
+  	this.newDealsPositionForm = new FormGroup({
       product: this.product,
       cost: this.cost,
       price: this.price,

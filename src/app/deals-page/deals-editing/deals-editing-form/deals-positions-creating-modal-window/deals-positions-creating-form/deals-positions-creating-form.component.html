@@ -1,0 +1,103 @@
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
+
+  <!--
+  <div class="select-blocks">
+    <div *ngFor="let select of selects" class="select-field-block">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      </ng-select>
+    </div>
+  </div>
+
+-->
+   
+   <div class="input-blocks" [ngClass]="{'big' : bigWindow}">
+
+    <div *ngFor="let select of selectInputs" class="input-field-block">
+      <div class="select-container">
+        <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Загрузка "{{searchTerm}}"
+              </div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
+      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+         'has-danger': newDealsPositionForm.get(input.name).invalid && newDealsPositionForm.get(input.name).dirty, 
+         'has-success': newDealsPositionForm.get(input.name).valid && newDealsPositionForm.get(input.name).dirty
+       }">
+      <div class="form-control-feedback"
+         *ngIf="newDealsPositionForm.get(input.name).errors && (newDealsPositionForm.get(input.name).dirty || newDealsPositionForm.get(input.name).touched)">
+         <p>Заполните поле</p>
+      </div>
+    </div>
+
+    <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
+      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
+    </div>
+  </div>
+
+  <div class="orders_items">
+    <div class="top">
+      <div (click)="addNewDealsItem()" class="add-button">
+        <a>Создать товар</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+    </div>
+    
+    <ng-container *ngIf="position_items.length != 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Наименование</th>
+            <th>Где</th>
+            <th>Цена</th>
+            <th>Техзадание</th>
+            <th>Счет</th>
+            <th>Макет</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of position_items">
+            <tr>
+              <td>{{ item.product.text }}</td>
+              <td>{{ item.organization.text }}</td>
+              <td>{{ item.prime_price }}</td>
+              <td>{{ item.description }}</td>
+              <td>{{ item.full_price }}</td>
+              <td>{{ item.status }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-container>
+    
+  </div>
+
+  <div class="buttons-block">
+    <button class="button save-button" type="submit">Сохранить</button>
+    <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+  </div>
+  
+</form>
+
+<deals-items-add-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-add-modal-window>

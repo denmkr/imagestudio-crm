@@ -29,6 +29,11 @@ export class DealsPositionsEditModalWindowComponent implements OnInit {
   	this.activeClass = true;
   }
 
+  showWithData(position) {
+    this.dealsPositionsEditFormComponent.updateData(position);
+    this.activeClass = true;
+  }
+
   hide() {
     this.activeClass = false;
     let timeoutClear = setTimeout(() => { this.dealsPositionsEditFormComponent.newDealsPositionForm.reset(); clearTimeout(timeoutClear); }, 300);

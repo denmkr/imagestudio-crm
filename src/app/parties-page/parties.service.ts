@@ -92,8 +92,8 @@ export class PartiesService {
 
       let parties = result.counterparties.map(party => ({
         id: party.id,
-        organization: party.organization.name,
-        contact: party.contact_name
+        organization: party.organization,
+        contact_name: party.contact_name
       }));
 
       return parties;

@@ -46,9 +46,12 @@ export class DealsCreatingFormComponent implements OnInit {
     }
   }
 
-  public organizations;
+  public organizations = [];
   public orders_positions = [];
   public documents = [];
+  public statuses = [];
+  public users = [];
+  public counterparties = [];
 
   public selects = [
     {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"}
@@ -66,21 +69,6 @@ export class DealsCreatingFormComponent implements OnInit {
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ]
 
-  public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
-  ];
-
-  public users = [
-    {text: 'Ильдан', id: "1"}, 
-    {text: 'Максим', id: "2"},
-    {text: 'Андрей', id: "3"}
-  ];
-
   newDealForm: FormGroup;
 
   counterparty: FormControl;
@@ -88,14 +76,12 @@ export class DealsCreatingFormComponent implements OnInit {
   comment: FormControl;
   deadline: FormControl;
 
-  public counterparties = [];
-
   constructor(private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
     this.documents = this.documents.map(document => {
       let newDocument = {
-        kind: document.type.id,
+        kind: document.kind.id,
         category: document.category.id,
         url: document.url,
         comment: document.comment,
@@ -124,13 +110,11 @@ export class DealsCreatingFormComponent implements OnInit {
         this.counterparties = x;
     }, (err) => {
         console.log(err);
-        
         this.counterparties = [];
     });
   }
 
   updateTable(event) {
-
     this.documents.push(event);
   }
 

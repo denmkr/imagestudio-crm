@@ -63,7 +63,7 @@
           <div class="select-blocks">
             <div class="select-field-block">
               <form [formGroup]="positionStatusForm">
-                <ng-select class="green" id={{positionStatusSelect.id}} [items]="order_position.available_events" bindLabel="name" bindValue="id" placeholder="{{order_position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(deal.id, $event)" notFoundText="Нет событий">
+                <ng-select class="green" id={{positionStatusSelect.id}} [items]="order_position.available_events" bindLabel="name" bindValue="id" placeholder="{{order_position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(order_position.id, $event)" notFoundText="Нет событий">
                 </ng-select>
               </form>
             </div>

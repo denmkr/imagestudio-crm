@@ -69,6 +69,8 @@ import { DealsItemsEditModalWindowComponent } from './deals-page/deals-editing/d
 import { DealsItemsEditFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-edit-modal-window/deals-positions-edit-form/deals-items-edit-modal-window/deals-items-edit-form/deals-items-edit-form.component';
 
 import { NgDatepickerModule } from 'ng2-datepicker';
+import { DealsPositionsCreatingModalWindowComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-creating-modal-window/deals-positions-creating-modal-window.component';
+import { DealsPositionsCreatingFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-creating-modal-window/deals-positions-creating-form/deals-positions-creating-form.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +123,9 @@ import { NgDatepickerModule } from 'ng2-datepicker';
     DealsPositionsEditModalWindowComponent,
     DealsPositionsEditFormComponent,
     DealsItemsEditModalWindowComponent,
-    DealsItemsEditFormComponent
+    DealsItemsEditFormComponent,
+    DealsPositionsCreatingModalWindowComponent,
+    DealsPositionsCreatingFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

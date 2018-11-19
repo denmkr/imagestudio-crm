@@ -30,11 +30,6 @@ export class DocumentsTableComponent {
 
   public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
 
-  public statuses = [
-    {text: 'Не оплачено', id: 'pending'}, 
-    {text: 'Оплачено', id: 'complete'}
-  ];
-
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentCategory = params['category'];

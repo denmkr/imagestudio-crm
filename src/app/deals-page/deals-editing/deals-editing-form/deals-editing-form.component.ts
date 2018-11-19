@@ -5,7 +5,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsEditModalWindowComponent } from './deals-positions-edit-modal-window/deals-positions-edit-modal-window.component';
-import { DealsPositionsAddModalWindowComponent } from '../../deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-modal-window.component';
+import { DealsPositionsCreatingModalWindowComponent } from './deals-positions-creating-modal-window/deals-positions-creating-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 import { DocumentsAddModalWindowComponent } from '../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
@@ -32,7 +32,7 @@ export class DealsEditingFormComponent implements OnInit {
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
   @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
-  @ViewChild(DealsPositionsAddModalWindowComponent) dealsPositionsAddModalWindowComponent: DealsPositionsAddModalWindowComponent;
+  @ViewChild(DealsPositionsCreatingModalWindowComponent) dealsPositionsCreatingModalWindowComponent: DealsPositionsCreatingModalWindowComponent;
   @ViewChild(DealsPositionsEditModalWindowComponent) dealsPositionsEditModalWindowComponent: DealsPositionsEditModalWindowComponent;
 
   cancelLink = "/deals";
@@ -53,8 +53,8 @@ export class DealsEditingFormComponent implements OnInit {
   public documents = [];
 
   public selects = [
-    {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
-    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "text", bindValue: "id"}
+    {items: "users", name: "doer", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
+    {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect", bindLabel: "name", bindValue: "id"}
   ];
 
   public selectInputs = [
@@ -66,54 +66,28 @@ export class DealsEditingFormComponent implements OnInit {
   ];
 
   public dateInputs = [
-    {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
+    {name: "must_be_finished_at", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ]
 
-  public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
-  ];
+  public statuses = [];
+  public users = [];
 
-  public users = [
-    {text: 'Ильдан', id: "1"}, 
-    {text: 'Максим', id: "2"},
-    {text: 'Андрей', id: "3"}
-  ];
+  editDealForm: FormGroup;
 
-  newDealForm: FormGroup;
-
+  id: string;
   counterparty: FormControl;
-  user: FormControl;
+  doer: FormControl;
   status: FormControl;
   comment: FormControl;
-  deadline: FormControl;
+  must_be_finished_at: FormControl;
 
   public counterparties = [];
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
-  createDeal(event) {
-    this.documents = this.documents.map(document => {
-      let newDocument = {
-        number: document.orderNumber,
-        kind: document.type.id,
-        category: document.category.id,
-        url: document.url,
-        comment: document.comment,
-        counterparty: {
-          id: document.counterparty
-        }
-      };
-
-      return newDocument;
-    });
-
-    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions, this.documents);
-    this.newDealForm.reset();
+  editDeal(event) {
+    this.dealsService.editDealById(this.id, this.editDealForm.get("must_be_finished_at").value, this.editDealForm.get("doer").value, this.editDealForm.get("counterparty").value, this.editDealForm.get("comment").value, this.orders_positions, this.documents);
+    this.editDealForm.reset();
     this.router.navigate([this.cancelLink]);
   }
 
@@ -143,11 +117,15 @@ export class DealsEditingFormComponent implements OnInit {
   }
 
   addNewDocument() {
-    this.documentsAddModalWindowComponent.show();
+    this.documentsAddModalWindowComponent.showForOrder();
   }
 
   addNewParty(name) {
     this.partiesAddModalWindowComponent.showWithName(name);
+  }
+
+  editPosition(position) {
+    this.dealsPositionsEditModalWindowComponent.showWithData(position);
   }
 
   ngOnInit() {
@@ -162,66 +140,46 @@ export class DealsEditingFormComponent implements OnInit {
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
-    this.user = new FormControl('', [
+    this.doer = new FormControl('', [
       Validators.required
     ]);
     this.status = new FormControl('', [
       Validators.required
     ]);
-    this.deadline = new FormControl('', [
+    this.must_be_finished_at = new FormControl('', [
       Validators.required
     ]);
     this.comment = new FormControl('', [
       Validators.required
     ]);
 
-    this.newDealForm = new FormGroup({
-      user: this.user,
+    this.editDealForm = new FormGroup({
+      doer: this.doer,
       status: this.status,
       comment: this.comment,
-      deadline: this.deadline,
+      must_be_finished_at: this.must_be_finished_at,
       counterparty: this.counterparty
     });
 
-    this.newDealForm.reset();
+    this.editDealForm.reset();
 
     this.activatedRoute.queryParams.subscribe(params => {
-      this.dealsService.getDealById(params['id']).subscribe(result => {
-        console.log(result);
-        this.counterparty.setValue(result.order.counterparty.id);
-        this.user.setValue(result.order.doer.id);
-        this.comment.setValue(result.order.comment);
-        this.deadline.setValue(result.order.must_be_finished_at);
-        this.status.setValue(result.order.status);
+      this.dealsService.getDealById(params['id']).subscribe(order => {
+        this.id = params['id'];
+        this.counterparty.setValue(order.counterparty.id);
+        this.doer.setValue(order.doer.id);
+        this.comment.setValue(order.comment);
+        this.must_be_finished_at.setValue(order.must_be_finished_at);
+        this.status.setValue(order.status.id);
 
-        result.order.documents.map(document => {
-          document.orderNumber = document.number;
-          document.category = {
-            text: document.category
-          };
-          document.type = {
-            text: document.kind
-          };
-          document.comment = document.comment;
-          document.url = document.url;
-        });
+        this.statuses = order.available_events;
+        this.documents = order.documents;
+        this.orders_positions = order.orders_positions;
 
-        result.order.orders_positions.map(orders_position => {
-          orders_position.product = {
-            text: orders_position.product.name,
-            id: orders_position.product.id,
-          };
-          orders_position.first_price = orders_position.prime_price;
-        });
-
-        this.documents = result.order.documents;
-        this.orders_positions = result.order.orders_positions;
       });
-      
     });
 
     this.getCurrentParty();
-
   }
 
   getCurrentParty() {
@@ -229,7 +187,7 @@ export class DealsEditingFormComponent implements OnInit {
   }
 
   addNewDealsPosition() {
-    this.dealsPositionsAddModalWindowComponent.show();
+    this.dealsPositionsCreatingModalWindowComponent.show();
   }
 
 }

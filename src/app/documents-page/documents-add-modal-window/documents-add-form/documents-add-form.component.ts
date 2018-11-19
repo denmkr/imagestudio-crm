@@ -30,7 +30,7 @@ export class DocumentsAddFormComponent implements OnInit {
   @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
 
   public selects = [
-    {items: "types", name: "type", placeholder: "Тип документа", id: "docTypeSelect"},
+    {items: "types", name: "kind", placeholder: "Тип документа", id: "docTypeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"}
   ];
 
@@ -42,7 +42,7 @@ export class DocumentsAddFormComponent implements OnInit {
   ];
 
   public orderSelectInputs = [
-    {name: "orderNumber", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
+    {name: "number", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
   ];
 
   public inputs = [
@@ -50,18 +50,18 @@ export class DocumentsAddFormComponent implements OnInit {
   ];
 
   public types = [
-    {text: 'Счет', id: 'check'},
-    {text: 'Акт', id: 'act'},
-    {text: 'Договор', id: 'agreement'},
-    {text: 'Накладная', id: 'invoice'},
-    {text: 'Прочее', id: 'other'},
-    {text: 'Макет', id: 'layout'},
-    {text: 'Коммерческое предложение', id: 'commercial_proposal'}
+    {name: 'Счет', id: 'check'},
+    {name: 'Акт', id: 'act'},
+    {name: 'Договор', id: 'agreement'},
+    {name: 'Накладная', id: 'invoice'},
+    {name: 'Прочее', id: 'other'},
+    {name: 'Макет', id: 'layout'},
+    {name: 'Коммерческое предложение', id: 'commercial_proposal'}
   ];
 
   public categories = [
-    {text: 'Расход', id: "spending"}, 
-    {text: 'Доход', id: "income"}
+    {name: 'Расход', id: "spending"}, 
+    {name: 'Доход', id: "income"}
   ];
 
   newDocumentForm: FormGroup;
@@ -71,10 +71,10 @@ export class DocumentsAddFormComponent implements OnInit {
   fileType: string;
   file: File;
 
-  type: FormControl;
+  kind: FormControl;
   category: FormControl;
   counterparty: FormControl;
-  orderNumber: FormControl;
+  number: FormControl;
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
@@ -121,8 +121,8 @@ export class DocumentsAddFormComponent implements OnInit {
           this.refreshTableEvent.emit(true);
         }
         else {
-          this.documentsService.createNewDocument(this.type.value.id, this.category.value.id, this.counterparty.value, 
-          this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
+          this.documentsService.createNewDocument(this.kind.value.id, this.category.value.id, this.counterparty.value, 
+          this.number.value, this.fileUrl, this.comment.value).subscribe(
             res => { 
               let form = this.newDocumentForm.value;
               form.url = this.fileUrl;
@@ -205,7 +205,7 @@ export class DocumentsAddFormComponent implements OnInit {
     this.orderSelectInputs = [];
 
     this.newDocumentForm = new FormGroup({
-      type: this.type,
+      kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
       comment: this.comment
@@ -218,7 +218,7 @@ export class DocumentsAddFormComponent implements OnInit {
     this.serverSideSearch();
     this.ordersServerSideSearch();
 
-    this.type = new FormControl('', [
+    this.kind = new FormControl('', [
       Validators.required
     ]);
     this.category = new FormControl('', [
@@ -230,15 +230,15 @@ export class DocumentsAddFormComponent implements OnInit {
     this.comment = new FormControl('', [
       Validators.required
     ]);
-    this.orderNumber = new FormControl('', [
+    this.number = new FormControl('', [
       Validators.required
     ]);
 
     this.newDocumentForm = new FormGroup({
-      type: this.type,
+      kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
-      orderNumber: this.orderNumber,
+      number: this.number,
       comment: this.comment
     });
 

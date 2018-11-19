@@ -70,7 +70,7 @@ table tr .file i {
 }
 
 table tr td.status {
-	min-width: 110px;
+	min-width: 124px;
 	color: #777;
 }
 
@@ -79,7 +79,7 @@ table tr td.status .square {
 }
 
 .ng-select#statusSelect {
-	width: 100px;
+	width: 124px;
 	height: 30px;
 }
 

@@ -1,4 +1,4 @@
-<form [formGroup]="newDealForm" (ngSubmit)="createDeal($event)">
+<form [formGroup]="editDealForm" (ngSubmit)="editDeal($event)">
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
@@ -11,7 +11,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact_name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -28,8 +28,8 @@
               </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
-            {{item.contact}} <br />
-            <small>{{item.organization}}</small>
+            {{item.contact_name}} <br />
+            <small>{{item.organization.name}}</small>
           </ng-template>
         </ng-select>
       </div>
@@ -43,11 +43,11 @@
 
     <div *ngFor="let input of textAreas" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
         <textarea formControlName="{{input.name}}" name="{{input.name}}" placeholder="{{input.placeholder}}" [ngClass]="{
-           'has-danger': newDealForm.get(input.name).invalid && newDealForm.get(input.name).dirty, 
-           'has-success': newDealForm.get(input.name).valid && newDealForm.get(input.name).dirty
+           'has-danger': editDealForm.get(input.name).invalid && editDealForm.get(input.name).dirty, 
+           'has-success': editDealForm.get(input.name).valid && editDealForm.get(input.name).dirty
          }"></textarea>
         <div class="form-control-feedback"
-           *ngIf="newDealForm.get(input.name).errors && (newDealForm.get(input.name).dirty || newDealForm.get(input.name).touched)">
+           *ngIf="editDealForm.get(input.name).errors && (editDealForm.get(input.name).dirty || editDealForm.get(input.name).touched)">
            <p>Заполните поле</p>
         </div>
     </div>
@@ -82,15 +82,15 @@
         <tbody>
           <ng-container *ngFor="let position of orders_positions">
             <tr>
-              <td>{{ position.product.text }}</td>
+              <td>{{ position.product.name }}</td>
               <td>{{ position.count }}</td>
               <td>{{ position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
-              <td>{{ position.first_price }}</td>
+              <td>{{ position.prime_price }}</td>
               <td>{{ position.price }}</td>
               <td>{{ position.full_price }}</td>
               <td>{{ position.profit }}</td>
               <td class="arrow">
-                <i class="material-icons" >
+                <i class="material-icons" (click)="editPosition(position)">
                 keyboard_arrow_right
                 </i>
               </td>
@@ -131,8 +131,8 @@
       <tbody>
         <ng-container *ngFor="let document of documents">
           <tr>
-            <td><div class="square orange">{{ document.category.text }}</div></td>
-            <td><div class="square purple">{{ document.type.text }}</div></td>
+            <td><div class="square orange">{{ document.category.name }}</div></td>
+            <td><div class="square purple">{{ document.kind.name }}</div></td>
             <td>{{ document.comment }}</td>
             <td>
               <div class="file">
@@ -143,7 +143,7 @@
               </div>
             </td>
             <td class="arrow">
-              <i class="material-icons" >
+              <i class="material-icons">
               keyboard_arrow_right
               </i>
             </td>
@@ -164,5 +164,5 @@
 
 <documents-add-modal-window (updateTableInOrder)="updateTable($event)"></documents-add-modal-window>
 <parties-add-modal-window></parties-add-modal-window>
-<deals-positions-add-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-add-modal-window>
+<deals-positions-creating-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-creating-modal-window>
 <deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-edit-modal-window>

@@ -31,7 +31,7 @@ export class DocumentsEditFormComponent implements OnInit {
   @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
 
   public selects = [
-    {items: "types", name: "type", placeholder: "Тип документа", id: "docTypeSelect"},
+    {items: "types", name: "kind", placeholder: "Тип документа", id: "docTypeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"},
     {items: "available_events", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
@@ -44,7 +44,7 @@ export class DocumentsEditFormComponent implements OnInit {
   ];
 
   public orderSelectInputs = [
-    {name: "orderNumber", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
+    {name: "number", placeholder: "Номер заказа", title: "Заказ", items: "orders", id: "ordersSelect"}
   ];
 
   public inputs = [
@@ -52,18 +52,18 @@ export class DocumentsEditFormComponent implements OnInit {
   ];
 
   public types = [
-    {text: 'Счет', id: 'check'},
-    {text: 'Акт', id: 'act'},
-    {text: 'Договор', id: 'agreement'},
-    {text: 'Накладная', id: 'invoice'},
-    {text: 'Прочее', id: 'other'},
-    {text: 'Макет', id: 'layout'},
-    {text: 'Коммерческое предложение', id: 'commercial_proposal'}
+    {name: 'Счет', id: 'check'},
+    {name: 'Акт', id: 'act'},
+    {name: 'Договор', id: 'agreement'},
+    {name: 'Накладная', id: 'invoice'},
+    {name: 'Прочее', id: 'other'},
+    {name: 'Макет', id: 'layout'},
+    {name: 'Коммерческое предложение', id: 'commercial_proposal'}
   ];
 
   public categories = [
-    {text: 'Расход', id: "spending"}, 
-    {text: 'Доход', id: "income"}
+    {name: 'Расход', id: "spending"}, 
+    {name: 'Доход', id: "income"}
   ];
 
   editDocumentForm: FormGroup;
@@ -72,13 +72,13 @@ export class DocumentsEditFormComponent implements OnInit {
   fileType: string;
   fileUrl: string;
 
-  available_events: any[] = [];
+  available_events = [];
 
   status: FormControl;
-  type: FormControl;
+  kind: FormControl;
   category: FormControl;
   counterparty: FormControl;
-  orderNumber: FormControl;
+  number: FormControl;
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
@@ -101,7 +101,7 @@ export class DocumentsEditFormComponent implements OnInit {
   }
 
   getCurrentParty() {
-    this.partiesService.getPartiesBySearch(this.document.counterparty).subscribe(counterparties => { this.counterparties = counterparties });
+    this.partiesService.getPartiesBySearch(this.document.counterparty.contact_name).subscribe(counterparties => { this.counterparties = counterparties });
   }
 
   constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private dealsService: DealsService, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
@@ -110,11 +110,11 @@ export class DocumentsEditFormComponent implements OnInit {
     this.document = document;
 
     this.available_events = document.available_events;
-    this.status.setValue(document.status);
-    this.type.setValue(document.type);
-    this.category.setValue(document.category);
-    this.counterparty.setValue(document.counterparty_id);
-    this.orderNumber.setValue(document.number);
+    this.status.setValue(document.status.id);
+    this.kind.setValue(document.kind.id);
+    this.category.setValue(document.category.id);
+    this.counterparty.setValue(document.counterparty.id);
+    this.number.setValue(document.number);
     this.comment.setValue(document.comment);
 
     this.getCurrentParty();
@@ -143,8 +143,8 @@ export class DocumentsEditFormComponent implements OnInit {
 
   editDocument() {
     if (this.editDocumentForm.valid) {
-  	  this.documentsService.updateDocument(this.document.id, this.type.value, this.category.value, this.status.value, this.counterparty.value, 
-            this.orderNumber.value, this.fileUrl, this.comment.value).subscribe(
+  	  this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
+            this.number.value, this.fileUrl, this.comment.value).subscribe(
         res => { 
           this.editDocumentForm.reset();
           this.refreshTableEvent.emit(true);
@@ -207,7 +207,7 @@ export class DocumentsEditFormComponent implements OnInit {
     this.status = new FormControl('', [
       Validators.required
     ]);
-    this.type = new FormControl('', [
+    this.kind = new FormControl('', [
       Validators.required
     ]);
     this.category = new FormControl('', [
@@ -216,7 +216,7 @@ export class DocumentsEditFormComponent implements OnInit {
     this.counterparty = new FormControl('', [
       Validators.required
     ]);
-    this.orderNumber = new FormControl('', [
+    this.number = new FormControl('', [
       Validators.required,
       Validators.pattern("[0-9]*")
     ]);
@@ -226,10 +226,10 @@ export class DocumentsEditFormComponent implements OnInit {
 
     this.editDocumentForm = new FormGroup({
       status: this.status,
-      type: this.type,
+      kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
-      orderNumber: this.orderNumber,
+      number: this.number,
       comment: this.comment
     });
   }

@@ -16,13 +16,13 @@
   <tbody>
     <tr *ngFor="let document of documents">
       <td>
-        <div>{{ document.counterparty }}</div>
+        <div>{{ document.counterparty.contact_name }}</div>
         <div class="additional-attributes">
-          <div class="organization">{{ document.organization }}</div>
+          <div class="organization">{{ document.counterparty.organization.name }}</div>
         </div>
       </td>
-      <td><div class="square orange">{{ document.categoryName }}</div></td>
-      <td><div class="square green">{{ document.typeName }}</div></td>
+      <td><div class="square orange">{{ document.category.name }}</div></td>
+      <td><div class="square green">{{ document.kind.name }}</div></td>
       <td>№{{ document.id }}</td>
       <td>#{{ document.number }}</td>
       <td>
@@ -38,13 +38,13 @@
         <div class="select-blocks">
           <div class="select-field-block">
             <form [formGroup]="statusForm" (ngSubmit)="changeDocumentStatus(deal.id, $event)">
-              <ng-select class="blue" id={{statusSelect.id}} [items]="document.available_events" bindLabel="text" bindValue="id" placeholder="{{statusSelect.placeholder}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" [(ngModel)]="document.status" (change)="changeDocumentStatus(deal.id, $event)">
+              <ng-select class="blue" id={{statusSelect.id}} [items]="document.available_events" bindLabel="name" bindValue="id" placeholder="{{document.status.name}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changeDocumentStatus(deal.id, $event)">
               </ng-select>
             </form>
           </div>
         </div>
       </td>
-      <td class="date">{{ document.date | date: 'dd.MM.yyyy' }}</td>
+      <td class="date">{{ document.created_at | date: 'dd.MM.yyyy' }}</td>
       <td class="arrow">
         <i class="material-icons" (click)="showEditModal(document)">
         keyboard_arrow_right

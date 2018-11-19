@@ -73,15 +73,15 @@ export class DocumentsService {
     return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/generate_presigned_url/', file);
   }
 
-  createNewDocument(type: string, category: string, counterparty: string, orderNumber: string, url: string, comment: string) {
+  createNewDocument(kindId: string, categoryId: string, counterpartyId: string, number: string, url: string, comment: string) {
     const document = {
-      number: orderNumber,
-      kind: type,
-      category: category,
+      number: number,
+      kind: kindId,
+      category: categoryId,
       url: url,
       comment: comment,
       counterparty: {
-        id: counterparty
+        id: counterpartyId
       }
     };
 
@@ -109,10 +109,10 @@ export class DocumentsService {
       result.documents.map(document => {
         switch (document.category) {
           case "spending":
-            document.categoryName = "Расход";
+            document.category = { id: "spending", name: "Расход" };
             break;
           case "income":
-            document.categoryName = "Доход";
+            document.category = { id: "income", name: "Доход" };
             break;
           default:
             break;
@@ -120,25 +120,25 @@ export class DocumentsService {
 
         switch (document.kind) {
           case "act":
-            document.kindName = "Акт";
+            document.kind = { id: "act", name: "Акт" };
             break;
           case "layout":
-            document.kindName = "Макет";
+            document.kind = { id: "layout", name: "Макет" };
             break;
           case "check":
-            document.kindName = "Счет";
+            document.kind = { id: "check", name: "Счет" };
             break;
           case "agreement":
-            document.kindName = "Договор";
+            document.kind = { id: "agreement", name: "Договор" };
             break;
           case "invoice":
-            document.kindName = "Накладная";
+            document.kind = { id: "invoice", name: "Накладная" };
             break;
           case "other":
-            document.kindName = "Прочее";
+            document.kind = { id: "other", name: "Прочее" };
             break;
           case "commercial_proposal":
-            document.kindName = "Коммерческое предложение";
+            document.kind = { id: "commercial_proposal", name: "Коммерческое предложение" };
             break;
           default:
             break;
@@ -146,10 +146,10 @@ export class DocumentsService {
 
         switch (document.status) {
           case "complete":
-            document.status = "Оплачено";
+            document.status = { id: "complete", name: "Оплачено" };
             break;
           case "pending":
-            document.status = "Не оплачено";
+            document.status = { id: "pending", name: "Не оплачено" };
             break;
           default:
             break;
@@ -159,10 +159,10 @@ export class DocumentsService {
 
         switch (document.available_event) {
           case "complete":
-            events.push("Оплачено");
+            events.push({ id: "complete", name: "Оплачено"});
             break;
           case "pending":
-            events.push("Не оплачено");
+            events.push({ id: "pending", name: "Не оплачено"});
             break;
           default:
             break;
@@ -175,18 +175,14 @@ export class DocumentsService {
 
       let documents = result.documents.map(document => ({
         id: document.id,
-        organization: document.counterparty.organization.name,
-        counterparty: document.counterparty.contact_name,
-        counterparty_id: document.counterparty.id,
-        categoryName: document.categoryName,
+        counterparty: document.counterparty,
         category: document.category,
-        typeName: document.kindName,
-        type: document.kind,
+        kind: document.kind,
         number: document.number,
         url: document.url,
         status: document.status,
         comment: document.comment,
-        date: document.created_at,
+        created_at: document.created_at,
         available_events: document.available_events
       }));
 

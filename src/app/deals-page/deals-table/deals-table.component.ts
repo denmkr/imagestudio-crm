@@ -97,14 +97,17 @@ export class DealsTableComponent {
 
   revealDeal(event) {
     let id = event.target.parentNode.parentNode.id;
-    if (document.getElementById('child' + id).classList.contains('show')) {
-      document.getElementById('child' + id).classList.remove("show");
-      event.target.classList.remove("active");
+    if (document.getElementById('child' + id)) {
+      if (document.getElementById('child' + id).classList.contains('show')) {
+        document.getElementById('child' + id).classList.remove("show");
+        event.target.classList.remove("active");
+      }
+      else {
+        document.getElementById('child' + id).classList.add("show");
+        event.target.classList.add("active");
+      }
     }
-    else {
-      document.getElementById('child' + id).classList.add("show");
-      event.target.classList.add("active");
-    }
+    
   }
 
   showAllDeals() {

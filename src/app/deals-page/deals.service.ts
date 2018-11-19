@@ -47,8 +47,8 @@ export class DealsService {
 
       let orders = result.orders.map(order => ({
         id: order.id,
-        organization: order.counterparty.organization.name,
-        client: order.counterparty.contact_name,
+        organization: order.counterparty.organization,
+        counterparty: order.counterparty,
         number: order.number
       }));
 
@@ -113,6 +113,50 @@ export class DealsService {
     
   }
 
+  editDealById(id: string, deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
+
+    documents.map(document => {
+      document.kind = document.kind.id;
+      document.category = document.category.id;
+    });
+
+    orders_positions.map(orders_position => {
+      const order = {
+        id: id
+      };
+
+      orders_position.order = order;
+      let orders_position_id = orders_position.id;
+
+      orders_position.orders_items.map(orders_item => {
+        const orders_position = {
+          id: orders_position_id
+        }
+
+        orders_item.orders_position = orders_position;
+      });
+    });
+
+    const order = {
+      must_be_finished_at: deadline,
+      doer: {
+        id: doer_id
+      },
+      counterparty: {
+        id: counterparty_id
+      },
+      comment: comment,
+      orders_positions: orders_positions
+    };
+
+    console.log(order);
+
+    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, order).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
+  }
+
   createNewDeal(deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
  
     const order = {
@@ -173,24 +217,127 @@ export class DealsService {
   }
 
   getDealById(id: string) {
-    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id);
+    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id)
+    .map(result => {
+      let available_events = [];
 
-    /*
-    let newResult = {
-      price: '100',
-      comment: 'Comment',
-      status: 'new',
-      must_be_finished_at: '2014 02 02',
-      counterparty: {
-        id: 3
-      },
-      doer: {
-        id: 2
-      }
-    };
+      result.order.available_events.map(available_event => {
+        switch (available_event) {
+          case "accept":
+            available_events.push({ name: "Лид", id: "accept" });
+            break;
+          case "start":
+            available_events.push({ name: "В работе", id: "start" });
+            break;
+          case "complete":
+            available_events.push({ name: "Выполнено", id: "complete" });
+            break;
+          case "set_payed":
+            available_events.push({ name: "Оплачено", id: "set_payed" });
+            break;
+          case "archive":
+            available_events.push({ name: "Архив", id: "archive" });
+            break;
+          case "deny":
+            available_events.push({ name: "Слив", id: "deny" });
+            break;
+          default:
+            break;
+        };
+      });
 
-    return newResult;
-    */
+      switch (result.order.status) {
+        case "new":
+          result.order.status = {name: "Новое", id: "new"};
+          break;
+        case "lead":
+          result.order.status = {name: "Лид", id: "lead"};
+          break;
+        case "in_progress":
+          result.order.status = {name: "В работе", id: "in_progress"};
+          break;
+        case "payed":
+          result.order.status = {name: "Оплачено", id: "payed"};
+          break;
+        case "done":
+          result.order.status = {name: "Выполнено", id: "done"};
+          break;
+        case "archived":
+          result.order.status = {name: "Архив", id: "archived"};
+          break;
+        case "denied":
+          result.order.status = {name: "Слив", id: "denied"};
+          break;
+        default:
+          break;
+      };
+
+      available_events.push({ name: result.order.status.name, id: result.order.status.id});
+
+      result.order.documents.map(document => {
+        switch (document.category) {
+          case "spending":
+            document.category = { id: "spending", name: "Расход" };
+            break;
+          case "income":
+            document.category = { id: "income", name: "Доход" };
+            break;
+          default:
+            break;
+        }
+
+        switch (document.kind) {
+          case "act":
+            document.kind = { id: "act", name: "Акт" };
+            break;
+          case "layout":
+            document.kind = { id: "layout", name: "Макет" };
+            break;
+          case "check":
+            document.kind = { id: "check", name: "Счет" };
+            break;
+          case "agreement":
+            document.kind = { id: "agreement", name: "Договор" };
+            break;
+          case "invoice":
+            document.kind = { id: "invoice", name: "Накладная" };
+            break;
+          case "other":
+            document.kind = { id: "other", name: "Прочее" };
+            break;
+          case "commercial_proposal":
+            document.kind = { id: "commercial_proposal", name: "Коммерческое предложение" };
+            break;
+          default:
+            break;
+        }
+
+        switch (document.status) {
+          case "complete":
+            document.status = { id: "complete", name: "Оплачено" };
+            break;
+          case "pending":
+            document.status = { id: "pending", name: "Не оплачено" };
+            break;
+          default:
+            break;
+        };
+
+      });
+
+      let order = {
+        doer: result.order.doer,
+        comment: result.order.comment,
+        must_be_finished_at: result.order.must_be_finished_at,
+        status: result.order.status,
+        counterparty: result.order.counterparty,
+        available_events: available_events,
+        documents: result.order.documents,
+        orders_positions: result.order.orders_positions
+      };
+
+      return order;
+    });
   }
 
   getDealsByParams(status: string, search: string, page: string, user_id: string) {

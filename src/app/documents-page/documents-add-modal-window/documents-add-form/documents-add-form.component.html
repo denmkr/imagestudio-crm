@@ -2,7 +2,7 @@
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select style="width: {{select.widthValue}};" class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      <ng-select style="width: {{select.widthValue}};" class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
     </div>
   </div>
@@ -11,7 +11,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact_name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -28,8 +28,8 @@
               </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
-            {{item.contact}} <br />
-            <small>{{item.organization}}</small>
+            {{item.contact_name}} <br />
+            <small>{{item.organization.name}}</small>
           </ng-template>
         </ng-select>
       </div>
@@ -56,7 +56,7 @@
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
             {{item.number}} <br />
-            <small>{{item.organization}}</small>
+            <small>{{item.organization.name}}</small>
           </ng-template>
         </ng-select>
       </div>
