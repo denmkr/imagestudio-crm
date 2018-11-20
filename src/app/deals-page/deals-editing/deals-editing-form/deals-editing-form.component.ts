@@ -7,6 +7,7 @@ import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsEditModalWindowComponent } from './deals-positions-edit-modal-window/deals-positions-edit-modal-window.component';
 import { DealsPositionsCreatingModalWindowComponent } from './deals-positions-creating-modal-window/deals-positions-creating-modal-window.component';
 import { PartiesAddModalWindowComponent } from '../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
+import { DocumentsEditModalWindowComponent } from '../../../documents-page/documents-edit-modal-window/documents-edit-modal-window.component';
 import { DocumentsAddModalWindowComponent } from '../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
@@ -31,6 +32,7 @@ export class DealsEditingFormComponent implements OnInit {
 
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
+  @ViewChild(DocumentsEditModalWindowComponent) documentsEditModalWindowComponent: DocumentsEditModalWindowComponent;
   @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
   @ViewChild(DealsPositionsCreatingModalWindowComponent) dealsPositionsCreatingModalWindowComponent: DealsPositionsCreatingModalWindowComponent;
   @ViewChild(DealsPositionsEditModalWindowComponent) dealsPositionsEditModalWindowComponent: DealsPositionsEditModalWindowComponent;
@@ -91,6 +93,10 @@ export class DealsEditingFormComponent implements OnInit {
     this.router.navigate([this.cancelLink]);
   }
 
+  editDocument(document) {
+    this.documentsEditModalWindowComponent.showForOrder(document);
+  }
+
   partiesTypeahead = new EventEmitter<string>();
 
   private serverSideSearch() {
@@ -112,8 +118,20 @@ export class DealsEditingFormComponent implements OnInit {
     this.documents.push(event);
   }
 
+  updateTableEdit(event) {
+    this.dealsService.getDealById(this.id).subscribe(order => {
+      this.documents = order.documents;
+    });
+  }
+
   refreshOrderPositions(event) {
     this.orders_positions.push(event);
+  }
+
+  refreshOrderPositionsEdit(event) {
+    this.dealsService.getDealById(this.id).subscribe(order => {
+      this.orders_positions = order.orders_positions;
+    });
   }
 
   addNewDocument() {

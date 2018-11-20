@@ -36,12 +36,12 @@ export class DealsPositionsAddFormComponent implements OnInit {
   ];
 
   public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
+    {name: 'Новое', id: 'new'}, 
+    {name: 'Лид', id: 'lead'},
+    {name: 'В работе', id: 'work'},
+    {name: 'Долг', id: 'debt'},
+    {name: 'Сделано', id: 'done'},
+    {name: 'Слив', id: 'dumb'}
   ];
 
   public position_items = [];
@@ -92,7 +92,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
     let positionForm = {
       product: this.product.value,
       price: this.price.value,
-      first_price: this.cost.value,
+      prime_price: this.cost.value,
       full_price: this.amount.value * this.cost.value,
       profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
       count: this.amount.value,
@@ -125,7 +125,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
     this.warehouseService.createProduct(name).subscribe(product => {
       let fieldProduct = {
         id: product.id,
-        text: product.name
+        name: product.name
       };
       this.product.setValue(fieldProduct);
     });

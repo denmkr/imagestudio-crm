@@ -143,7 +143,7 @@
               </div>
             </td>
             <td class="arrow">
-              <i class="material-icons">
+              <i class="material-icons" (click)="editDocument(document)">
               keyboard_arrow_right
               </i>
             </td>
@@ -163,6 +163,7 @@
 </form>
 
 <documents-add-modal-window (updateTableInOrder)="updateTable($event)"></documents-add-modal-window>
+<documents-edit-modal-window (updateTableInOrder)="updateTableEdit($event)"></documents-edit-modal-window>
 <parties-add-modal-window></parties-add-modal-window>
 <deals-positions-creating-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-creating-modal-window>
-<deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-edit-modal-window>
+<deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositionsEdit($event)"></deals-positions-edit-modal-window>

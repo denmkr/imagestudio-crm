@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsAddModalWindowComponent } from '../../../../deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
+import { DealsService } from '../../../../deals.service';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
 
@@ -10,7 +12,7 @@ import * as ruLocale from 'date-fns/locale/ru';
   selector: 'deals-positions-creating-form',
   templateUrl: './deals-positions-creating-form.component.html',
   styleUrls: ['./deals-positions-creating-form.component.css'],
-  providers: [ WarehouseService ]
+  providers: [ WarehouseService, DealsService ]
 })
 export class DealsPositionsCreatingFormComponent implements OnInit {
 
@@ -36,12 +38,12 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
   ];
 
   public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
+    {name: 'Новое', id: 'new'}, 
+    {name: 'Лид', id: 'lead'},
+    {name: 'В работе', id: 'work'},
+    {name: 'Долг', id: 'debt'},
+    {name: 'Сделано', id: 'done'},
+    {name: 'Слив', id: 'dumb'}
   ];
 
   public position_items = [];
@@ -58,6 +60,7 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
 
   newDealsPositionForm: FormGroup;
 
+  orderId: number;
   product: FormControl;
   cost: FormControl;
   price: FormControl;
@@ -90,9 +93,10 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
   addDealsPositions() {
 
     let positionForm = {
+      id: this.orderId,
       product: this.product.value,
       price: this.price.value,
-      first_price: this.cost.value,
+      prime_price: this.cost.value,
       full_price: this.amount.value * this.cost.value,
       profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
       count: this.amount.value,
@@ -101,6 +105,7 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
     };
     
     this.refreshOrderPositions.emit(positionForm);
+    this.dealsService.createNewPosition(positionForm.must_be_finished_at, positionForm.product.id, positionForm.id, positionForm.price, positionForm.count);
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -119,19 +124,23 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
     });
   }
 
-  constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, public formbuilder: FormBuilder, private elRef: ElementRef, private dealsService: DealsService, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   addNewProduct(name) {
     this.warehouseService.createProduct(name).subscribe(product => {
       let fieldProduct = {
         id: product.id,
-        text: product.name
+        name: product.name
       };
       this.product.setValue(fieldProduct);
     });
   }
 
   ngOnInit() {
+  	this.activatedRoute.queryParams.subscribe(params => {
+      this.orderId = parseInt(params['id']);
+  	});
+
     this.serverSideSearchForProducts();
 
     this.product = new FormControl('', [

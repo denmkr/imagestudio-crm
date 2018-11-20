@@ -121,7 +121,7 @@ export class DocumentsAddFormComponent implements OnInit {
           this.refreshTableEvent.emit(true);
         }
         else {
-          this.documentsService.createNewDocument(this.kind.value.id, this.category.value.id, this.counterparty.value, 
+          this.documentsService.createNewDocument(this.kind.value.id, this.category.value.id, this.counterparty.value.id, 
           this.number.value, this.fileUrl, this.comment.value).subscribe(
             res => { 
               let form = this.newDocumentForm.value;
@@ -203,6 +203,7 @@ export class DocumentsAddFormComponent implements OnInit {
 
   forOrder() {
     this.orderSelectInputs = [];
+    this.isOrder = true;
 
     this.newDocumentForm = new FormGroup({
       kind: this.kind,
@@ -210,8 +211,7 @@ export class DocumentsAddFormComponent implements OnInit {
       counterparty: this.counterparty,
       comment: this.comment
     });
-
-    this.isOrder = true;
+    
   }
 
   ngOnInit() {

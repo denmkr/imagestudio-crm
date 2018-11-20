@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsEditModalWindowComponent } from './deals-items-edit-modal-window/deals-items-edit-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
+import { DealsService } from '../../../../deals.service';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
 
@@ -10,7 +12,7 @@ import * as ruLocale from 'date-fns/locale/ru';
   selector: 'deals-positions-edit-form',
   templateUrl: './deals-positions-edit-form.component.html',
   styleUrls: ['./deals-positions-edit-form.component.css'],
-  providers: [ WarehouseService ]
+  providers: [ WarehouseService, DealsService ]
 })
 export class DealsPositionsEditFormComponent implements OnInit {
 
@@ -39,15 +41,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
     {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
 
-  public statuses = [
-    {text: 'Новое', id: 'new'}, 
-    {text: 'Лид', id: 'lead'},
-    {text: 'В работе', id: 'work'},
-    {text: 'Долг', id: 'debt'},
-    {text: 'Сделано', id: 'done'},
-    {text: 'Слив', id: 'dumb'}
-  ];
-
+  public statuses = [];
   public position_items = [];
 
   public inputs = [
@@ -60,8 +54,10 @@ export class DealsPositionsEditFormComponent implements OnInit {
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
   ]
 
-  newDealsPositionForm: FormGroup;
+  editDealsPositionForm: FormGroup;
 
+  id: number;
+  orderId: number;
   status: FormControl;
   product: FormControl;
   cost: FormControl;
@@ -86,11 +82,25 @@ export class DealsPositionsEditFormComponent implements OnInit {
     this.position_items.push(event);
   }
 
-  addDealsPositions() {
-    let order_position = this.newDealsPositionForm.value;
+  editDealsPosition() {
+    let order_position = this.editDealsPositionForm.value;
     order_position.items = this.position_items;
+
+    let positionForm = {
+      orderId: this.orderId,
+      product: this.product.value,
+      price: this.price.value,
+      prime_price: this.cost.value,
+      full_price: this.amount.value * this.cost.value,
+      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+      count: this.amount.value,
+      orders_items: this.position_items,
+      must_be_finished_at: this.deadline.value
+    };
     
-    this.refreshOrderPositions.emit(order_position);
+    this.dealsService.editPositionById(this.id, positionForm.must_be_finished_at, positionForm.product.id, positionForm.orderId, positionForm.price, positionForm.count).subscribe(result => {
+      this.refreshOrderPositions.emit(order_position);
+    });
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -109,7 +119,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
     });
   }
 
-  constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private dealsService: DealsService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   addNewProduct(name) {
     this.warehouseService.createProduct(name).subscribe(product => {
@@ -122,12 +132,21 @@ export class DealsPositionsEditFormComponent implements OnInit {
   }
 
   updateData(position) {
-    console.log(position);
+    this.id = position.id;
+    this.product.setValue(position.product);
+    this.status.setValue(position.status.id);
+    this.statuses = position.available_events;
     this.cost.setValue(position.prime_price);
     this.price.setValue(position.price);
+    this.deadline.setValue(position.must_be_finished_at);
+    this.amount.setValue(position.count);
   }
 
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.orderId = parseInt(params['id']);
+    });
+
     this.serverSideSearchForProducts();
 
     this.status = new FormControl('', [
@@ -149,7 +168,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
       Validators.required
     ]);
 
-    this.newDealsPositionForm = new FormGroup({
+    this.editDealsPositionForm = new FormGroup({
       status: this.status,
       product: this.product,
       cost: this.cost,
@@ -158,7 +177,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
       deadline: this.deadline
     });
 
-    this.newDealsPositionForm.reset();
+    this.editDealsPositionForm.reset();
   }
 
 }

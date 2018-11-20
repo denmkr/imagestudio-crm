@@ -1,8 +1,8 @@
-<form [ngClass]="{'validation' : validationClass}" [formGroup]="newDealsPositionForm" (ngSubmit)="addDealsPositions($event)">
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="editDealsPositionForm" (ngSubmit)="editDealsPosition($event)">
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="text" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
     </div>
   </div>
@@ -12,7 +12,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -35,11 +35,11 @@
     <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
       <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
-         'has-danger': newDealsPositionForm.get(input.name).invalid && newDealsPositionForm.get(input.name).dirty, 
-         'has-success': newDealsPositionForm.get(input.name).valid && newDealsPositionForm.get(input.name).dirty
+         'has-danger': editDealsPositionForm.get(input.name).invalid && editDealsPositionForm.get(input.name).dirty, 
+         'has-success': editDealsPositionForm.get(input.name).valid && editDealsPositionForm.get(input.name).dirty
        }">
       <div class="form-control-feedback"
-         *ngIf="newDealsPositionForm.get(input.name).errors && (newDealsPositionForm.get(input.name).dirty || newDealsPositionForm.get(input.name).touched)">
+         *ngIf="editDealsPositionForm.get(input.name).errors && (editDealsPositionForm.get(input.name).dirty || editDealsPositionForm.get(input.name).touched)">
          <p>Заполните поле</p>
       </div>
     </div>

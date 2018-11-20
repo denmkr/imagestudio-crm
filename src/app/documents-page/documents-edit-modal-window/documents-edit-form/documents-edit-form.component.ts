@@ -23,6 +23,7 @@ export class DocumentsEditFormComponent implements OnInit {
   );
  
   fileLoading: any;
+  isOrder: boolean = false;
 
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
@@ -82,6 +83,7 @@ export class DocumentsEditFormComponent implements OnInit {
   comment: FormControl;
 
   @Output() eventEmitter = new EventEmitter<boolean>();
+  @Output() updateOrderEdit = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   removeDocument() {
@@ -89,11 +91,25 @@ export class DocumentsEditFormComponent implements OnInit {
       this.documentsService.removeDocument(this.document.id).subscribe(
         res => { 
           this.eventEmitter.emit(true);
+          if (this.isOrder) this.updateOrderEdit.emit(true);
           this.refreshTableEvent.emit(true);
         },
         err => { console.log(err) }
       ); 
     }
+  }
+
+  forOrder() {
+    this.orderSelectInputs = [];
+    this.isOrder = true;
+    this.editDocumentForm = new FormGroup({
+      status: this.status,
+      kind: this.kind,
+      category: this.category,
+      counterparty: this.counterparty,
+      comment: this.comment
+    });
+    
   }
 
   hideWindow() {
@@ -143,12 +159,13 @@ export class DocumentsEditFormComponent implements OnInit {
 
   editDocument() {
     if (this.editDocumentForm.valid) {
-  	  this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
-            this.number.value, this.fileUrl, this.comment.value).subscribe(
+	    this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
+          this.number.value, this.fileUrl, this.comment.value).subscribe(
         res => { 
-          this.editDocumentForm.reset();
-          this.refreshTableEvent.emit(true);
-          this.eventEmitter.emit(true);
+        this.editDocumentForm.reset();
+        if (this.isOrder) this.updateOrderEdit.emit(true);
+        this.refreshTableEvent.emit(true);
+        this.eventEmitter.emit(true);
         },
         err => { console.log(err) }
       );

@@ -15,7 +15,7 @@ export class WarehouseService {
     .map(result => {
       return result.products.map(product => ({
         id: product.id,
-        text: product.name
+        name: product.name
       }));
     });
   }

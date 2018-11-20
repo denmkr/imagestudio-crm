@@ -13,6 +13,7 @@ export class DocumentsEditModalWindowComponent implements OnInit {
   @HostBinding('class.active') activeClass: boolean = false;
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
+  @Output() updateTableInOrder = new EventEmitter<boolean>();
 
   title = "Редактировать документ";
 
@@ -23,6 +24,16 @@ export class DocumentsEditModalWindowComponent implements OnInit {
 
   refresh() {
     this.refreshTableEvent.emit(true);
+  }
+
+  showForOrder(document) {
+    this.documentsEditFormComponent.forOrder();
+    this.documentsEditFormComponent.updateValues(document);
+    this.activeClass = true;
+  }
+
+  updateOrderEdit(event) {
+    this.updateTableInOrder.emit(event);
   }
 
   show(document) {

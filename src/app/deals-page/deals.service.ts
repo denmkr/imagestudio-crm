@@ -86,38 +86,14 @@ export class DealsService {
     ); 
   }
 
-  updateDeal(id: string, type: string, category: string, organization: string, email: string, contact: string, 
-    position: string, phone: string, comment: string) {
-
-    const document = {
-      id: id,
-      kind: type,
-      category: category,
-      organization: {
-        id: organization
-      },
-      email: email,
-      contact_name: contact,
-      position: position,
-      contact_phone: phone,
-      comment: comment,
-      user: {
-        id: this.authService.getUserId()
-      }
-    };
-
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, document).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
-    
-  }
-
   editDealById(id: string, deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
 
     documents.map(document => {
       document.kind = document.kind.id;
       document.category = document.category.id;
+      document.counterparty = {
+        id: document.counterparty.id
+      };
     });
 
     orders_positions.map(orders_position => {
@@ -146,7 +122,7 @@ export class DealsService {
         id: counterparty_id
       },
       comment: comment,
-      orders_positions: orders_positions
+      documents: documents
     };
 
     console.log(order);
@@ -177,6 +153,41 @@ export class DealsService {
       err => { console.log(err) }
     );
     
+  }
+
+  editPositionById(id: number, deadline: string, product_id: number, order_id: number, price: string, count: string) {
+    const order_position = {
+      product: {
+        id: product_id
+      },
+      order: {
+        id: order_id
+      },
+      must_be_finished_at: deadline,
+      price: price,
+      count: count
+    };
+
+    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id, order_position);
+  }
+
+  createNewPosition(deadline: string, product_id: number, order_id: number, price: string, count: string) {
+    const order_position = {
+      product: {
+        id: product_id
+      },
+      order: {
+        id: order_id
+      },
+      must_be_finished_at: deadline,
+      price: price,
+      count: count
+    };
+
+    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/', order_position).subscribe(
+      res => { console.log(res) },
+      err => { console.log(err) }
+    );
   }
 
   getColumnDealsByParams(status: string, search: string, user_id: string) {
@@ -274,6 +285,80 @@ export class DealsService {
 
       available_events.push({ name: result.order.status.name, id: result.order.status.id});
 
+      result.order.orders_positions.map(position => {
+        let position_events: any[] = [];
+
+        switch (position.status) {
+          case "new":
+            position.status = {name: "Новое", id: "new"};
+            break;
+          case "pending":
+            position.status = {name: "Рассмотрение", id: "pending"};
+            break;
+          case "calculating":
+            position.status = {name: "Расчет", id: "calculating"};
+            break;
+          case "deffered":
+            position.status = {name: "Различить", id: "deffered"};
+            break;
+          case "waiting":
+            position.status = {name: "Ожидается", id: "waiting"};
+            break;
+          case "in_progress":
+            position.status = {name: "В работе", id: "in_progress"};
+            break;
+          case "ordered":
+            position.status = {name: "Заказан", id: "ordered"};
+            break;
+          case "done":
+            position.status = {name: "Завершен", id: "done"};
+            break;
+          case "payed":
+            position.status = {name: "Оплачен", id: "payed"};
+            break;
+          case "verified":
+            position.status = {name: "Проверен", id: "verified"};
+            break;
+          default:
+            break;
+        };
+
+        position.available_events.map(available_event => {
+          switch (available_event) {
+            case "accept":
+              position_events.push({ name: "Лид", id: "accept" });
+              break;
+            case "start":
+              position_events.push({ name: "В работе", id: "start" });
+              break;
+            case "put_in_wait":
+              position_events.push({ name: "Ожидание", id: "put_in_wait" });
+              break;
+            case "calculate":
+              position_events.push({ name: "Рассчет", id: "calculate" });
+              break;
+            case "set_ordered":
+              position_events.push({ name: "Заказ", id: "set_ordered" });
+              break;
+            case "complete":
+              position_events.push({ name: "Выполнено", id: "complete" });
+              break;
+            case "set_payed":
+              position_events.push({ name: "Оплачено", id: "set_payed" });
+              break;
+            case "verify":
+              position_events.push({ name: "Проверено", id: "verify" });
+              break;
+            default:
+              break;
+          };
+        });
+
+        position_events.push({ name: position.status.name, id: position.status.id});
+        position.available_events = position_events;
+        
+      });
+
       result.order.documents.map(document => {
         switch (document.category) {
           case "spending":
@@ -322,6 +407,24 @@ export class DealsService {
           default:
             break;
         };
+
+        let events: any[] = [];
+
+        switch (document.available_event) {
+          case "complete":
+            events.push({ id: "complete", name: "Оплачено"});
+            break;
+          case "pending":
+            events.push({ id: "pending", name: "Не оплачено"});
+            break;
+          default:
+            break;
+        };
+
+        document.available_events = events;
+        document.available_events.push(document.status);
+
+        // document.counterparty = document.counterparty.id;
 
       });
 
