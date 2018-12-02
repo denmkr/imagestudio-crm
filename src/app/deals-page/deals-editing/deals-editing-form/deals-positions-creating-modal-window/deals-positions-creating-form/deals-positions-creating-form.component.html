@@ -37,7 +37,7 @@
 
     <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
-      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+      <input formControlName="{{input.name}}" [readonly]="input.readonly" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
          'has-danger': newDealsPositionForm.get(input.name).invalid && newDealsPositionForm.get(input.name).dirty, 
          'has-success': newDealsPositionForm.get(input.name).valid && newDealsPositionForm.get(input.name).dirty
        }">

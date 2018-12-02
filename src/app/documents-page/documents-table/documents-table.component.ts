@@ -28,7 +28,10 @@ export class DocumentsTableComponent {
   statusForm: FormGroup;
   status: FormControl;
 
+  public available_events = [{ id: "approve", name: "Оплачено"}];
+
   public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
+  public statuses = [{id: "approve", name: "Оплачено"}];
 
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {
@@ -63,7 +66,10 @@ export class DocumentsTableComponent {
   }
 
   changeDocumentStatus(id, event) {
-    this.documentsService.updateDocumentStatusByDocumentId(event, id);
+    if (event.id == "approve") this.documentsService.approveDocument(id).subscribe(approveResult => {
+      this.documentsService.getDocumentsByParams(this.currentCategory, this.currentContact, this.currentSearch, "1").subscribe(result => { this.statusForm.reset(); this.documents = result[0]; this.documentsTablePaginationComponent.paginator = result[1];  });
+    });
+    
   }
 
   refreshDocuments() {
@@ -74,13 +80,6 @@ export class DocumentsTableComponent {
   showDocumentsByPage(page: number) {
     this.documentsService.getDocumentsByParams(this.currentCategory, this.currentContact, this.currentSearch, page.toString()).subscribe(
       result => { 
-        /*
-        if (result[1].current_page > 1) this.meta.push({ 'page': result[1].prev_page, 'text': '<' });
-        this.meta.push({ 'page': result[1].next_page, 'text': result[1].next_page });
-        this.meta.push({ 'page': result[1].next_page, 'text': '' });
-        if (result[1].total_pages < 4) this.meta.push({ 'page': result[1].prev_page, 'text': '<' });
-        this.meta.push({ 'number': 2, 'type': 'test' });
-        */
         this.documents = result[0]; 
         this.documentsTablePaginationComponent.paginator = result[1]; 
       }

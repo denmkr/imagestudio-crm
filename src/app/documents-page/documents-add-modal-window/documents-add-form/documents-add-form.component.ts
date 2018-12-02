@@ -19,9 +19,13 @@ export class DocumentsAddFormComponent implements OnInit {
   uploader: CloudinaryUploader = new CloudinaryUploader(
     new CloudinaryOptions({ cloudName: 'eldarkikcloudinary', uploadPreset: 'default_preset' })
   );
+
+  ordersLoading: boolean = false;
+  partiesLoading : boolean = false;
  
   fileLoading: any;
   isOrder: boolean = false;
+  isItem: boolean = false;
 
   @HostBinding('class.validation') validationClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
@@ -79,6 +83,7 @@ export class DocumentsAddFormComponent implements OnInit {
 
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() updateOrder = new EventEmitter<any>();
+  @Output() updateItem = new EventEmitter<any>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   hideWindow() {
@@ -121,18 +126,29 @@ export class DocumentsAddFormComponent implements OnInit {
           this.refreshTableEvent.emit(true);
         }
         else {
-          this.documentsService.createNewDocument(this.kind.value.id, this.category.value.id, this.counterparty.value.id, 
-          this.number.value, this.fileUrl, this.comment.value).subscribe(
-            res => { 
-              let form = this.newDocumentForm.value;
-              form.url = this.fileUrl;
-              this.updateOrder.emit(form);
-              this.newDocumentForm.reset();
-              this.eventEmitter.emit(true);
-              this.refreshTableEvent.emit(true);
-            },
-            err => { console.log(err) }
-          );
+          if (this.isItem) {
+            let form = this.newDocumentForm.value;
+            form.url = this.fileUrl;
+            this.updateItem.emit(form);
+            this.newDocumentForm.reset();
+            this.eventEmitter.emit(true);
+            // this.refreshTableEvent.emit(true);
+          }
+          else {
+            this.documentsService.createNewDocument(this.kind.value.id, this.category.value.id, this.counterparty.value.id, 
+            this.number.value, this.fileUrl, this.comment.value).subscribe(
+              res => { 
+                let form = this.newDocumentForm.value;
+                form.url = this.fileUrl;
+                this.updateOrder.emit(form);
+                this.newDocumentForm.reset();
+                this.eventEmitter.emit(true);
+                this.refreshTableEvent.emit(true);
+              },
+              err => { console.log(err) }
+            );
+          }
+       
         }
         
       }
@@ -152,6 +168,7 @@ export class DocumentsAddFormComponent implements OnInit {
   ordersTypeahead = new EventEmitter<string>();
 
   private ordersServerSideSearch() {
+    this.ordersLoading = true;
     this.ordersTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -159,6 +176,7 @@ export class DocumentsAddFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.orders = x;
+        this.ordersLoading = false;
     }, (err) => {
         console.log(err);
         this.orders = [];
@@ -166,6 +184,7 @@ export class DocumentsAddFormComponent implements OnInit {
   }
 
   private serverSideSearch() {
+    this.partiesLoading = true;
     this.partiesTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -173,6 +192,7 @@ export class DocumentsAddFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.counterparties = x;
+        this.partiesLoading = false;
     }, (err) => {
         console.log(err);
         this.counterparties = [];
@@ -212,6 +232,37 @@ export class DocumentsAddFormComponent implements OnInit {
       comment: this.comment
     });
     
+  }
+
+  forItemReceipt() {
+    this.orderSelectInputs = [];
+    this.selects = [];
+    this.isItem = true;
+    this.category.setValue({id: "spending", name: "Расход"});
+    this.kind.setValue({name: 'Счет', id: 'check'});
+
+    this.newDocumentForm = new FormGroup({
+      kind: this.kind,
+      category: this.category,
+      counterparty: this.counterparty,
+      comment: this.comment
+    });
+  }
+
+  forItemTemplate() {
+    this.orderSelectInputs = [];
+    this.selects = [];
+    this.isItem = true;
+
+    this.category.setValue({id: "spending", name: "Расход"});
+    this.kind.setValue({name: 'Макет', id: 'layout'});
+
+    this.newDocumentForm = new FormGroup({
+      kind: this.kind,
+      category: this.category,
+      counterparty: this.counterparty,
+      comment: this.comment
+    });
   }
 
   ngOnInit() {

@@ -663,7 +663,7 @@ ng-datepicker input {
 	color: #fff;
 }
 
-.select-blocks .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+.select-blocks .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected * {
 	background-color: #2d4d8a !important;
 	color: #fff !important;
 }
@@ -694,4 +694,12 @@ ng-datepicker input {
 
 .ng-select .ng-clear-wrapper {
 	margin-top: 2px;
+}
+
+.ng-spinner-loader {
+	display: none !important;
+}
+
+.ngx-datepicker-calendar-container {
+	z-index: 1000;
 }

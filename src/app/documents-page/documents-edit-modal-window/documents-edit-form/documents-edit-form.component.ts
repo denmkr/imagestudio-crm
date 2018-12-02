@@ -22,6 +22,8 @@ export class DocumentsEditFormComponent implements OnInit {
     new CloudinaryOptions({ cloudName: 'eldarkikcloudinary', uploadPreset: 'default_preset' })
   );
  
+  ordersLoading: boolean = false;
+  partiesLoading : boolean = false;
   fileLoading: any;
   isOrder: boolean = false;
 
@@ -31,14 +33,16 @@ export class DocumentsEditFormComponent implements OnInit {
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
   @ViewChild('addFileButtonText') addFileButtonText: ElementRef;
 
+  public statusSelect = {items: "available_events", name: "status", id: "statusSelect"};
+
   public selects = [
     {items: "types", name: "kind", placeholder: "Тип документа", id: "docTypeSelect"},
     {items: "categories", name: "category", placeholder: "Категория", id: "docCategorySelect"},
-    {items: "available_events", name: "status", placeholder: "Статус", id: "statusSelect"},
   ];
 
   public counterparties = [];
   public orders = [];
+  public available_events = [];
 
   public selectInputs = [
     {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
@@ -67,13 +71,22 @@ export class DocumentsEditFormComponent implements OnInit {
     {name: 'Доход', id: "income"}
   ];
 
+  changeDocumentStatus(event) {
+    if (event.id == "approve") {
+      this.changeStatus = true;
+    }
+  }
+
   editDocumentForm: FormGroup;
+  statusForm: FormGroup;
 
   fileName: string;
   fileType: string;
   fileUrl: string;
 
-  available_events = [];
+  changeStatus: boolean = false;
+
+  id: number;
 
   status: FormControl;
   kind: FormControl;
@@ -103,7 +116,6 @@ export class DocumentsEditFormComponent implements OnInit {
     this.orderSelectInputs = [];
     this.isOrder = true;
     this.editDocumentForm = new FormGroup({
-      status: this.status,
       kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
@@ -125,6 +137,7 @@ export class DocumentsEditFormComponent implements OnInit {
   updateValues(document) {
     this.document = document;
 
+    this.id = document.id;
     this.available_events = document.available_events;
     this.status.setValue(document.status.id);
     this.kind.setValue(document.kind.id);
@@ -158,6 +171,8 @@ export class DocumentsEditFormComponent implements OnInit {
   }
 
   editDocument() {
+    if (this.changeStatus) this.documentsService.approveDocument(this.id).subscribe();
+
     if (this.editDocumentForm.valid) {
 	    this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
           this.number.value, this.fileUrl, this.comment.value).subscribe(
@@ -176,6 +191,7 @@ export class DocumentsEditFormComponent implements OnInit {
   ordersTypeahead = new EventEmitter<string>();
 
   private ordersServerSideSearch() {
+    this.ordersLoading = true;
     this.ordersTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -183,6 +199,7 @@ export class DocumentsEditFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.orders = x;
+        this.ordersLoading = false;
     }, (err) => {
         console.log(err);
         this.orders = [];
@@ -190,6 +207,7 @@ export class DocumentsEditFormComponent implements OnInit {
   }
 
   private serverSideSearch() {
+    this.partiesLoading = true;
     this.partiesTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -197,6 +215,7 @@ export class DocumentsEditFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.counterparties = x;
+        this.partiesLoading = false;
     }, (err) => {
         console.log(err);
         this.counterparties = [];
@@ -218,12 +237,9 @@ export class DocumentsEditFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.serverSideSearch();
     this.ordersServerSideSearch();
+    this.serverSideSearch();
 
-    this.status = new FormControl('', [
-      Validators.required
-    ]);
     this.kind = new FormControl('', [
       Validators.required
     ]);
@@ -242,13 +258,22 @@ export class DocumentsEditFormComponent implements OnInit {
     ]);
 
     this.editDocumentForm = new FormGroup({
-      status: this.status,
       kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
       number: this.number,
       comment: this.comment
     });
+
+    this.status = new FormControl('', [
+      Validators.required
+    ]);
+
+    this.statusForm = new FormGroup({
+      status: this.status
+    });
+
+    this.statusForm.reset();
   }
 
 }

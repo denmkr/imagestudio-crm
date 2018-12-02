@@ -13,6 +13,7 @@ export class DocumentsAddModalWindowComponent implements OnInit {
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
   @Output() updateTableInOrder = new EventEmitter<any>();
+  @Output() updateTableInItem = new EventEmitter<any>();
 
   title = "Новый документ";
 
@@ -34,8 +35,24 @@ export class DocumentsAddModalWindowComponent implements OnInit {
     this.activeClass = true;
   }
 
+  showForItemReceipt() {
+    this.documentsAddFormComponent.forItemReceipt();
+    this.title = "Новый счет";
+    this.activeClass = true;
+  }
+
+  showForItemTemplate() {
+    this.documentsAddFormComponent.forItemTemplate();
+    this.title = "Новый макет";
+    this.activeClass = true;
+  }
+
   updateOrder(event) {
     this.updateTableInOrder.emit(event);
+  }
+
+  updateItem(event) {
+    this.updateTableInItem.emit(event);
   }
 
   hide() {

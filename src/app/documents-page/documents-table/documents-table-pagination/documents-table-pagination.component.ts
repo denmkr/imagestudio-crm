@@ -15,15 +15,17 @@ export class DocumentsTablePaginationComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    /*
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['page'] != null && params['page'] != undefined) {
         this.eventEmitter.emit(params['page']);
       }
     });
+    */
   }
 
   changePage(page: number) {
-  	this.eventEmitter.emit(page.toString());
+  	// this.eventEmitter.emit(page.toString());
   	this.router.navigate(['/documents'], { queryParams: { page: page.toString() }, queryParamsHandling: 'merge' });
   }
 }

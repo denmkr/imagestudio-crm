@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsAddModalWindowComponent } from './deals-items-add-modal-window/deals-items-add-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
+import { DealsService } from '../../../../deals.service';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
 import * as ruLocale from 'date-fns/locale/ru';
 
@@ -10,12 +11,12 @@ import * as ruLocale from 'date-fns/locale/ru';
   selector: 'deals-positions-add-form',
   templateUrl: './deals-positions-add-form.component.html',
   styleUrls: ['./deals-positions-add-form.component.css'],
-  providers: [ WarehouseService ]
+  providers: [ WarehouseService, DealsService ]
 })
 export class DealsPositionsAddFormComponent implements OnInit {
 
   options: DatepickerOptions = {
-    barTitleIfEmpty: 'Выберите дату',
+    barTitleIfEmpty: 'Выберите месяц и день',
     minYear: 2016,
     placeholder: '01.01.2018',
     displayFormat: 'D.MM.YYYY',
@@ -48,7 +49,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
 
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
-    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
+    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
 
@@ -119,7 +120,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
     });
   }
 
-  constructor(public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private dealsService: DealsService, public formbuilder: FormBuilder, private elRef: ElementRef, private warehouseService: WarehouseService, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   addNewProduct(name) {
     this.warehouseService.createProduct(name).subscribe(product => {

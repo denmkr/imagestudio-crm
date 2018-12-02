@@ -15,7 +15,7 @@ export class PartiesService {
     .map(result => {
       return result.organizations.map(organization => ({
         id: organization.id,
-        text: organization.name
+        name: organization.name
       }))
     });
   }

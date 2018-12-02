@@ -20,13 +20,15 @@ import * as ruLocale from 'date-fns/locale/ru';
 export class DealsCreatingFormComponent implements OnInit {
 
   options: DatepickerOptions = {
-    barTitleIfEmpty: 'Выберите дату',
+    barTitleIfEmpty: 'Выберите месяц и день',
     minYear: 2016,
     placeholder: '01.01.2018',
     displayFormat: 'D.MM.YYYY',
     firstCalendarDay: 1,
     locale: ruLocale,
   };
+
+  partiesLoading: boolean = false;
 
   @HostBinding('class.active') activeClass: boolean = false;
   @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
@@ -86,7 +88,7 @@ export class DealsCreatingFormComponent implements OnInit {
         url: document.url,
         comment: document.comment,
         counterparty: {
-          id: document.counterparty
+          id: document.counterparty.id
         }
       };
 
@@ -101,6 +103,7 @@ export class DealsCreatingFormComponent implements OnInit {
   partiesTypeahead = new EventEmitter<string>();
 
   private serverSideSearch() {
+    this.partiesLoading = true;
     this.partiesTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -108,6 +111,7 @@ export class DealsCreatingFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.counterparties = x;
+        this.partiesLoading = false;
     }, (err) => {
         console.log(err);
         this.counterparties = [];

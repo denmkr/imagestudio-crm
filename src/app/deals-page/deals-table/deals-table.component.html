@@ -43,39 +43,43 @@
           <div class="percent">{{ deal.readiness }}%</div>
         </td>
         <td class="arrow">
-          <i class="material-icons" routerLink="{{editingLink}}" [queryParams]="{id:deal.id}">
+          <i class="material-icons" (click)="toEditPage(deal.id, deal.user_id)">
           keyboard_arrow_right
           </i>
         </td>
       </tr>
-      <tr id="childdeal{{ deal.id }}" *ngFor="let order_position of deal.orders_positions" class="child-row">
-        <td></td>
-        <td></td>
-        <td>{{ order_position.product.name }}
-          <div class="additional-attributes">
-            <div class="amount">{{ order_position.count }} шт.</div>
-          </div>
-        </td>
-        <td>{{ order_position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
-        <td>{{ order_position.price }} Р</td>
-        <td>{{ order_position.profit }} Р</td>
-        <td class="status">
-          <div class="select-blocks">
-            <div class="select-field-block">
-              <form [formGroup]="positionStatusForm">
-                <ng-select class="green" id={{positionStatusSelect.id}} [items]="order_position.available_events" bindLabel="name" bindValue="id" placeholder="{{order_position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(order_position.id, $event)" notFoundText="Нет событий">
-                </ng-select>
-              </form>
+      <ng-container *ngFor="let order_position of deal.orders_positions">
+        <tr class="child-row childdeal{{ deal.id }}">
+          <td></td>
+          <td></td>
+          <td>{{ order_position.product.name }}
+            <div class="additional-attributes">
+              <div class="amount">{{ order_position.count }} шт.</div>
             </div>
-          </div>
-          <div class="percent">{{ order_position.readiness }}</div>
-        </td>
-        <td class="arrow">
-          <i class="material-icons" routerLink="{{editingLink}}" [queryParams]="{id:deal.id}">
-          keyboard_arrow_right
-          </i>
-        </td>
-      </tr>
+          </td>
+          <td>{{ order_position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ order_position.price }} Р</td>
+          <td>{{ order_position.profit }} Р</td>
+          <td class="status">
+            <div class="select-blocks">
+              <div class="select-field-block">
+                <form [formGroup]="positionStatusForm">
+                  <ng-select class="green" id={{positionStatusSelect.id}} [items]="order_position.available_events" bindLabel="name" bindValue="id" placeholder="{{order_position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(order_position.id, $event)" notFoundText="Нет событий">
+                  </ng-select>
+                </form>
+              </div>
+            </div>
+            <div class="percent">{{ order_position.readiness }}</div>
+          </td>
+          <td class="arrow">
+            <!--
+            <i class="material-icons" routerLink="{{editingLink}}" [queryParams]="{id:deal.id}">
+            keyboard_arrow_right
+            </i>
+          -->
+          </td>
+        </tr>
+      </ng-container>
     </ng-container>
   </tbody>
 </table>

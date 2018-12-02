@@ -194,7 +194,7 @@ export class PartiesEditFormComponent implements OnInit {
   }
 
   addTag(name) {
-    return { id: name, text: name };
+    return { id: name, name: name };
   }
 
 }

@@ -1,9 +1,15 @@
 <form [ngClass]="{'validation' : validationClass}" [formGroup]="editDocumentForm" (ngSubmit)="editDocument()">
-
+  
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
       <ng-select style="width: {{select.widthValue}};" class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
       </ng-select>
+    </div>
+    <div class="select-field-block">
+      <form [formGroup]="statusForm" (ngSubmit)="changeDocumentStatus($event)">
+        <ng-select class="grey" id={{statusSelect.id}} [items]="available_events" bindLabel="name" bindValue="id" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changeDocumentStatus($event)">
+        </ng-select>
+      </form>
     </div>
   </div>
 
@@ -11,7 +17,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact_name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="partiesLoading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact_name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -24,7 +30,7 @@
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Загрузка "{{searchTerm}}"
+                  Поиск "{{searchTerm}}"
               </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
@@ -38,7 +44,7 @@
     <div *ngFor="let select of orderSelectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [typeahead]="ordersTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="number" bindValue="number" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="ordersLoading" [typeahead]="ordersTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="number" bindValue="number" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -51,12 +57,12 @@
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Загрузка "{{searchTerm}}"
+                  Поиск "{{searchTerm}}"
               </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
             {{item.number}} <br />
-            <small>{{item.organization}}</small>
+            <small>{{item.organization.name}}</small>
           </ng-template>
         </ng-select>
       </div>

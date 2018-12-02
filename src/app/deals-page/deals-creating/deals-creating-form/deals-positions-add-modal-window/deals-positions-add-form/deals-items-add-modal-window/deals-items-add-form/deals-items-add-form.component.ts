@@ -3,13 +3,14 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { PartiesService } from '../../../../../../../parties-page/parties.service';
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
+import { DealsService } from '../../../../../../deals.service';
 import { DocumentsAddModalWindowComponent } from '../../../../../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 
 @Component({
   selector: 'deals-items-add-form',
   templateUrl: './deals-items-add-form.component.html',
   styleUrls: ['./deals-items-add-form.component.css'],
-  providers: [WarehouseService, PartiesService]
+  providers: [WarehouseService, PartiesService, DealsService]
 })
 export class DealsItemsAddFormComponent implements OnInit {
 
@@ -34,6 +35,8 @@ export class DealsItemsAddFormComponent implements OnInit {
   public products = [];
   public documents = [];
 
+  public position_id = -1;
+
   newDealsItemForm: FormGroup;
 
   product: FormControl;
@@ -51,25 +54,35 @@ export class DealsItemsAddFormComponent implements OnInit {
   }
 
   addPositionItems() {
-    let itemForm = this.newDealsItemForm.value;
-    itemForm.documents = this.documents.map(document => {
-      let newDocument = {
-        number: document.orderNumber,
-        kind: document.type.id,
-        category: document.category.id,
-        url: document.url,
-        comment: document.comment,
-        counterparty: {
-          id: document.counterparty
+
+    if (this.position_id >= 0) {
+      this.dealsService.createNewItem(this.organization.value.id, this.product.value.id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+        result => { 
+          this.refreshPositionItems.emit(true);
         }
-      };
+      );
+    }
+    else {
+      let itemForm = this.newDealsItemForm.value;
+      itemForm.documents = this.documents.map(document => {
+        let newDocument = {
+          number: document.orderNumber,
+          kind: document.kind.id,
+          category: document.category.id,
+          url: document.url,
+          comment: document.comment,
+          counterparty: {
+            id: document.counterparty
+          }
+        };
 
-      return newDocument;
-    });
+        return newDocument;
+      });
 
-    console.log(itemForm);
+      this.refreshPositionItems.emit(itemForm);
+    }
 
-    this.refreshPositionItems.emit(itemForm);
+    
   }
 
   addNewProduct(name) {
@@ -82,7 +95,7 @@ export class DealsItemsAddFormComponent implements OnInit {
     });
   }
 
-  constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createParty(event) {
     if (this.newDealsItemForm.valid) {
@@ -152,9 +165,13 @@ export class DealsItemsAddFormComponent implements OnInit {
         this.organizations = [];
     });
   }
+  
+  addNewDocumentReceiptItem() {
+    this.documentsAddModalWindowComponent.showForItemReceipt();
+  }
 
-  addNewDocumentItem() {
-    this.documentsAddModalWindowComponent.show();
+  addNewDocumentTemplateItem() {
+    this.documentsAddModalWindowComponent.showForItemTemplate();
   }
 
   updateTable(event) {

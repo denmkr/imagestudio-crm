@@ -30,38 +30,8 @@ export class DocumentsService {
     
   }
 
-  updateDocumentStatusByDocumentId(newStatus: string, id: string) {
-    switch (newStatus) {
-      case "Новое":
-        newStatus = "new";
-        break;
-      case "Лид":
-        newStatus = "lead";
-        break;
-      case "В работе":
-        newStatus = "work";
-        break;
-      case "Не оплачено":
-        newStatus = "debt";
-        break;
-      case "Выполнено":
-        newStatus = "done";
-        break;
-      case "Слив":
-        newStatus = "dumb";
-        break;
-      default:
-        break;
-    };
-
-    const status = {
-      event: newStatus
-    };
-
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id + '/process_event', status).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+  approveDocument(id: number) {
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id + '/approve', null);
   }
 
   generateUrlForFile(name: string, type: string) {
@@ -145,8 +115,8 @@ export class DocumentsService {
         }
 
         switch (document.status) {
-          case "complete":
-            document.status = { id: "complete", name: "Оплачено" };
+          case "approved":
+            document.status = { id: "approve", name: "Оплачено" };
             break;
           case "pending":
             document.status = { id: "pending", name: "Не оплачено" };
@@ -159,7 +129,7 @@ export class DocumentsService {
 
         switch (document.available_event) {
           case "complete":
-            events.push({ id: "complete", name: "Оплачено"});
+            events.push({ id: "approve", name: "Оплачено"});
             break;
           case "pending":
             events.push({ id: "pending", name: "Не оплачено"});
@@ -168,8 +138,11 @@ export class DocumentsService {
             break;
         };
 
+        if (document.status.id == "pending") events.push({ id: "pending", name: "Не оплачено"});
+        events.push({ id: "approve", name: "Оплачено"});
+
         document.available_events = events;
-        document.available_events.push(document.status);
+        // document.available_events.push(document.status);
 
       });
 

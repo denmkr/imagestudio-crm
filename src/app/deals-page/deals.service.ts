@@ -62,10 +62,15 @@ export class DealsService {
       event: eventId
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', params).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', params);
+  }
+
+  updateItemStatusById(eventId: string, id: string) {
+    const params = {
+      event: eventId
+    };
+
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id + '/process_event', params);
   }
 
   updatePositionStatusByOrderId(eventId: string, id: string) {
@@ -73,10 +78,7 @@ export class DealsService {
       event: eventId
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', params).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', params);
   }
 
   removeDeal(id: string) {
@@ -125,8 +127,6 @@ export class DealsService {
       documents: documents
     };
 
-    console.log(order);
-
     this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, order).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
@@ -169,6 +169,53 @@ export class DealsService {
     };
 
     return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id, order_position);
+  }
+
+  editItemById(id:number, organization_id: number, product_id: number, position_id: number, prime_price: string, description: string, documents: any) {
+    documents.map(document => {
+      document.counterparty = {
+        id: document.counterparty.id
+      };
+
+      document.category = document.category.id;
+      document.kind = document.kind.id;
+    });
+
+    const order_item = {
+      product: {
+        id: product_id
+      },
+      organization: {
+        id: organization_id
+      },
+      orders_position: {
+        id: position_id
+      },
+      documents: documents,
+      prime_price: prime_price,
+      description: description
+    };
+
+    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id, order_item);
+  }
+
+  createNewItem(organization_id: number, product_id: number, position_id: number, prime_price: string, description: string, documents: any) {
+    const order_item = {
+      product: {
+        id: product_id
+      },
+      organization: {
+        id: organization_id
+      },
+      orders_position: {
+        id: position_id
+      },
+      documents: documents,
+      prime_price: prime_price,
+      description: description
+    };
+
+    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/', order_item);
   }
 
   createNewPosition(deadline: string, product_id: number, order_id: number, price: string, count: string) {
@@ -225,6 +272,128 @@ export class DealsService {
 
     });
 
+  }
+
+  getPositionById(id: string) {
+    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id)
+    .map(result => {
+        result.orders_position.orders_items.map(item => {
+
+          let item_events: any[] = [];
+
+          switch (item.status) {
+            case "new":
+              item.status = {name: "Новое", id: "new"};
+              break;
+            case "pending":
+              item.status = {name: "Рассмотрение", id: "pending"};
+              break;
+            case "calculating":
+              item.status = {name: "Расчет", id: "calculating"};
+              break;
+            case "deffered":
+              item.status = {name: "Различить", id: "deffered"};
+              break;
+            case "waiting":
+              item.status = {name: "Ожидается", id: "waiting"};
+              break;
+            case "in_progress":
+              item.status = {name: "В работе", id: "in_progress"};
+              break;
+            case "ordered":
+              item.status = {name: "Заказан", id: "ordered"};
+              break;
+            case "done":
+              item.status = {name: "Завершен", id: "done"};
+              break;
+            case "payed":
+              item.status = {name: "Оплачен", id: "payed"};
+              break;
+            case "verified":
+              item.status = {name: "Проверен", id: "verified"};
+              break;
+            default:
+              break;
+          };
+
+          item.available_events.map(available_event => {
+            switch (available_event) {
+              case "accept":
+                item_events.push({ name: "Лид", id: "accept" });
+                break;
+              case "start":
+                item_events.push({ name: "В работе", id: "start" });
+                break;
+              case "put_in_wait":
+                item_events.push({ name: "Ожидание", id: "put_in_wait" });
+                break;
+              case "calculate":
+                item_events.push({ name: "Рассчет", id: "calculate" });
+                break;
+              case "set_ordered":
+                item_events.push({ name: "Заказ", id: "set_ordered" });
+                break;
+              case "complete":
+                item_events.push({ name: "Выполнено", id: "complete" });
+                break;
+              case "set_payed":
+                item_events.push({ name: "Оплачено", id: "set_payed" });
+                break;
+              case "verify":
+                item_events.push({ name: "Проверено", id: "verify" });
+                break;
+              default:
+                break;
+            };
+          });
+
+          item.available_events = item_events;
+
+          item.documents.map(document => {
+            switch (document.category) {
+              case "spending":
+                document.category = { id: "spending", name: "Расход" };
+                break;
+              case "income":
+                document.category = { id: "income", name: "Доход" };
+                break;
+              default:
+                break;
+            }
+
+            switch (document.kind) {
+              case "act":
+                document.kind = { id: "act", name: "Акт" };
+                break;
+              case "layout":
+                document.kind = { id: "layout", name: "Макет" };
+                break;
+              case "check":
+                document.kind = { id: "check", name: "Счет" };
+                break;
+              case "agreement":
+                document.kind = { id: "agreement", name: "Договор" };
+                break;
+              case "invoice":
+                document.kind = { id: "invoice", name: "Накладная" };
+                break;
+              case "other":
+                document.kind = { id: "other", name: "Прочее" };
+                break;
+              case "commercial_proposal":
+                document.kind = { id: "commercial_proposal", name: "Коммерческое предложение" };
+                break;
+              default:
+                break;
+            }
+          });
+        });
+        return result;
+      });
+  }
+
+  getItemById(id: string) {
+    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id);
   }
 
   getDealById(id: string) {
@@ -356,10 +525,122 @@ export class DealsService {
 
         position_events.push({ name: position.status.name, id: position.status.id});
         position.available_events = position_events;
+
+        position.orders_items.map(item => {
+
+          let item_events: any[] = [];
+
+          switch (item.status) {
+            case "new":
+              item.status = {name: "Новое", id: "new"};
+              break;
+            case "pending":
+              item.status = {name: "Рассмотрение", id: "pending"};
+              break;
+            case "calculating":
+              item.status = {name: "Расчет", id: "calculating"};
+              break;
+            case "deffered":
+              item.status = {name: "Различить", id: "deffered"};
+              break;
+            case "waiting":
+              item.status = {name: "Ожидается", id: "waiting"};
+              break;
+            case "in_progress":
+              item.status = {name: "В работе", id: "in_progress"};
+              break;
+            case "ordered":
+              item.status = {name: "Заказан", id: "ordered"};
+              break;
+            case "done":
+              item.status = {name: "Завершен", id: "done"};
+              break;
+            case "payed":
+              item.status = {name: "Оплачен", id: "payed"};
+              break;
+            case "verified":
+              item.status = {name: "Проверен", id: "verified"};
+              break;
+            default:
+              break;
+          };
+
+          item.available_events.map(available_event => {
+            switch (available_event) {
+              case "accept":
+                item_events.push({ name: "Лид", id: "accept" });
+                break;
+              case "start":
+                item_events.push({ name: "В работе", id: "start" });
+                break;
+              case "put_in_wait":
+                item_events.push({ name: "Ожидание", id: "put_in_wait" });
+                break;
+              case "calculate":
+                item_events.push({ name: "Рассчет", id: "calculate" });
+                break;
+              case "set_ordered":
+                item_events.push({ name: "Заказ", id: "set_ordered" });
+                break;
+              case "complete":
+                item_events.push({ name: "Выполнено", id: "complete" });
+                break;
+              case "set_payed":
+                item_events.push({ name: "Оплачено", id: "set_payed" });
+                break;
+              case "verify":
+                item_events.push({ name: "Проверено", id: "verify" });
+                break;
+              default:
+                break;
+            };
+          });
+
+          item.available_events = item_events;
+
+          item.documents.map(document => {
+            switch (document.category) {
+              case "spending":
+                document.category = { id: "spending", name: "Расход" };
+                break;
+              case "income":
+                document.category = { id: "income", name: "Доход" };
+                break;
+              default:
+                break;
+            }
+
+            switch (document.kind) {
+              case "act":
+                document.kind = { id: "act", name: "Акт" };
+                break;
+              case "layout":
+                document.kind = { id: "layout", name: "Макет" };
+                break;
+              case "check":
+                document.kind = { id: "check", name: "Счет" };
+                break;
+              case "agreement":
+                document.kind = { id: "agreement", name: "Договор" };
+                break;
+              case "invoice":
+                document.kind = { id: "invoice", name: "Накладная" };
+                break;
+              case "other":
+                document.kind = { id: "other", name: "Прочее" };
+                break;
+              case "commercial_proposal":
+                document.kind = { id: "commercial_proposal", name: "Коммерческое предложение" };
+                break;
+              default:
+                break;
+            }
+          });
+        });
         
       });
 
-      result.order.documents.map(document => {
+      result.order.all_documents.map(document => {
         switch (document.category) {
           case "spending":
             document.category = { id: "spending", name: "Расход" };
@@ -398,8 +679,8 @@ export class DealsService {
         }
 
         switch (document.status) {
-          case "complete":
-            document.status = { id: "complete", name: "Оплачено" };
+          case "approved":
+            document.status = { id: "approve", name: "Оплачено" };
             break;
           case "pending":
             document.status = { id: "pending", name: "Не оплачено" };
@@ -412,7 +693,7 @@ export class DealsService {
 
         switch (document.available_event) {
           case "complete":
-            events.push({ id: "complete", name: "Оплачено"});
+            events.push({ id: "approve", name: "Оплачено"});
             break;
           case "pending":
             events.push({ id: "pending", name: "Не оплачено"});
@@ -421,8 +702,10 @@ export class DealsService {
             break;
         };
 
+        events.push({ id: "pending", name: "Не оплачено"});
+        events.push({ id: "approve", name: "Оплачено"});
+
         document.available_events = events;
-        document.available_events.push(document.status);
 
         // document.counterparty = document.counterparty.id;
 
@@ -435,7 +718,7 @@ export class DealsService {
         status: result.order.status,
         counterparty: result.order.counterparty,
         available_events: available_events,
-        documents: result.order.documents,
+        documents: result.order.all_documents,
         orders_positions: result.order.orders_positions
       };
 
@@ -609,8 +892,11 @@ export class DealsService {
         orders_positions: order.orders_positions,
         deadline: order.must_be_finished_at,
         readiness: order.readiness,
+        user_id: order.user.id,
         available_events: order.available_events
       }));
+
+
 
       return [deals, result.meta];
 

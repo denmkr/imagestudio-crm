@@ -37,7 +37,7 @@
 
     <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
-      <input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+      <input formControlName="{{input.name}}" [readonly]="input.readonly" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
          'has-danger': newDealsPositionForm.get(input.name).invalid && newDealsPositionForm.get(input.name).dirty, 
          'has-success': newDealsPositionForm.get(input.name).valid && newDealsPositionForm.get(input.name).dirty
        }">
@@ -79,8 +79,8 @@
         <tbody>
           <ng-container *ngFor="let item of position_items">
             <tr>
-              <td>{{ item.product.text }}</td>
-              <td>{{ item.organization.text }}</td>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.organization.name }}</td>
               <td>{{ item.prime_price }}</td>
               <td>{{ item.description }}</td>
               <td>{{ item.full_price }}</td>

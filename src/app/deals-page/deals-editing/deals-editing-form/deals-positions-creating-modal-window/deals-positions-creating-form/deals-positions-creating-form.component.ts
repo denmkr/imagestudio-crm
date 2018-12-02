@@ -50,7 +50,7 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
 
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
-    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
+    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
 

@@ -4,7 +4,7 @@
    	<div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="text" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -37,8 +37,15 @@
     </div>
   </div>
 
-  <div (click)="addNewDocumentItem()" class="add-button">
-    <a>Добавить документ</a>
+  <div (click)="addNewDocumentReceiptItem()" class="add-button">
+    <a>Добавить счет</a>
+    <i class="material-icons">
+    add_circle
+    </i>
+  </div>
+
+   <div (click)="addNewDocumentTemplateItem()" class="add-button">
+    <a>Добавить макет</a>
     <i class="material-icons">
     add_circle
     </i>
@@ -48,7 +55,6 @@
     <table>
       <thead>
         <tr>
-          <th>Номер документа</th>
           <th>Категория</th>
           <th>Тип</th>
           <th>Комментарий</th>
@@ -58,9 +64,8 @@
       <tbody>
         <ng-container *ngFor="let document of documents">
           <tr>
-            <td>{{ document.orderNumber }}</td>
-            <td>{{ document.category.text }}</td>
-            <td>{{ document.type.text }}</td>
+            <td>{{ document.category.name }}</td>
+            <td>{{ document.kind.name }}</td>
             <td>{{ document.comment }}</td>
             <td>
               <div class="file">
@@ -83,4 +88,4 @@
   
 </form>
 
-<documents-add-modal-window (updateTableInOrder)="updateTable($event)"></documents-add-modal-window>
+<documents-add-modal-window (updateTableInItem)="updateTable($event)"></documents-add-modal-window>

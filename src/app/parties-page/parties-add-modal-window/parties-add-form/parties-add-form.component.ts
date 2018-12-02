@@ -138,7 +138,7 @@ export class PartiesAddFormComponent implements OnInit {
   }
 
   addTag(name) {
-    return { id: name, text: name };
+    return { id: name, name: name };
   }
 
   onChange(change) {
@@ -168,7 +168,7 @@ export class PartiesAddFormComponent implements OnInit {
     ]);
     this.phone = new FormControl('', [
       Validators.required,
-      Validators.pattern("[ -()+0-9]*")
+      Validators.pattern("[- ()+0-9]*")
     ]);
     this.comment = new FormControl('', [
       Validators.required

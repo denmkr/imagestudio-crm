@@ -1,16 +1,20 @@
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, Renderer, HostListener, HostBinding, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { PartiesService } from '../../../../../../../parties-page/parties.service';
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
+import { DealsService } from '../../../../../../deals.service';
+import { DocumentsAddModalWindowComponent } from '../../../../../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
 
 @Component({
   selector: 'deals-items-edit-form',
   templateUrl: './deals-items-edit-form.component.html',
   styleUrls: ['./deals-items-edit-form.component.css'],
-  providers: [WarehouseService, PartiesService]
+  providers: [WarehouseService, PartiesService, DealsService]
 })
 export class DealsItemsEditFormComponent implements OnInit {
+
+  @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
@@ -19,23 +23,28 @@ export class DealsItemsEditFormComponent implements OnInit {
 
   public selectInputs = [
     {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
-    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"}
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"},
   ];
 
   public inputs = [
-    {name: "price", type: "text", title: "Стоимость", tiny: true},
+    {name: "prime_price", type: "text", title: "Стоимость", tiny: true},
+    {name: "description", type: "text", title: "Тех. задание"},
   ];
 
   public organizations = [];
   public products = [];
+  public documents = [];
+  public position_id;
 
   newDealsItemForm: FormGroup;
 
+  id: number;
   product: FormControl;
   organization: FormControl;
-  price: FormControl;
+  prime_price: FormControl;
+  description: FormControl;
 
-  @Output() refreshPositionItems = new EventEmitter<any>();
+  @Output() refreshPositionItems = new EventEmitter<boolean>();
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
@@ -45,7 +54,28 @@ export class DealsItemsEditFormComponent implements OnInit {
   }
 
   addPositionItems() {
-    this.refreshPositionItems.emit(this.newDealsItemForm.value);
+
+    this.dealsService.editItemById(this.id, this.organization.value.id, this.product.value.id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+      result => { 
+        let itemForm = this.newDealsItemForm.value;
+        itemForm.documents = this.documents.map(document => {
+          let newDocument = {
+            number: document.number,
+            kind: document.kind,
+            category: document.category,
+            url: document.url,
+            comment: document.comment,
+            counterparty: {
+              id: document.counterparty
+            }
+          };
+
+          return newDocument;
+        });
+
+        this.refreshPositionItems.emit(true);
+      }
+    );
   }
 
   addNewProduct(name) {
@@ -58,45 +88,7 @@ export class DealsItemsEditFormComponent implements OnInit {
     });
   }
 
-  constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
-
-  createParty(event) {
-    if (this.newDealsItemForm.valid) {
-      let organization_id = this.newDealsItemForm.get("organization").value;
-      
-      if (isNaN(this.organization.value)) {
-        this.partiesService.createOrganization(this.organization.value).subscribe(result => {
-          organization_id = result.organization.id;
-
-          this.partiesService.createNewParty(this.newDealsItemForm.get("type").value, this.newDealsItemForm.get("category").value, 
-          organization_id, this.newDealsItemForm.get("email").value, this.newDealsItemForm.get("contact").value,
-          this.newDealsItemForm.get("position").value, this.newDealsItemForm.get("phone").value, this.newDealsItemForm.get("comment").value).subscribe(
-            res => { 
-              this.newDealsItemForm.reset();
-              this.refreshTableEvent.emit(true);
-              this.eventEmitter.emit(true);
-            },
-            err => { console.log(err) }
-          );
-        }, err => { console.log(err); });
-      }
-      else {
-        this.partiesService.createNewParty(this.newDealsItemForm.get("type").value, this.newDealsItemForm.get("category").value, 
-        organization_id, this.newDealsItemForm.get("email").value, this.newDealsItemForm.get("contact").value,
-        this.newDealsItemForm.get("position").value, this.newDealsItemForm.get("phone").value, this.newDealsItemForm.get("comment").value).subscribe(
-          res => { 
-            this.newDealsItemForm.reset();
-            this.refreshTableEvent.emit(true);
-            this.eventEmitter.emit(true);
-          },
-          err => { console.log(err) }
-        );
-      }
-    }
-    else {
-      this.validationClass = true;
-    }
-  }
+  constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   organizationsTypeahead = new EventEmitter<string>();
   productsTypeahead = new EventEmitter<string>();
@@ -129,15 +121,47 @@ export class DealsItemsEditFormComponent implements OnInit {
     });
   }
 
-  addTag(name) {
-    return { id: name, text: name };
+  addNewDocumentReceiptItem() {
+    this.documentsAddModalWindowComponent.showForItemReceipt();
+  }
+
+  addNewDocumentTemplateItem() {
+    this.documentsAddModalWindowComponent.showForItemTemplate();
+  }
+
+  updateTable(event) {
+    this.documents.push(event);
+  }
+
+  /*
+
+  updateTable(event) {
+    this.dealsService.getItemById(this.id.toString()).subscribe(item => {
+      console.log(item);
+      this.documents = item.documents;
+    });
+    //this.documents.push(event);
+  }
+  */
+
+  updateData(item, positionId) {
+    this.position_id = positionId;
+    this.id = item.id;
+    this.product.setValue(item.product);
+    this.documents = item.documents;
+    this.organization.setValue(item.organization);
+    this.prime_price.setValue(item.prime_price);
+    this.description.setValue(item.description);
   }
 
   ngOnInit() {
     this.serverSideSearchForOrganizations();
     this.serverSideSearchForProducts();
 
-    this.price = new FormControl('', [
+    this.prime_price = new FormControl('', [
+      Validators.required
+    ]);
+    this.description = new FormControl('', [
       Validators.required
     ]);
     this.product = new FormControl('', [
@@ -148,8 +172,9 @@ export class DealsItemsEditFormComponent implements OnInit {
     ]);
 
     this.newDealsItemForm = new FormGroup({
-      price: this.price,
+      prime_price: this.prime_price,
       product: this.product,
+      description: this.description,
       organization: this.organization
     });
 

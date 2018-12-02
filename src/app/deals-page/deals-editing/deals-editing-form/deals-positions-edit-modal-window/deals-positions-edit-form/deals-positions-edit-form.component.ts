@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { DealsItemsEditModalWindowComponent } from './deals-items-edit-modal-window/deals-items-edit-modal-window.component';
+import { DealsItemsAddModalWindowComponent } from '../../../../deals-creating/deals-creating-form/deals-positions-add-modal-window/deals-positions-add-form/deals-items-add-modal-window/deals-items-add-modal-window.component';
 import { WarehouseService } from '../../../../../warehouse-page/warehouse.service';
 import { DealsService } from '../../../../deals.service';
 import { DatepickerOptions } from 'ng2-datepicker/dist/src/ng-datepicker/component/ng-datepicker.component';
@@ -17,7 +18,7 @@ import * as ruLocale from 'date-fns/locale/ru';
 export class DealsPositionsEditFormComponent implements OnInit {
 
   options: DatepickerOptions = {
-    barTitleIfEmpty: 'Выберите дату',
+    barTitleIfEmpty: 'Выберите месяц и день',
     minYear: 2016,
     placeholder: '01.01.2018',
     displayFormat: 'D.MM.YYYY',
@@ -26,12 +27,18 @@ export class DealsPositionsEditFormComponent implements OnInit {
   };
 
   @ViewChild(DealsItemsEditModalWindowComponent) dealsItemsEditModalWindowComponent: DealsItemsEditModalWindowComponent;
+  @ViewChild(DealsItemsAddModalWindowComponent) dealsItemsAddModalWindowComponent: DealsItemsAddModalWindowComponent;
+
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
   loading = false;
   bigWindow = true;
 
   public products = [];
+
+  itemStatusForm: FormGroup;
+  itemStatus: FormControl;
+  public itemStatusSelect = {name: "itemStatus", placeholder: "Статус", id: "itemStatusSelect"};
 
   public selectInputs = [
     {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"}
@@ -46,7 +53,7 @@ export class DealsPositionsEditFormComponent implements OnInit {
 
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
-    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true},
+    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
 
@@ -75,11 +82,23 @@ export class DealsPositionsEditFormComponent implements OnInit {
   }
 
   addNewDealsItem() {
-    this.dealsItemsEditModalWindowComponent.show();
+    this.dealsItemsAddModalWindowComponent.showForPosition(this.id);
+  }
+
+  editDealsItem(item) {
+    this.dealsItemsEditModalWindowComponent.showWithData(item, this.id);
   }
 
   addPositionItems(event) {
-    this.position_items.push(event);
+    this.refreshItems();
+    // this.position_items.push(event);
+  }
+
+  refreshItems() {
+    this.dealsService.getPositionById(this.id.toString()).subscribe(result => {
+      this.position_items = result.orders_position.orders_items;
+      this.cost.setValue(result.orders_position.prime_price);
+    });
   }
 
   editDealsPosition() {
@@ -132,6 +151,8 @@ export class DealsPositionsEditFormComponent implements OnInit {
   }
 
   updateData(position) {
+    console.log(position);
+    this.position_items = position.orders_items;
     this.id = position.id;
     this.product.setValue(position.product);
     this.status.setValue(position.status.id);
@@ -142,7 +163,27 @@ export class DealsPositionsEditFormComponent implements OnInit {
     this.amount.setValue(position.count);
   }
 
+  changeItemStatus(id, event) {
+    this.dealsService.updateItemStatusById(event.id, id).subscribe(
+      result => {
+        this.itemStatusForm.reset();
+        // this.showAllDeals();
+      }
+    );
+  }
+
   ngOnInit() {
+    this.itemStatus = new FormControl('', [
+      Validators.required
+    ]);
+
+    this.itemStatusForm = new FormGroup({
+      itemStatus: this.itemStatus
+    });
+
+    this.itemStatusForm.reset();
+
+
     this.activatedRoute.queryParams.subscribe(params => {
       this.orderId = parseInt(params['id']);
     });

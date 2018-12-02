@@ -1,5 +1,5 @@
 <div class="modal-container" [ngClass]="{'active' : activeClass}" (click)="hide()"></div>
 <div class="modal new-document-modal" [ngClass]="{'active' : activeClass}">
 	<div class="title">{{title}}</div>
- 	<documents-add-form (eventEmitter)="hide()" (updateOrder)="updateOrder($event)" (refreshTableEvent)="refresh()"></documents-add-form>
+ 	<documents-add-form (eventEmitter)="hide()" (updateOrder)="updateOrder($event)" (updateItem)="updateItem($event)" (refreshTableEvent)="refresh()"></documents-add-form>
 </div>

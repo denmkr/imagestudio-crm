@@ -21,6 +21,8 @@ import * as ruLocale from 'date-fns/locale/ru';
 })
 export class DealsEditingFormComponent implements OnInit {
 
+  partiesLoading: boolean = false;
+
   options: DatepickerOptions = {
     barTitleIfEmpty: 'Выберите дату',
     minYear: 2016,
@@ -73,6 +75,7 @@ export class DealsEditingFormComponent implements OnInit {
 
   public statuses = [];
   public users = [];
+  oldStatusId: string;
 
   editDealForm: FormGroup;
 
@@ -88,6 +91,10 @@ export class DealsEditingFormComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   editDeal(event) {
+    if (this.oldStatusId != this.status.value) {
+      this.dealsService.updateDealStatusByOrderId(this.status.value, this.id);
+    }
+
     this.dealsService.editDealById(this.id, this.editDealForm.get("must_be_finished_at").value, this.editDealForm.get("doer").value, this.editDealForm.get("counterparty").value, this.editDealForm.get("comment").value, this.orders_positions, this.documents);
     this.editDealForm.reset();
     this.router.navigate([this.cancelLink]);
@@ -100,6 +107,7 @@ export class DealsEditingFormComponent implements OnInit {
   partiesTypeahead = new EventEmitter<string>();
 
   private serverSideSearch() {
+    this.partiesLoading = true;
     this.partiesTypeahead.pipe(
         distinctUntilChanged(),
         debounceTime(300),
@@ -107,9 +115,9 @@ export class DealsEditingFormComponent implements OnInit {
     ).subscribe(x => {
         this.cd.markForCheck();
         this.counterparties = x;
+        this.partiesLoading = false;
     }, (err) => {
         console.log(err);
-        
         this.counterparties = [];
     });
   }
@@ -121,6 +129,7 @@ export class DealsEditingFormComponent implements OnInit {
   updateTableEdit(event) {
     this.dealsService.getDealById(this.id).subscribe(order => {
       this.documents = order.documents;
+      this.orders_positions = order.orders_positions;
     });
   }
 
@@ -189,6 +198,7 @@ export class DealsEditingFormComponent implements OnInit {
         this.comment.setValue(order.comment);
         this.must_be_finished_at.setValue(order.must_be_finished_at);
         this.status.setValue(order.status.id);
+        this.oldStatusId = order.status.id;
 
         this.statuses = order.available_events;
         this.documents = order.documents;

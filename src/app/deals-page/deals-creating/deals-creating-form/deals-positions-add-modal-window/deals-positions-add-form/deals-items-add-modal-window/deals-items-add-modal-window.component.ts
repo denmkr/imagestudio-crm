@@ -29,6 +29,11 @@ export class DealsItemsAddModalWindowComponent implements OnInit {
   	this.activeClass = true;
   }
 
+  showForPosition(id: number) {
+    this.dealsItemsAddFormComponent.position_id = id;
+    this.activeClass = true;
+  }  
+
   hide() {
     this.activeClass = false;
     let timeoutClear = setTimeout(() => { this.dealsItemsAddFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
@@ -37,7 +42,7 @@ export class DealsItemsAddModalWindowComponent implements OnInit {
   refreshPositionItems(event) {
     this.refreshOrderItems.emit(event);
     this.activeClass = false;
-    let timeoutClear = setTimeout(() => { this.dealsItemsAddFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
+    let timeoutClear = setTimeout(() => { this.dealsItemsAddFormComponent.newDealsItemForm.reset(); this.dealsItemsAddFormComponent.documents = []; clearTimeout(timeoutClear); }, 300);
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Route, ActivatedRoute } from '@angular/router';
+import { Route, Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
@@ -34,12 +34,16 @@ export class DealsTableComponent {
   public statusSelect = {name: "status", placeholder: "Статус", id: "statusSelect"};
   public positionStatusSelect = {name: "positionStatus", placeholder: "Статус", id: "positionStatusSelect"};
 
-  constructor(private dealsService: DealsService, private activatedRoute: ActivatedRoute, private authService: AuthService) { 
+  constructor(private router: Router, private dealsService: DealsService, private activatedRoute: ActivatedRoute, private authService: AuthService) { 
     this.activatedRoute.queryParams.subscribe(params => {
         this.currentStatus = params['status'];
         this.currentSearch = params['search'];
         this.currentUserId = params['author'];
     });
+  }
+
+  toEditPage(id, userId) {
+    if (this.authService.getUserId() == userId) this.router.navigate(['/deals/edit'], { queryParams: { id: id } });
   }
 
   showEditModal(deal) {
@@ -88,26 +92,41 @@ export class DealsTableComponent {
   }
 
   changeDealStatus(id, event) {
-    this.dealsService.updateDealStatusByOrderId(event.id, id);
+    this.dealsService.updateDealStatusByOrderId(event.id, id).subscribe(
+      result => {
+        this.statusForm.reset();
+        this.showAllDeals();
+      }
+    );
   }
 
   changePositionStatus(id, event) {
-    this.dealsService.updatePositionStatusByOrderId(event.id, id);
+    this.dealsService.updatePositionStatusByOrderId(event.id, id).subscribe(
+      result => {
+        this.positionStatusForm.reset();
+        this.showAllDeals();
+      }
+    );
   }
 
   revealDeal(event) {
     let id = event.target.parentNode.parentNode.id;
-    if (document.getElementById('child' + id)) {
-      if (document.getElementById('child' + id).classList.contains('show')) {
-        document.getElementById('child' + id).classList.remove("show");
-        event.target.classList.remove("active");
-      }
-      else {
-        document.getElementById('child' + id).classList.add("show");
-        event.target.classList.add("active");
-      }
+    let elements = document.getElementsByClassName('child' + id);
+
+    if (elements) {
+      Array.from(elements).forEach(
+        function(element, index, array) {
+          if (element.classList.contains('show')) {
+            element.classList.remove("show");
+            event.target.classList.remove("active");
+          }
+          else {
+            element.classList.add("show");
+            event.target.classList.add("active");
+          }
+        }
+      );
     }
-    
   }
 
   showAllDeals() {
