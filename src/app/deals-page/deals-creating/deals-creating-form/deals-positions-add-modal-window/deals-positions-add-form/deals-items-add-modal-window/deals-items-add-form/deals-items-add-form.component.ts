@@ -5,6 +5,7 @@ import { PartiesService } from '../../../../../../../parties-page/parties.servic
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
 import { DealsService } from '../../../../../../deals.service';
 import { DocumentsAddModalWindowComponent } from '../../../../../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
+import { PartiesAddModalWindowComponent } from '../../../../../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
   selector: 'deals-items-add-form',
@@ -15,16 +16,24 @@ import { DocumentsAddModalWindowComponent } from '../../../../../../../documents
 export class DealsItemsAddFormComponent implements OnInit {
 
   @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
+  @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
+
+  @ViewChild('myDiv') myDiv: ElementRef;
+  @ViewChild('notFound') notFound: ElementRef;
+
   loading = false;
   smallWindow = true;
 
   public selectInputs = [
-  	{name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
-    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"},
+  	{name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"}
   ];
+
+  public organizationInput = [
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Подрядчик", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"}
+  ]
 
   public inputs = [
     {name: "prime_price", type: "text", title: "Стоимость", tiny: true},
@@ -53,35 +62,180 @@ export class DealsItemsAddFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
+  addNewParty(name) {
+    this.partiesAddModalWindowComponent.showWithOrganization(name);
+  }
+
+  updateOrganization(event) {
+    this.organization.setValue(event);
+    this.getCurrentOrganization(event.name);
+  }
+
+  getCurrentOrganization(name) {
+    this.partiesService.getOrganizations(name).subscribe(organizations => { this.organizations = organizations });
+  }
+
+  addTag(name) {
+    return { id: null, name: name };
+  }
+
+  addProductTag(name) {
+    return { id: null, name: name };
+  }
+
   addPositionItems() {
+    let organization_id = this.organization.value.id;
+    let product_id = this.product.value.id;
 
     if (this.position_id >= 0) {
-      this.dealsService.createNewItem(this.organization.value.id, this.product.value.id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
-        result => { 
-          this.refreshPositionItems.emit(true);
+      if (organization_id == null) {
+        this.partiesService.createOrganization(this.organization.value.name).subscribe(result => {
+          organization_id = result.organization.id;
+
+          if (product_id == null) {
+            this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+              product_id = product.id;
+
+              this.dealsService.createNewItem(organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+                result => { 
+                  this.refreshPositionItems.emit(true);
+                }
+              );
+            });
+          }
+          else {
+            this.dealsService.createNewItem(organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+              result => { 
+                this.refreshPositionItems.emit(true);
+              }
+            );
+          }
+        });
+      }
+      else {
+        if (product_id == null) {
+          this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+            product_id = product.id;
+
+            this.dealsService.createNewItem(organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+              result => { 
+                this.refreshPositionItems.emit(true);
+              }
+            );
+          });
         }
-      );
+        else {
+          this.dealsService.createNewItem(organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+            result => { 
+              this.refreshPositionItems.emit(true);
+            }
+          );
+        }  
+      }
     }
     else {
-      let itemForm = this.newDealsItemForm.value;
-      itemForm.documents = this.documents.map(document => {
-        let newDocument = {
-          number: document.orderNumber,
-          kind: document.kind.id,
-          category: document.category.id,
-          url: document.url,
-          comment: document.comment,
-          counterparty: {
-            id: document.counterparty
+      if (organization_id == null) {
+        this.partiesService.createOrganization(this.organization.value.name).subscribe(result => {
+          organization_id = result.organization.id;
+          this.organization.setValue(result.organization);
+
+          if (product_id == null) {
+            this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+              product_id = product.id;
+              this.product.setValue(product);
+
+              let itemForm = this.newDealsItemForm.value;
+              itemForm.documents = this.documents.map(document => {
+                let newDocument = {
+                  number: document.orderNumber,
+                  kind: document.kind,
+                  category: document.category,
+                  url: document.url,
+                  comment: document.comment,
+                  organization: {
+                    id: organization_id
+                  }
+                };
+
+                return newDocument;
+              });
+
+              this.refreshPositionItems.emit(itemForm);
+            });
           }
-        };
+          else {
+            let itemForm = this.newDealsItemForm.value;
+            itemForm.documents = this.documents.map(document => {
+              let newDocument = {
+                number: document.orderNumber,
+                kind: document.kind,
+                category: document.category,
+                url: document.url,
+                comment: document.comment,
+                organization: {
+                  id: organization_id
+                }
+              };
 
-        return newDocument;
-      });
+              return newDocument;
+            });
 
-      this.refreshPositionItems.emit(itemForm);
+            this.refreshPositionItems.emit(itemForm);
+          }
+        });
+      }
+      else {
+        if (product_id == null) {
+          this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+            product_id = product.id;
+            this.product.setValue(product);
+
+            let itemForm = this.newDealsItemForm.value;
+            itemForm.documents = this.documents.map(document => {
+              let newDocument = {
+                number: document.orderNumber,
+                kind: document.kind,
+                category: document.category,
+                url: document.url,
+                comment: document.comment,
+                /*
+                counterparty: {
+                  id: document.counterparty
+                }
+                */
+                organization: {
+                  id: this.organization.value.id
+                }
+              };
+
+              return newDocument;
+            });
+
+            this.refreshPositionItems.emit(itemForm);
+          });
+        }
+        else {
+          let itemForm = this.newDealsItemForm.value;
+          itemForm.documents = this.documents.map(document => {
+            let newDocument = {
+              number: document.orderNumber,
+              kind: document.kind,
+              category: document.category,
+              url: document.url,
+              comment: document.comment,
+              organization: {
+                id: this.organization.value.id
+              }
+            };
+
+            return newDocument;
+          });
+
+          this.refreshPositionItems.emit(itemForm);
+        }
+        
+      }
     }
-
     
   }
 
@@ -89,51 +243,17 @@ export class DealsItemsAddFormComponent implements OnInit {
     this.warehouseService.createProduct(name).subscribe(product => {
       let fieldProduct = {
         id: product.id,
-        text: product.name
+        name: product.name
       };
+
       this.product.setValue(fieldProduct);
+      let el: HTMLElement = this.notFound.nativeElement as HTMLElement;
+      el.innerHTML = "Добавлено";
     });
   }
 
   constructor(public formbuilder: FormBuilder, private warehouseService: WarehouseService, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
-  createParty(event) {
-    if (this.newDealsItemForm.valid) {
-      let organization_id = this.newDealsItemForm.get("organization").value;
-      
-      if (isNaN(this.organization.value)) {
-        this.partiesService.createOrganization(this.organization.value).subscribe(result => {
-          organization_id = result.organization.id;
-
-          this.partiesService.createNewParty(this.newDealsItemForm.get("type").value, this.newDealsItemForm.get("category").value, 
-          organization_id, this.newDealsItemForm.get("email").value, this.newDealsItemForm.get("contact").value,
-          this.newDealsItemForm.get("position").value, this.newDealsItemForm.get("phone").value, this.newDealsItemForm.get("comment").value).subscribe(
-            res => { 
-              this.newDealsItemForm.reset();
-              this.refreshTableEvent.emit(true);
-              this.eventEmitter.emit(true);
-            },
-            err => { console.log(err) }
-          );
-        }, err => { console.log(err); });
-      }
-      else {
-        this.partiesService.createNewParty(this.newDealsItemForm.get("type").value, this.newDealsItemForm.get("category").value, 
-        organization_id, this.newDealsItemForm.get("email").value, this.newDealsItemForm.get("contact").value,
-        this.newDealsItemForm.get("position").value, this.newDealsItemForm.get("phone").value, this.newDealsItemForm.get("comment").value).subscribe(
-          res => { 
-            this.newDealsItemForm.reset();
-            this.refreshTableEvent.emit(true);
-            this.eventEmitter.emit(true);
-          },
-          err => { console.log(err) }
-        );
-      }
-    }
-    else {
-      this.validationClass = true;
-    }
-  }
 
   organizationsTypeahead = new EventEmitter<string>();
   productsTypeahead = new EventEmitter<string>();
@@ -167,11 +287,11 @@ export class DealsItemsAddFormComponent implements OnInit {
   }
   
   addNewDocumentReceiptItem() {
-    this.documentsAddModalWindowComponent.showForItemReceipt();
+    this.documentsAddModalWindowComponent.showForItemReceipt(null);
   }
 
   addNewDocumentTemplateItem() {
-    this.documentsAddModalWindowComponent.showForItemTemplate();
+    this.documentsAddModalWindowComponent.showForItemTemplate(null);
   }
 
   updateTable(event) {

@@ -71,6 +71,21 @@ import { DealsItemsEditFormComponent } from './deals-page/deals-editing/deals-ed
 import { NgDatepickerModule } from 'ng2-datepicker';
 import { DealsPositionsCreatingModalWindowComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-creating-modal-window/deals-positions-creating-modal-window.component';
 import { DealsPositionsCreatingFormComponent } from './deals-page/deals-editing/deals-editing-form/deals-positions-creating-modal-window/deals-positions-creating-form/deals-positions-creating-form.component';
+import { OrdersPageComponent } from './orders-page/orders-page.component';
+import { OrdersTableComponent } from './orders-page/orders-table/orders-table.component';
+import { OrdersTablePaginationComponent } from './orders-page/orders-table/orders-table-pagination/orders-table-pagination.component';
+import { OrdersColumnsComponent } from './orders-page/orders-columns/orders-columns.component';
+import { OrdersSearchComponent } from './orders-page/orders-search/orders-search.component';
+import { OrdersCreateComponent } from './orders-page/orders-create/orders-create.component';
+import { OrdersPositionCreateModalComponent } from './orders-page/orders-create/orders-position-create-modal/orders-position-create-modal.component';
+import { OrdersPositionCreateFormComponent } from './orders-page/orders-create/orders-position-create-modal/orders-position-create-form/orders-position-create-form.component';
+import { OrdersItemCreateModalComponent } from './orders-page/orders-create/orders-item-create-modal/orders-item-create-modal.component';
+import { OrdersItemCreateFormComponent } from './orders-page/orders-create/orders-item-create-modal/orders-item-create-form/orders-item-create-form.component';
+import { OrdersEditComponent } from './orders-page/orders-edit/orders-edit.component';
+import { OrdersPositionEditModalComponent } from './orders-page/orders-edit/orders-position-edit-modal/orders-position-edit-modal.component';
+import { OrdersPositionEditFormComponent } from './orders-page/orders-edit/orders-position-edit-modal/orders-position-edit-form/orders-position-edit-form.component';
+import { OrdersItemEditModalComponent } from './orders-page/orders-edit/orders-item-edit-modal/orders-item-edit-modal.component';
+import { OrdersItemEditFormComponent } from './orders-page/orders-edit/orders-item-edit-modal/orders-item-edit-form/orders-item-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +140,22 @@ import { DealsPositionsCreatingFormComponent } from './deals-page/deals-editing/
     DealsItemsEditModalWindowComponent,
     DealsItemsEditFormComponent,
     DealsPositionsCreatingModalWindowComponent,
-    DealsPositionsCreatingFormComponent
+    DealsPositionsCreatingFormComponent,
+    OrdersPageComponent,
+    OrdersTableComponent,
+    OrdersTablePaginationComponent,
+    OrdersColumnsComponent,
+    OrdersSearchComponent,
+    OrdersCreateComponent,
+    OrdersPositionCreateModalComponent,
+    OrdersPositionCreateFormComponent,
+    OrdersItemCreateModalComponent,
+    OrdersItemCreateFormComponent,
+    OrdersEditComponent,
+    OrdersPositionEditModalComponent,
+    OrdersPositionEditFormComponent,
+    OrdersItemEditModalComponent,
+    OrdersItemEditFormComponent
   ],
   imports: [
     LoadingBarHttpClientModule,

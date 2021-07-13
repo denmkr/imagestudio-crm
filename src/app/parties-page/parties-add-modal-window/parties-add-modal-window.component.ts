@@ -12,6 +12,7 @@ export class PartiesAddModalWindowComponent implements OnInit {
   @HostBinding('class.active') activeClass: boolean = false;
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
+  @Output() updateOrganization = new EventEmitter<any>();
 
   title = "Новый контрагент";
 
@@ -28,8 +29,17 @@ export class PartiesAddModalWindowComponent implements OnInit {
   	this.activeClass = true;
   }
 
+  sendOrganization(event) {
+    this.updateOrganization.emit(event);
+  }
+
   showWithName(name) {
     this.partiesAddFormComponent.setName(name);
+    this.activeClass = true;
+  }
+
+  showWithOrganization(name) {
+    this.partiesAddFormComponent.setOrganization(name);
     this.activeClass = true;
   }
 

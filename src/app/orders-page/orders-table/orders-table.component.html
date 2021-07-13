@@ -1,0 +1,72 @@
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Клиент, Номер</th>
+      <th>Наименования</th>
+      <th>Дедлайн</th>
+      <th>Сумма</th>
+      <th>Прибыль</th>
+      <th>Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let order of orders">
+      <tr id="order{{ order.id }}">
+        <td class="arrow">
+          <i (click)="revealOrder($event)" class="material-icons">keyboard_arrow_down</i>
+        </td>
+        <td (click)="toEditPage(order.id, order.user_id)">
+          <div>{{ order.organization }}</div>
+          <div class="additional-attributes">
+            <div class="client">{{ order.doer }}</div>
+            <div class="number">{{ order.number }}</div>
+            <div class="creator">{{ order.creator }}</div>
+          </div>
+        </td>
+        <td (click)="toEditPage(order.id, order.user_id)">{{ order.names }}</td>
+        <td (click)="toEditPage(order.id, order.user_id)">{{ order.deadline | date: 'dd.MM.yyyy' }}</td>
+        <td (click)="toEditPage(order.id, order.user_id)">{{ order.price }} Р</td>
+        <td (click)="toEditPage(order.id, order.user_id)">{{ order.profit }} Р</td>
+        <td class="status">
+          <div class="select-blocks">
+            <div class="select-field-block">
+              <form [formGroup]="statusForm">
+                <ng-select class="blue" id={{statusSelect.id}} [items]="order.available_events" bindLabel="name" bindValue="id" placeholder="{{order.status.name}}" formControlName="{{statusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changeOrderStatus(order.id, $event)" notFoundText="Нет событий">
+                </ng-select>
+              </form>
+            </div>
+          </div>
+          <div class="percent">{{ order.readiness }}%</div>
+        </td>
+      </tr>
+      <ng-container *ngFor="let position of order.orders_positions">
+        <tr class="child-row childorder{{ order.id }}">
+          <td></td>
+          <td></td>
+          <td>{{ position.product.name }}
+            <div class="additional-attributes">
+              <div class="amount">{{ position.count }} шт.</div>
+            </div>
+          </td>
+          <td>{{ position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ position.price }} Р</td>
+          <td>{{ position.profit }} Р</td>
+          <td class="status">
+            <div class="select-blocks">
+              <div class="select-field-block">
+                <form [formGroup]="positionStatusForm">
+                  <ng-select class="green" id={{positionStatusSelect.id}} [items]="position.available_events" bindLabel="name" bindValue="id" placeholder="{{position.status.name}}" formControlName="{{positionStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus(position.id, $event)" notFoundText="Нет событий">
+                  </ng-select>
+                </form>
+              </div>
+            </div>
+            <div class="percent">{{ position.readiness }}</div>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+<!-- (eventEmitter)="showOrdersByPage($event)" -->
+<orders-table-pagination></orders-table-pagination>

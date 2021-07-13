@@ -1,0 +1,145 @@
+<form [ngClass]="{'validation' : validationClass}" [formGroup]="editOrdersPositionForm" (ngSubmit)="editOrdersPosition($event)">
+
+  <div class="select-blocks">
+    <div *ngFor="let select of selects" class="select-field-block">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus($event)">
+      </ng-select>
+    </div>
+  </div>
+   
+   <div class="input-blocks" [ngClass]="{'big' : bigWindow}">
+
+    <div *ngFor="let select of selectInputs" class="input-field-block">
+      <div class="select-container">
+        <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Загрузка "{{searchTerm}}"
+              </div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <div *ngFor="let input of inputs" [ngClass]="{'inline' : input.inline, 'tiny' : input.tiny, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" [ngClass]="{'small' : input.smallTitle}" class="input-title">{{input.title}}</div>
+      <input formControlName="{{input.name}}" [readonly]="input.readonly" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}" [ngClass]="{
+         'has-danger': editOrdersPositionForm.get(input.name).invalid && editOrdersPositionForm.get(input.name).dirty, 
+         'has-success': editOrdersPositionForm.get(input.name).valid && editOrdersPositionForm.get(input.name).dirty
+       }">
+      <div class="form-control-feedback"
+         *ngIf="editOrdersPositionForm.get(input.name).errors && (editOrdersPositionForm.get(input.name).dirty || editOrdersPositionForm.get(input.name).touched)">
+         <p>Заполните поле</p>
+      </div>
+    </div>
+
+    <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
+      <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
+      <ng-datepicker [(ngModel)]="currentDate" formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
+    </div>
+  </div>
+
+  <div class="orders_items">
+    <div class="top">
+      <div (click)="addNewOrdersItem()" class="add-button">
+        <a>Добавить услугу</a>
+        <i class="material-icons">
+        add_circle
+        </i>
+      </div>
+    </div>
+    
+    <ng-container *ngIf="position_items.length != 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Наименование</th>
+            <th>Где</th>
+            <th>Цена</th>
+            <th>Статус</th>
+            <th>Техзадание</th>
+            <th>Счет</th>
+            <th>Макет</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of position_items">
+            <tr>
+              <td (click)="editOrdersItem(item)">{{ item.product.name }}</td>
+              <td (click)="editOrdersItem(item)">{{ item.organization.name }}</td>
+              <td (click)="editOrdersItem(item)">{{ item.prime_price }}</td>
+              <td class="status">
+                <div class="select-blocks">
+                  <div class="select-field-block">
+                    <form [formGroup]="itemStatusForm">
+                      <ng-select class="green" id={{itemStatusSelect.id}} [items]="item.available_events" bindLabel="name" bindValue="id" placeholder="{{item.status.name}}" formControlName="{{itemStatusSelect.name}}" [searchable]="false" [clearable]="false" (change)="changeItemStatus(item.id, $event)" notFoundText="Нет событий">
+                      </ng-select>
+                    </form>
+                  </div>
+                </div>
+              </td>
+              <td>{{ item.description }}</td>
+              <td>
+                <ng-container *ngFor="let document of item.documents">
+                  <ng-container *ngIf="document.kind.id == 'check'">
+                    <div class="file">
+                      <i class="material-icons">
+                        insert_drive_file
+                      </i>
+                      
+                      <a href="{{ document.url }}" target="_blank" download>Скачать</a>
+                      
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let document of item.documents">
+                  <ng-container *ngIf="document.kind.id == 'layout'">
+                    <div class="file">
+                      <i class="material-icons">
+                        insert_drive_file
+                      </i>
+                      
+                      <a href="{{ document.url }}" target="_blank" download>Скачать</a>
+                      
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td class="arrow">
+                <i class="material-icons" (click)="editOrdersItem(item)">
+                  keyboard_arrow_right
+                </i>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-container>
+    
+  </div>
+
+  <div class="buttons-block">
+    <button class="button save-button" type="submit">Сохранить</button>
+    <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+    <div class="button remove-button" (click)="remove()">Удалить</div>
+  </div>
+  
+</form>
+
+<orders-item-create-modal (refreshOrderItems)="addPositionItems($event)"></orders-item-create-modal>
+<orders-item-edit-modal (refreshOrderItemsRemove)="refreshItems()" (refreshOrderItemsEdit)="refreshItems()"></orders-item-edit-modal>

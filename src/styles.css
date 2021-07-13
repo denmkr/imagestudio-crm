@@ -177,6 +177,19 @@ h1.title {
 	margin-bottom: 25px;
 }
 
+.modal .close i {
+	font-size: 28px;
+	cursor: pointer;
+}
+
+.modal .close {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	right: 0;
+	padding: 40px 50px;
+}
+
 .button {
 	text-transform: uppercase;
 	padding: 10px 18px;
@@ -196,6 +209,10 @@ h1.title {
 
 .button.cancel-button {
 	background: #ab2036;
+}
+
+.button.remove-button {
+	background: red;
 }
 
 .button.black {
@@ -702,4 +719,36 @@ ng-datepicker input {
 
 .ngx-datepicker-calendar-container {
 	z-index: 1000;
+}
+
+input[name='cost'] {
+	background: #eef0ef;
+}
+
+input[name='cost']::-webkit-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #333;
+  opacity: 1; /* Firefox */
+}
+
+input[name='cost']:-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #333;
+  opacity: 1; /* Firefox */
+}
+
+input[name='cost']::-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #333;
+  opacity: 1; /* Firefox */
+}
+
+input[name='cost']::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #333;
+  opacity: 1; /* Firefox */
+}
+
+input[name='cost']:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #333;
+}
+
+input[name='cost']::-ms-input-placeholder { /* Microsoft Edge */
+  color: #333;
 }

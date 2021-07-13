@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef, Output, ElementRef, ViewChild, Renderer, HostListener, HostBinding } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
 import { DealsService } from '../../deals.service';
 import { PartiesService } from '../../../parties-page/parties.service';
 import { DealsPositionsAddModalWindowComponent } from './deals-positions-add-modal-window/deals-positions-add-modal-window.component';
@@ -15,9 +16,15 @@ import * as ruLocale from 'date-fns/locale/ru';
   selector: 'deals-creating-form',
   templateUrl: './deals-creating-form.component.html',
   styleUrls: ['./deals-creating-form.component.css'],
-  providers: [DealsService, PartiesService]
+  providers: [DealsService, PartiesService, DatePipe]
 })
 export class DealsCreatingFormComponent implements OnInit {
+
+  @HostBinding('class.active')
+  yurActive: boolean = false;
+  templateActive: boolean = false;
+
+  currentDate: any;
 
   options: DatepickerOptions = {
     barTitleIfEmpty: 'Выберите месяц и день',
@@ -55,6 +62,8 @@ export class DealsCreatingFormComponent implements OnInit {
   public users = [];
   public counterparties = [];
 
+  public allDocuments = [];
+
   public selects = [
     {items: "users", name: "user", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"}
   ];
@@ -78,26 +87,72 @@ export class DealsCreatingFormComponent implements OnInit {
   comment: FormControl;
   deadline: FormControl;
 
-  constructor(private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
+  constructor(private datePipe: DatePipe, private router: Router, public formbuilder: FormBuilder, private dealsService: DealsService, private partiesService: PartiesService, private elRef: ElementRef, private renderer: Renderer, private cd: ChangeDetectorRef) { }
 
   createDeal(event) {
+
     this.documents = this.documents.map(document => {
       let newDocument = {
+        number: document.number,
         kind: document.kind.id,
         category: document.category.id,
         url: document.url,
         comment: document.comment,
+        organization: document.organization,
         counterparty: {
-          id: document.counterparty.id
+          id: this.counterparty.value
         }
+        
       };
 
       return newDocument;
     });
+    
+    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions, this.documents).subscribe(result => {
+      this.router.navigate([this.cancelLink]);
+      this.newDealForm.reset();
+    });
+  }
 
-    this.dealsService.createNewDeal(this.newDealForm.get("deadline").value, this.newDealForm.get("user").value, this.newDealForm.get("counterparty").value, this.newDealForm.get("comment").value, this.orders_positions, this.documents);
-    this.newDealForm.reset();
-    this.router.navigate([this.cancelLink]);
+  public showYurDocuments() {
+    if (this.yurActive) {
+      this.yurActive = false;
+      this.templateActive = false;
+
+      this.documents = this.allDocuments;
+    }
+    else {
+      let newDocuments = [];
+      this.allDocuments.map(document => {
+        if (document.kind.id != "template") {
+          newDocuments.push(document);
+        }
+      });
+      this.documents = newDocuments;
+      this.yurActive = true;
+      this.templateActive = false;
+    }
+    
+  }
+
+  public showTemplatesDocuments() {
+    if (this.templateActive) {
+      this.yurActive = false;
+      this.templateActive = false;
+
+      this.documents = this.allDocuments;
+    }
+    else {
+      let newDocuments = [];
+      this.allDocuments.map(document => {
+        if (document.kind.id == "template") {
+          newDocuments.push(document);
+        }
+      });
+      this.documents = newDocuments;
+      this.yurActive = false;
+      this.templateActive = true;
+    }
   }
 
   partiesTypeahead = new EventEmitter<string>();
@@ -119,10 +174,22 @@ export class DealsCreatingFormComponent implements OnInit {
   }
 
   updateTable(event) {
-    this.documents.push(event);
+    this.allDocuments.push(event);
+    this.documents = this.allDocuments;
+
+    this.yurActive = false;
+    this.templateActive = false;
   }
 
   refreshOrderPositions(event) {
+    let documents = [];
+    event.orders_items.map(item => {
+      item.documents.map(document => {
+        this.allDocuments.push(document);
+      });
+    });
+
+    this.documents = this.allDocuments;
     this.orders_positions.push(event);
   }
 
@@ -163,6 +230,7 @@ export class DealsCreatingFormComponent implements OnInit {
       counterparty: this.counterparty
     });
 
+    this.currentDate = new Date();
     this.newDealForm.reset();
   }
 

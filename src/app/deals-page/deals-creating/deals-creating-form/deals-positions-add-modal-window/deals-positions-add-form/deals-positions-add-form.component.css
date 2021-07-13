@@ -16,6 +16,26 @@ table tr .square {
 	font-size: 11px;
 }
 
+table tr .file {
+	min-width: 70px;
+	cursor: pointer;
+}
+
+table tr .file a {
+	color: #999;
+	font-size: 12px;
+}
+
+table tr .file i, table tr .file a {
+	display: inline-block;
+	vertical-align: middle;
+} 
+
+table tr .file i {
+	font-size: 20px;
+	margin-right: 2px;
+}
+
 table tr .square.orange {
 	background: orange;
 }

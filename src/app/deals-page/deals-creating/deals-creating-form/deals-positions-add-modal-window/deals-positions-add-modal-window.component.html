@@ -2,4 +2,7 @@
 <div class="modal new-deals-position-modal" [ngClass]="{'active' : activeClass}">
 	<div class="title">{{title}}</div>
  	<deals-positions-add-form (refreshOrderPositions)="refreshPositions($event)" (eventEmitter)="hide()" (refreshTableEvent)="refresh()"></deals-positions-add-form>
+ 	<div class="close">
+ 		<i class="material-icons" (click)="hide()">close</i>
+ 	</div>
 </div>

@@ -71,6 +71,7 @@ export class PartiesAddFormComponent implements OnInit {
 
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
+  @Output() updateOrganization = new EventEmitter<any>();
 
   hideWindow() {
     this.validationClass = false;
@@ -81,6 +82,24 @@ export class PartiesAddFormComponent implements OnInit {
 
   setName(name) {
     this.newPartyForm.get("contact").setValue(name);
+  }
+
+  setOrganization(name) {
+    this.partiesService.createOrganization(name).subscribe(result => {
+      this.organization.setValue(result.organization.id);
+      this.getCurrentOrganization(name);
+
+      let organization = {
+        id: result.organization.id,
+        name: name
+      };
+
+      this.updateOrganization.emit(organization);
+    }, err => { console.log(err); });
+  }
+
+  getCurrentOrganization(name) {
+    this.partiesService.getOrganizations(name).subscribe(organizations => { this.organizations = organizations });
   }
 
   createParty(event) {
@@ -171,7 +190,7 @@ export class PartiesAddFormComponent implements OnInit {
       Validators.pattern("[- ()+0-9]*")
     ]);
     this.comment = new FormControl('', [
-      Validators.required
+      // Validators.required
     ]);
     this.type = new FormControl('', [
       Validators.required

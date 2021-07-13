@@ -35,14 +35,14 @@ export class DocumentsAddModalWindowComponent implements OnInit {
     this.activeClass = true;
   }
 
-  showForItemReceipt() {
-    this.documentsAddFormComponent.forItemReceipt();
+  showForItemReceipt(organizationId) {
+    this.documentsAddFormComponent.forItemReceipt(organizationId);
     this.title = "Новый счет";
     this.activeClass = true;
   }
 
-  showForItemTemplate() {
-    this.documentsAddFormComponent.forItemTemplate();
+  showForItemTemplate(organizationId) {
+    this.documentsAddFormComponent.forItemTemplate(organizationId);
     this.title = "Новый макет";
     this.activeClass = true;
   }

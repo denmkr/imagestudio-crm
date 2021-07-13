@@ -11,7 +11,7 @@ export class PartiesService {
     let httpParams = new HttpParams();
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/", { params: httpParams })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/organizations/", { params: httpParams })
     .map(result => {
       return result.organizations.map(organization => ({
         id: organization.id,
@@ -25,11 +25,11 @@ export class PartiesService {
       name: name
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', params);
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/organizations/', params);
   }
 
   removeParty(id: string) {
-    return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id);
+    return this.http.delete<any>('http://backend-crm.imagestudio.su/api/v1/counterparties/' + id);
   }
 
   updateParty(id: string, type: string, category: string, organization: string, email: string, contact: string, 
@@ -52,7 +52,7 @@ export class PartiesService {
       }
     };
 
-    return this.http.put<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/' + id, party);
+    return this.http.put<any>('http://backend-crm.imagestudio.su/api/v1/counterparties/' + id, party);
     
   }
 
@@ -75,8 +75,30 @@ export class PartiesService {
       }
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/', party);
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/counterparties/', party);
     
+  }
+
+  getPartiesBySearchAndOrganization(search: string, organizationId: number) {
+
+    let httpParams = new HttpParams();
+    if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
+    httpParams = httpParams.set('page[number]', '1');
+    httpParams = httpParams.set('page[size]', '2500');
+    if (organizationId != null) httpParams = httpParams.set('organization_id', organizationId.toString());
+
+
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/counterparties/", { params: httpParams, reportProgress: true })
+    .map(result => {
+
+      let parties = result.counterparties.map(party => ({
+        id: party.id,
+        organization: party.organization,
+        contact_name: party.contact_name
+      }));
+
+      return parties;
+    });
   }
 
   getPartiesBySearch(search: string) {
@@ -87,7 +109,7 @@ export class PartiesService {
     httpParams = httpParams.set('page[size]', '2500');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/counterparties/", { params: httpParams, reportProgress: true })
     .map(result => {
 
       let parties = result.counterparties.map(party => ({
@@ -110,7 +132,7 @@ export class PartiesService {
     if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/counterparties/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/counterparties/", { params: httpParams, reportProgress: true })
     .map(result => {
       result.counterparties.map(party => {
         switch (party.category) {

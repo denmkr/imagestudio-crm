@@ -1,0 +1,50 @@
+<div class="top-block">
+	<div class="row middle">
+		<div class="col-6 left">
+			<h1 class="title">{{title}}</h1>
+			<div class="display">
+				<div (click)="setColumnsMode()" [ngClass]="{'active' : columnsMode}" class="vert"><i class="material-icons">menu</i></div>
+				<div (click)="setTableMode()" class="hor" [ngClass]="{'active' : !columnsMode}"><i class="material-icons">menu</i></div>
+			</div>
+			<div *ngIf="columnsMode; then button"></div>
+			<ng-template #button>
+				<div routerLink="{{creatingLink}}" class="column-button button create-button">Создать заказ</div>
+			</ng-template>
+		</div>
+		<div class="col-6 right">
+			<div class="own">
+				<div (click)="showMyOrders()" [ngClass]="{'active' : mineActive}" class="item">Мои</div>
+				<div (click)="showAllOrders()" [ngClass]="{'active' : allActive}" class="item">Все</div>
+			</div>
+			<div [ngClass]="{'active' : filersActive}" class="filters">
+				<orders-search (filterEmitter)="updateTableByFilterForm($event)"></orders-search>
+			</div>
+    		<div (click)="toggleFilters()" class="button filter-button black">Поиск / Фильтр</div>
+		</div>
+	</div>
+	<div *ngIf="!columnsMode; then buttons"></div>
+	<ng-template #buttons>
+		<div class="row middle">
+			<div class="col-10 left">
+				<div class="buttons">
+					<div routerLink="{{creatingLink}}" class="button create-button">Создать заказ</div>
+					<div (click)="showAllOrders()" [ngClass]="{'active' : noneActive}" class="button grey">Все</div>
+					<div (click)="showNewOrders()" [ngClass]="{'active' : newActive}" class="button grey">Новое</div>
+					<div (click)="showLeadOrders()" [ngClass]="{'active' : leadActive}" class="button grey">Лид</div>
+					<div (click)="showInProgressOrders()" [ngClass]="{'active' : inProgressActive}" class="button grey">В работе</div>
+					<div (click)="showDoneOrders()" [ngClass]="{'active' : doneActive}" class="button grey">Выполнено (не оплачено)</div>
+					<div (click)="showPayedOrders()" [ngClass]="{'active' : payedActive}" class="button grey">Выполнено (оплачено)</div>
+					<div (click)="showDeniedOrders()" [ngClass]="{'active' : deniedActive}" class="button grey">Слив</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+</div>
+
+<div *ngIf="columnsMode; then columns else table"></div>
+<ng-template #table>
+	<orders-table [ngClass]="{'hide' : tableHide}" (eventEmitter)="showEditModal($event)"></orders-table>
+</ng-template>
+<ng-template #columns>
+	<orders-columns></orders-columns>
+</ng-template>

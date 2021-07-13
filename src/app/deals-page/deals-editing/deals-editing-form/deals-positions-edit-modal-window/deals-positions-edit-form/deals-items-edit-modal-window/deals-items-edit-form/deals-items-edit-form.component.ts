@@ -5,6 +5,7 @@ import { PartiesService } from '../../../../../../../parties-page/parties.servic
 import { WarehouseService } from '../../../../../../../warehouse-page/warehouse.service';
 import { DealsService } from '../../../../../../deals.service';
 import { DocumentsAddModalWindowComponent } from '../../../../../../../documents-page/documents-add-modal-window/documents-add-modal-window.component';
+import { PartiesAddModalWindowComponent } from '../../../../../../../parties-page/parties-add-modal-window/parties-add-modal-window.component';
 
 @Component({
   selector: 'deals-items-edit-form',
@@ -15,6 +16,7 @@ import { DocumentsAddModalWindowComponent } from '../../../../../../../documents
 export class DealsItemsEditFormComponent implements OnInit {
 
   @ViewChild(DocumentsAddModalWindowComponent) documentsAddModalWindowComponent: DocumentsAddModalWindowComponent;
+  @ViewChild(PartiesAddModalWindowComponent) partiesAddModalWindowComponent: PartiesAddModalWindowComponent;
 
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
@@ -22,8 +24,8 @@ export class DealsItemsEditFormComponent implements OnInit {
   smallWindow = true;
 
   public selectInputs = [
-    {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead"},
-    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"},
+    {name: "product", placeholder: "Выберите товар", title: "Товар", items: "products", id: "productsSelect", typeahead: "productsTypeahead", addTag: "addTag"},
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Подрядчик", items: "organizations", id: "organizationsSelect", typeahead: "organizationsTypeahead"},
   ];
 
   public inputs = [
@@ -45,6 +47,7 @@ export class DealsItemsEditFormComponent implements OnInit {
   description: FormControl;
 
   @Output() refreshPositionItems = new EventEmitter<boolean>();
+  @Output() refreshPositionItemsRemove = new EventEmitter<boolean>();
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
@@ -53,29 +56,148 @@ export class DealsItemsEditFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
+  addTag(name) {
+    return { id: null, name: name };
+  }
+
+  addNewParty(name) {
+    this.partiesAddModalWindowComponent.showWithOrganization(name);
+  }
+
+  updateOrganization(event) {
+    this.organization.setValue(event);
+    this.getCurrentOrganization(event.name);
+  }
+
+  getCurrentOrganization(name) {
+    this.partiesService.getOrganizations(name).subscribe(organizations => { this.organizations = organizations });
+  }
+
   addPositionItems() {
 
-    this.dealsService.editItemById(this.id, this.organization.value.id, this.product.value.id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
-      result => { 
-        let itemForm = this.newDealsItemForm.value;
-        itemForm.documents = this.documents.map(document => {
-          let newDocument = {
-            number: document.number,
-            kind: document.kind,
-            category: document.category,
-            url: document.url,
-            comment: document.comment,
-            counterparty: {
-              id: document.counterparty
+    let organization_id = this.organization.value.id;
+
+    if (organization_id == null) {
+      this.partiesService.createOrganization(this.organization.value.name).subscribe(result => {
+        organization_id = result.organization.id;
+        let product_id = this.product.value.id;
+
+        if (product_id == null) {
+          this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+            product_id = product.id;
+            this.product.setValue(product);
+            this.dealsService.editItemById(this.id, organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+              result => { 
+                let itemForm = this.newDealsItemForm.value;
+                itemForm.documents = this.documents.map(document => {
+                  let newDocument = {
+                    number: document.number,
+                    kind: document.kind,
+                    category: document.category,
+                    url: document.url,
+                    comment: document.comment,
+                    organization: {
+                      id: organization_id
+                    }
+                  };
+
+                  return newDocument;
+                });
+
+                this.refreshPositionItems.emit(true);
+              }
+            );
+          });
+        }
+        else {
+          this.dealsService.editItemById(this.id, organization_id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+            result => { 
+              let itemForm = this.newDealsItemForm.value;
+              itemForm.documents = this.documents.map(document => {
+                let newDocument = {
+                  number: document.number,
+                  kind: document.kind,
+                  category: document.category,
+                  url: document.url,
+                  comment: document.comment,
+                  organization: {
+                    id: organization_id
+                  }
+                };
+
+                return newDocument;
+              });
+
+              this.refreshPositionItems.emit(true);
             }
-          };
+          );
+        }
 
-          return newDocument;
+      });
+    }
+    else {
+      let product_id = this.product.value.id;
+
+      if (product_id == null) {
+        this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+          product_id = product.id;
+          this.product.setValue(product);
+
+          this.dealsService.editItemById(this.id, this.organization.value.id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+            result => { 
+              let itemForm = this.newDealsItemForm.value;
+              itemForm.documents = this.documents.map(document => {
+                let newDocument = {
+                  number: document.number,
+                  kind: document.kind,
+                  category: document.category,
+                  url: document.url,
+                  comment: document.comment,
+                  organization: {
+                    id: this.organization.value.id
+                  }
+                };
+
+                return newDocument;
+              });
+
+              this.refreshPositionItems.emit(true);
+            }
+          );
         });
-
-        this.refreshPositionItems.emit(true);
       }
-    );
+      else {
+        this.dealsService.editItemById(this.id, this.organization.value.id, product_id, this.position_id, this.prime_price.value, this.description.value, this.documents).subscribe(
+          result => { 
+            let itemForm = this.newDealsItemForm.value;
+            itemForm.documents = this.documents.map(document => {
+              let newDocument = {
+                number: document.number,
+                kind: document.kind,
+                category: document.category,
+                url: document.url,
+                comment: document.comment,
+                organization: {
+                  id: this.organization.value.id
+                }
+              };
+
+              return newDocument;
+            });
+
+            this.refreshPositionItems.emit(true);
+          }
+        );
+      }
+      
+    }
+    
+  }
+
+  remove() {
+    this.dealsService.removeItemById(this.id).subscribe(result => {
+      this.refreshPositionItemsRemove.emit(true);
+    });
   }
 
   addNewProduct(name) {
@@ -122,11 +244,11 @@ export class DealsItemsEditFormComponent implements OnInit {
   }
 
   addNewDocumentReceiptItem() {
-    this.documentsAddModalWindowComponent.showForItemReceipt();
+    this.documentsAddModalWindowComponent.showForItemReceipt(this.organization.value);
   }
 
   addNewDocumentTemplateItem() {
-    this.documentsAddModalWindowComponent.showForItemTemplate();
+    this.documentsAddModalWindowComponent.showForItemTemplate(this.organization.value);
   }
 
   updateTable(event) {
@@ -162,7 +284,6 @@ export class DealsItemsEditFormComponent implements OnInit {
       Validators.required
     ]);
     this.description = new FormControl('', [
-      Validators.required
     ]);
     this.product = new FormControl('', [
       Validators.required

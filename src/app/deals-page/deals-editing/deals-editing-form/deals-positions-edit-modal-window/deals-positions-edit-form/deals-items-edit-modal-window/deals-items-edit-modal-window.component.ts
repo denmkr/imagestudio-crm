@@ -13,8 +13,9 @@ export class DealsItemsEditModalWindowComponent implements OnInit {
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
   @Output() refreshOrderItemsEdit = new EventEmitter<any>();
+  @Output() refreshOrderItemsRemove = new EventEmitter<any>();
 
-  title = "Редактирование товара";
+  title = "Редактирование услуги";
 
   constructor() { }
 
@@ -35,6 +36,12 @@ export class DealsItemsEditModalWindowComponent implements OnInit {
   }
 
   hide() {
+    this.activeClass = false;
+    let timeoutClear = setTimeout(() => { this.dealsItemsEditFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
+  }
+
+  refreshPositionItemsRemove(event) {
+    this.refreshOrderItemsRemove.emit(true);
     this.activeClass = false;
     let timeoutClear = setTimeout(() => { this.dealsItemsEditFormComponent.newDealsItemForm.reset(); clearTimeout(timeoutClear); }, 300);
   }

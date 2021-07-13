@@ -43,7 +43,8 @@ export class DealsTableComponent {
   }
 
   toEditPage(id, userId) {
-    if (this.authService.getUserId() == userId) this.router.navigate(['/deals/edit'], { queryParams: { id: id } });
+    // if (this.authService.getUserId() == userId) this.router.navigate(['/deals/edit'], { queryParams: { id: id } });
+    this.router.navigate(['/deals/edit'], { queryParams: { id: id } });
   }
 
   showEditModal(deal) {

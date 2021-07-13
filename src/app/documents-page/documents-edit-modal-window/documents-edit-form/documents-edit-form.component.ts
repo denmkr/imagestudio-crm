@@ -24,6 +24,7 @@ export class DocumentsEditFormComponent implements OnInit {
  
   ordersLoading: boolean = false;
   partiesLoading : boolean = false;
+  organizationsLoading : boolean = false;
   fileLoading: any;
   isOrder: boolean = false;
 
@@ -41,11 +42,13 @@ export class DocumentsEditFormComponent implements OnInit {
   ];
 
   public counterparties = [];
+  public organizations = [];
   public orders = [];
   public available_events = [];
 
   public selectInputs = [
-    {name: "counterparty", placeholder: "ИП Пупина Александра Владимировича", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect"}
+    {name: "organization", placeholder: "ИП Пупина Александра Владимировича", title: "Организация", items: "organizations", id: "organizationsSelect", bindLabel: "name", loading: "organizationsLoading", typeahead: "organizationsTypeahead", addTag: "addTag"},
+    {name: "counterparty", placeholder: "Пупин Александр Владимирович", title: "Контрагент", items: "counterparties", id: "counterpartiesSelect", bindLabel: "contact_name", loading: "partiesLoading", typeahead: "partiesTypeahead"}
   ];
 
   public orderSelectInputs = [
@@ -92,6 +95,7 @@ export class DocumentsEditFormComponent implements OnInit {
   kind: FormControl;
   category: FormControl;
   counterparty: FormControl;
+  organization: FormControl;
   number: FormControl;
   comment: FormControl;
 
@@ -112,13 +116,19 @@ export class DocumentsEditFormComponent implements OnInit {
     }
   }
 
+  addTag(name) {
+    return { id: name, name: name };
+  }
+
   forOrder() {
     this.orderSelectInputs = [];
+    this.selectInputs = [];
     this.isOrder = true;
     this.editDocumentForm = new FormGroup({
       kind: this.kind,
       category: this.category,
-      counterparty: this.counterparty,
+      organization: this.organization,
+      // counterparty: this.counterparty,
       comment: this.comment
     });
     
@@ -128,8 +138,31 @@ export class DocumentsEditFormComponent implements OnInit {
     this.eventEmitter.emit(true);
   }
 
-  getCurrentParty() {
-    this.partiesService.getPartiesBySearch(this.document.counterparty.contact_name).subscribe(counterparties => { this.counterparties = counterparties });
+  setOrganization(event) {
+    if (event != undefined) {
+      if (event.contact_name != null) { // counterparty
+        this.getCurrentOrganization(event.organization.name);
+        this.organization.setValue(event.organization.id);
+      }
+      else { // organization
+        this.counterparty.setValue("");
+        this.getCurrentParties("");
+      }
+      // this.getCurrentParties(event.contact_name);
+      // this.getCurrentOrganization(event.organization.name);
+    }
+    else {
+      this.counterparty.setValue("");
+      this.getCurrentParties("");
+    }
+  }
+
+  getCurrentParties(name) {
+    this.partiesService.getPartiesBySearchAndOrganization(name, this.organization.value).subscribe(counterparties => { this.counterparties = counterparties });
+  }
+
+  getCurrentOrganization(name) {
+    this.partiesService.getOrganizations(name).subscribe(organizations => { this.organizations = organizations });
   }
 
   constructor(public formbuilder: FormBuilder, private documentsService: DocumentsService, private dealsService: DealsService, private partiesService: PartiesService, private cd: ChangeDetectorRef) { }
@@ -142,11 +175,13 @@ export class DocumentsEditFormComponent implements OnInit {
     this.status.setValue(document.status.id);
     this.kind.setValue(document.kind.id);
     this.category.setValue(document.category.id);
-    this.counterparty.setValue(document.counterparty.id);
+    if (!this.isOrder) this.counterparty.setValue(document.counterparty.id);
+    this.organization.setValue(document.organization.id);
     this.number.setValue(document.number);
     this.comment.setValue(document.comment);
 
-    this.getCurrentParty();
+    if (!this.isOrder) this.getCurrentParties(this.document.counterparty.contact_name);
+    this.getCurrentOrganization(this.document.organization.name);
   }
 
   upload(event) {
@@ -174,19 +209,37 @@ export class DocumentsEditFormComponent implements OnInit {
     if (this.changeStatus) this.documentsService.approveDocument(this.id).subscribe();
 
     if (this.editDocumentForm.valid) {
-	    this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
-          this.number.value, this.fileUrl, this.comment.value).subscribe(
-        res => { 
-        this.editDocumentForm.reset();
-        if (this.isOrder) this.updateOrderEdit.emit(true);
-        this.refreshTableEvent.emit(true);
-        this.eventEmitter.emit(true);
-        },
-        err => { console.log(err) }
-      );
+      if (isNaN(this.organization.value)) {
+        this.partiesService.createOrganization(this.organization.value).subscribe(result => {
+          this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
+            result.organization.id, this.number.value, this.fileUrl, this.comment.value).subscribe(
+            res => { 
+            this.editDocumentForm.reset();
+            if (this.isOrder) this.updateOrderEdit.emit(true);
+            this.refreshTableEvent.emit(true);
+            this.eventEmitter.emit(true);
+            },
+            err => { console.log(err) }
+          );
+        });
+      }
+      else {
+        this.documentsService.updateDocument(this.document.id, this.kind.value.id, this.category.value.id, this.status.value, this.counterparty.value, 
+          this.organization.value, this.number.value, this.fileUrl, this.comment.value).subscribe(
+          res => { 
+          this.editDocumentForm.reset();
+          if (this.isOrder) this.updateOrderEdit.emit(true);
+          this.refreshTableEvent.emit(true);
+          this.eventEmitter.emit(true);
+          },
+          err => { console.log(err) }
+        );
+      }
+	    
     }
   }
 
+  organizationsTypeahead = new EventEmitter<string>();
   partiesTypeahead = new EventEmitter<string>();
   ordersTypeahead = new EventEmitter<string>();
 
@@ -222,6 +275,22 @@ export class DocumentsEditFormComponent implements OnInit {
     });
   }
 
+  private organizationServerSideSearch() {
+    this.organizationsLoading = true;
+    this.organizationsTypeahead.pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap(term => this.partiesService.getOrganizations(term))
+    ).subscribe(x => {
+        this.cd.markForCheck();
+        this.organizations = x;
+        this.organizationsLoading = false;
+    }, (err) => {
+        console.log(err);
+        this.organizations = [];
+    });
+  }
+
   onFileChange(event) {
     if (event.target.files.length > 0) {
       let file = event.target.files[0];
@@ -238,6 +307,7 @@ export class DocumentsEditFormComponent implements OnInit {
 
   ngOnInit() {
     this.ordersServerSideSearch();
+    this.organizationServerSideSearch();
     this.serverSideSearch();
 
     this.kind = new FormControl('', [
@@ -247,20 +317,24 @@ export class DocumentsEditFormComponent implements OnInit {
       Validators.required
     ]);
     this.counterparty = new FormControl('', [
+
+    ]);
+    this.organization = new FormControl('', [
       Validators.required
     ]);
     this.number = new FormControl('', [
-      Validators.required,
-      Validators.pattern("[0-9]*")
+      // Validators.required,
+      // Validators.pattern("[0-9]*")
     ]);
     this.comment = new FormControl('', [
-      Validators.required
+      // Validators.required
     ]);
 
     this.editDocumentForm = new FormGroup({
       kind: this.kind,
       category: this.category,
       counterparty: this.counterparty,
+      organization: this.organization,
       number: this.number,
       comment: this.comment
     });

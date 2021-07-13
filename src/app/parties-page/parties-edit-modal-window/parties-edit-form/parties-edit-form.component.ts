@@ -175,7 +175,7 @@ export class PartiesEditFormComponent implements OnInit {
       Validators.pattern("[ -()+0-9]*")
     ]);
     this.comment = new FormControl('', [
-      Validators.required
+      // Validators.required
     ]);
     this.type = new FormControl('', [
       Validators.required

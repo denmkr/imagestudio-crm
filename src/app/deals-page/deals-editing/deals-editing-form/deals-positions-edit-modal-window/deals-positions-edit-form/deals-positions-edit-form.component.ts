@@ -59,7 +59,11 @@ export class DealsPositionsEditFormComponent implements OnInit {
 
   public dateInputs = [
     {name: "deadline", type: "text", placeholder: "10 янв. 2017", title: "Дедлайн", small: true},
-  ]
+  ];
+
+  addProductTag(name) {
+    return { id: null, name: name };
+  }
 
   editDealsPositionForm: FormGroup;
 
@@ -79,6 +83,13 @@ export class DealsPositionsEditFormComponent implements OnInit {
   hideWindow() {
     this.validationClass = false;
     this.eventEmitter.emit(true);
+  }
+
+  remove() {
+    this.dealsService.removePositionById(this.id).subscribe(result => {
+      let order_position = this.editDealsPositionForm.value;
+      this.refreshOrderPositions.emit(order_position);
+    });
   }
 
   addNewDealsItem() {
@@ -105,21 +116,44 @@ export class DealsPositionsEditFormComponent implements OnInit {
     let order_position = this.editDealsPositionForm.value;
     order_position.items = this.position_items;
 
-    let positionForm = {
-      orderId: this.orderId,
-      product: this.product.value,
-      price: this.price.value,
-      prime_price: this.cost.value,
-      full_price: this.amount.value * this.cost.value,
-      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
-      count: this.amount.value,
-      orders_items: this.position_items,
-      must_be_finished_at: this.deadline.value
-    };
-    
-    this.dealsService.editPositionById(this.id, positionForm.must_be_finished_at, positionForm.product.id, positionForm.orderId, positionForm.price, positionForm.count).subscribe(result => {
-      this.refreshOrderPositions.emit(order_position);
-    });
+    let product_id = this.product.value.id;
+
+    if (product_id == null) {
+      this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+        let positionForm = {
+          orderId: this.orderId,
+          product: product,
+          price: this.price.value,
+          prime_price: this.cost.value,
+          full_price: this.amount.value * this.cost.value,
+          profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+          count: this.amount.value,
+          orders_items: this.position_items,
+          must_be_finished_at: this.deadline.value
+        };
+        
+        this.dealsService.editPositionById(this.id, positionForm.must_be_finished_at, positionForm.product.id, positionForm.orderId, positionForm.price, positionForm.count).subscribe(result => {
+          this.refreshOrderPositions.emit(order_position);
+        });
+      });
+    }
+    else {
+      let positionForm = {
+        orderId: this.orderId,
+        product: this.product.value,
+        price: this.price.value,
+        prime_price: this.cost.value,
+        full_price: this.amount.value * this.cost.value,
+        profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+        count: this.amount.value,
+        orders_items: this.position_items,
+        must_be_finished_at: this.deadline.value
+      };
+      
+      this.dealsService.editPositionById(this.id, positionForm.must_be_finished_at, positionForm.product.id, positionForm.orderId, positionForm.price, positionForm.count).subscribe(result => {
+        this.refreshOrderPositions.emit(order_position);
+      });
+    }
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -166,7 +200,19 @@ export class DealsPositionsEditFormComponent implements OnInit {
   changeItemStatus(id, event) {
     this.dealsService.updateItemStatusById(event.id, id).subscribe(
       result => {
-        this.itemStatusForm.reset();
+        console.log(result);
+        this.refreshItems();
+        // this.itemStatusForm.reset();
+        // this.showAllDeals();
+      }
+    );
+  }
+
+  changePositionStatus(event) {
+    this.dealsService.updatePositionStatusByOrderId(event.id, this.id.toString()).subscribe(
+      result => {
+        console.log(result);
+        // this.itemStatusForm.reset();
         // this.showAllDeals();
       }
     );

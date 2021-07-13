@@ -8,10 +8,10 @@ export class DocumentsService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   removeDocument(id: string) {
-    return this.http.delete<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id);
+    return this.http.delete<any>('http://backend-crm.imagestudio.su/api/v1/documents/' + id);
   }
 
-  updateDocument(id: string, type: string, category: string, status: string, counterparty: string, orderNumber: string, url: string, 
+  updateDocument(id: string, type: string, category: string, status: string, counterpartyId: string, organizationId: string, orderNumber: string, url: string, 
     comment: string) {
 
     const document = {
@@ -19,19 +19,22 @@ export class DocumentsService {
       kind: type,
       category: category,
       counterparty: {
-        id: counterparty
+        id: counterpartyId
+      },
+      organization: {
+        id: organizationId
       },
       status: status,
       url: url,
       comment: comment
     };
 
-    return this.http.put<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id, document);
+    return this.http.put<any>('http://backend-crm.imagestudio.su/api/v1/documents/' + id, document);
     
   }
 
   approveDocument(id: number) {
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/' + id + '/approve', null);
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/documents/' + id + '/approve', null);
   }
 
   generateUrlForFile(name: string, type: string) {
@@ -40,14 +43,17 @@ export class DocumentsService {
       file_type: type
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/generate_presigned_url/', file);
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/generate_presigned_url/', file);
   }
 
-  createNewDocument(kindId: string, categoryId: string, counterpartyId: string, number: string, url: string, comment: string) {
+  createNewDocument(kindId: string, categoryId: string, counterpartyId: string, organizationId: string, number: string, url: string, comment: string) {
     const document = {
       number: number,
       kind: kindId,
       category: categoryId,
+      organization: {
+        id: organizationId
+      },
       url: url,
       comment: comment,
       counterparty: {
@@ -55,7 +61,7 @@ export class DocumentsService {
       }
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/', document);
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/documents/', document);
   }
 
   uploadfileAWSS3(presignedUrl: string, contentType: string, file: File) { 
@@ -74,9 +80,11 @@ export class DocumentsService {
     if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/documents/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/documents/", { params: httpParams, reportProgress: true })
     .map(result => {
+
       result.documents.map(document => {
+
         switch (document.category) {
           case "spending":
             document.category = { id: "spending", name: "Расход" };
@@ -116,10 +124,10 @@ export class DocumentsService {
 
         switch (document.status) {
           case "approved":
-            document.status = { id: "approve", name: "Оплачено" };
+            document.status = { id: "approve", name: "Подписано" };
             break;
           case "pending":
-            document.status = { id: "pending", name: "Не оплачено" };
+            document.status = { id: "pending", name: "Не подписано" };
             break;
           default:
             break;
@@ -129,17 +137,19 @@ export class DocumentsService {
 
         switch (document.available_event) {
           case "complete":
-            events.push({ id: "approve", name: "Оплачено"});
+            events.push({ id: "approve", name: "Подписано"});
             break;
           case "pending":
-            events.push({ id: "pending", name: "Не оплачено"});
+            events.push({ id: "pending", name: "Не подписано"});
             break;
           default:
             break;
         };
 
-        if (document.status.id == "pending") events.push({ id: "pending", name: "Не оплачено"});
-        events.push({ id: "approve", name: "Оплачено"});
+        if (document.counterparty == null) document.counterparty = { contact_name: "" };
+
+        if (document.status.id == "pending") events.push({ id: "pending", name: "Не подписано"});
+        events.push({ id: "approve", name: "Подписано"});
 
         document.available_events = events;
         // document.available_events.push(document.status);
@@ -149,6 +159,7 @@ export class DocumentsService {
       let documents = result.documents.map(document => ({
         id: document.id,
         counterparty: document.counterparty,
+        organization: document.organization,
         category: document.category,
         kind: document.kind,
         number: document.number,

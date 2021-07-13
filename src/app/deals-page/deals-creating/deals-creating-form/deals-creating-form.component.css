@@ -205,4 +205,9 @@ table tr .square.purple {
 	background: purple;
 }
 
+.types .type.active {
+	color: #333;
+}
+
+
 

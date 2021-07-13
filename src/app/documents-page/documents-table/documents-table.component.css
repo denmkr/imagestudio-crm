@@ -1,5 +1,5 @@
 table tbody tr {
-	cursor: default;
+	cursor: pointer;
 }
 
 table tr .square {

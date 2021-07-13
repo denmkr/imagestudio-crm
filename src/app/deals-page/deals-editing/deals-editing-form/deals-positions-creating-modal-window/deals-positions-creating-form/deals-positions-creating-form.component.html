@@ -15,7 +15,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addProductTag" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -23,7 +23,7 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}"</div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -49,7 +49,7 @@
 
     <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <ng-datepicker [(ngModel)]="currentDate" formControlName="{{input.name}}" [options]="options"></ng-datepicker>
       <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
     </div>
   </div>
@@ -57,7 +57,7 @@
   <div class="orders_items">
     <div class="top">
       <div (click)="addNewDealsItem()" class="add-button">
-        <a>Создать товар</a>
+        <a>Добавить услугу</a>
         <i class="material-icons">
         add_circle
         </i>
@@ -79,12 +79,34 @@
         <tbody>
           <ng-container *ngFor="let item of position_items">
             <tr>
-              <td>{{ item.product.text }}</td>
-              <td>{{ item.organization.text }}</td>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.organization.name }}</td>
               <td>{{ item.prime_price }}</td>
               <td>{{ item.description }}</td>
-              <td>{{ item.full_price }}</td>
-              <td>{{ item.status }}</td>
+              <td>
+                <ng-container *ngFor="let document of item.documents">
+                  <ng-container *ngIf="document.kind.id == 'check'">
+                    <div class="file">
+                      <i class="material-icons">
+                        insert_drive_file
+                      </i>
+                      <a href="{{ document.url }}" target="_blank" download>Скачать</a>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let document of item.documents">
+                  <ng-container *ngIf="document.kind.id == 'layout'">
+                    <div class="file">
+                      <i class="material-icons">
+                        insert_drive_file
+                      </i>
+                      <a href="{{ document.url }}" target="_blank" download>Скачать</a>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </td>
             </tr>
           </ng-container>
         </tbody>

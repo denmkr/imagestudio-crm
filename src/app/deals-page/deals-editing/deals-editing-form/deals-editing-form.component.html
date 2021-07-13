@@ -37,7 +37,7 @@
 
     <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <ng-datepicker [(ngModel)]="currentDate" formControlName="{{input.name}}" [options]="options"></ng-datepicker>
       <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
     </div>
 
@@ -81,7 +81,7 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let position of orders_positions">
-            <tr>
+            <tr (click)="editPosition(position)">
               <td>{{ position.product.name }}</td>
               <td>{{ position.count }}</td>
               <td>{{ position.must_be_finished_at | date: 'dd.MM.yyyy' }}</td>
@@ -90,7 +90,7 @@
               <td>{{ position.full_price }}</td>
               <td>{{ position.profit }}</td>
               <td class="arrow">
-                <i class="material-icons" (click)="editPosition(position)">
+                <i class="material-icons">
                 keyboard_arrow_right
                 </i>
               </td>
@@ -113,16 +113,19 @@
         </i>
       </div>
       <div class="types">
-        <div class="type">Юр. документы</div>
-        <div class="type">Макеты</div>
+        <div class="type" [ngClass]="{'active' : yurActive}" (click)="showYurDocuments()">Юр. документы</div>
+        <div class="type" [ngClass]="{'active' : templateActive}" (click)="showTemplatesDocuments()">Макеты</div>
       </div>
     </div>
     <ng-container *ngIf="documents.length != 0">
     <table>
       <thead>
         <tr>
+          <th>Номер</th>
           <th>Категория</th>
           <th>Тип</th>
+          <th>Дата создания</th>
+          <th>Статус</th>
           <th>Комментарий</th>
           <th>Файл / Ссылка</th>
           <th></th>
@@ -130,9 +133,12 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let document of documents">
-          <tr>
+          <tr (click)="editDocument(document)">
+            <td>№{{ document.id }}</td>
             <td><div class="square orange">{{ document.category.name }}</div></td>
             <td><div class="square purple">{{ document.kind.name }}</div></td>
+            <td>{{ document.created_at | date: 'dd.MM.yyyy' }}</td>
+            <td><div class="square green">{{ document.status.name }}</div></td>
             <td>{{ document.comment }}</td>
             <td>
               <div class="file">
@@ -158,6 +164,7 @@
   <div class="buttons-block">
     <button class="button save-button" type="submit">Сохранить</button>
     <div class="button cancel-button" routerLink="{{cancelLink}}">Отмена</div>
+    <div class="button remove-button" (click)="remove()">Удалить</div>
   </div>
   
 </form>
@@ -165,5 +172,5 @@
 <documents-add-modal-window (updateTableInOrder)="updateTable($event)"></documents-add-modal-window>
 <documents-edit-modal-window (updateTableInOrder)="updateTableEdit($event)"></documents-edit-modal-window>
 <parties-add-modal-window></parties-add-modal-window>
-<deals-positions-creating-modal-window (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-creating-modal-window>
+<deals-positions-creating-modal-window (refreshOrderPositionsEdit)="refreshOrderPositionsEdit($event)" (refreshOrderPositions)="refreshOrderPositions($event)"></deals-positions-creating-modal-window>
 <deals-positions-edit-modal-window (refreshOrderPositions)="refreshOrderPositionsEdit($event)"></deals-positions-edit-modal-window>

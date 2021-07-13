@@ -2,7 +2,7 @@
 
   <div class="select-blocks">
     <div *ngFor="let select of selects" class="select-field-block">
-      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false">
+      <ng-select class="grey" id={{select.id}} [items]="this[select.items]" bindLabel="name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" [searchable]="false" [clearable]="false" (change)="changePositionStatus($event)">
       </ng-select>
     </div>
   </div>
@@ -12,7 +12,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="loading" [hideSelected]="true" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="loading" [hideSelected]="true" addTagText="Добавить" [addTag]="addProductTag" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -20,7 +20,7 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}"</div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -46,7 +46,7 @@
 
     <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <ng-datepicker [(ngModel)]="currentDate" formControlName="{{input.name}}" [options]="options"></ng-datepicker>
       <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
     </div>
   </div>
@@ -54,7 +54,7 @@
   <div class="orders_items">
     <div class="top">
       <div (click)="addNewDealsItem()" class="add-button">
-        <a>Создать товар</a>
+        <a>Добавить услугу</a>
         <i class="material-icons">
         add_circle
         </i>
@@ -78,9 +78,9 @@
         <tbody>
           <ng-container *ngFor="let item of position_items">
             <tr>
-              <td>{{ item.product.name }}</td>
-              <td>{{ item.organization.name }}</td>
-              <td>{{ item.prime_price }}</td>
+              <td (click)="editDealsItem(item)">{{ item.product.name }}</td>
+              <td (click)="editDealsItem(item)">{{ item.organization.name }}</td>
+              <td (click)="editDealsItem(item)">{{ item.prime_price }}</td>
               <td class="status">
                 <div class="select-blocks">
                   <div class="select-field-block">
@@ -136,9 +136,10 @@
   <div class="buttons-block">
     <button class="button save-button" type="submit">Сохранить</button>
     <div class="button cancel-button" (click)="hideWindow()">Отмена</div>
+    <div class="button remove-button" (click)="remove()">Удалить</div>
   </div>
   
 </form>
 
 <deals-items-add-modal-window (refreshOrderItems)="addPositionItems($event)"></deals-items-add-modal-window>
-<deals-items-edit-modal-window (refreshOrderItemsEdit)="refreshItems()"></deals-items-edit-modal-window>
+<deals-items-edit-modal-window (refreshOrderItemsRemove)="refreshItems()" (refreshOrderItemsEdit)="refreshItems()"></deals-items-edit-modal-window>

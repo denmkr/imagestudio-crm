@@ -37,7 +37,7 @@
 
     <div *ngFor="let input of dateInputs" [ngClass]="{'inline' : input.inline, 'small' : input.small, 'big' : input.big}" class="input-field-block">
       <div *ngIf="input.title !== undefined" class="input-title">{{input.title}}</div>
-      <ng-datepicker formControlName="{{input.name}}" [options]="options"></ng-datepicker>
+      <ng-datepicker [(ngModel)]="currentDate" formControlName="{{input.name}}" [options]="options"></ng-datepicker>
       <!--<input formControlName="{{input.name}}" name="{{input.name}}" type="{{input.type}}" placeholder="{{input.placeholder}}">-->
     </div>
 
@@ -107,8 +107,8 @@
         </i>
       </div>
       <div class="types">
-        <div class="type">Юр. документы</div>
-        <div class="type">Макеты</div>
+        <div class="type" [ngClass]="{'active' : yurActive}" (click)="showYurDocuments()">Юр. документы</div>
+        <div class="type" [ngClass]="{'active' : templateActive}" (click)="showTemplatesDocuments()">Макеты</div>
       </div>
     </div>
     <ng-container *ngIf="documents.length != 0">

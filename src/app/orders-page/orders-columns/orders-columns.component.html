@@ -1,0 +1,52 @@
+<div class="columns">
+	<div class="row">
+		<div class="col-2">
+			<div class="title">Новое</div>
+			<div *ngFor="let order of newOrders" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Лид</div>
+			<div *ngFor="let order of leadOrders" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">В работе</div>
+			<div *ngFor="let order of inProgressOrders" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Выполнено</div>
+			<div *ngFor="let order of doneOrders" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Оплачено</div>
+			<div *ngFor="let order of payedActive" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="title">Слив</div>
+			<div *ngFor="let order of deniedOrders" class="columns-row">
+			  <div class="name">{{ order.names }}</div>
+			  <div class="client">{{ order.client }}</div>
+			  <div class="date">{{ order.deadline }}</div>
+			</div>
+		</div>
+	</div>
+</div>

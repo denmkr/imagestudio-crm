@@ -17,7 +17,7 @@ export class AuthService {
       password: password
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/authentication/login/', userData)
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/authentication/login/', userData)
     .map(response => {
       console.log(response);
       if (response.status != 401) {

@@ -10,22 +10,21 @@
       <th>Примечание</th>
       <th>Статус</th>
       <th>Создано</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let document of documents">
-      <td>
+      <td (click)="showEditModal(document)">
         <div>{{ document.counterparty.contact_name }}</div>
         <div class="additional-attributes">
-          <div class="organization">{{ document.counterparty.organization.name }}</div>
+          <div class="organization">{{ document.organization.name }}</div>
         </div>
       </td>
-      <td><div class="square orange">{{ document.category.name }}</div></td>
-      <td><div class="square green">{{ document.kind.name }}</div></td>
-      <td>№{{ document.id }}</td>
-      <td>#{{ document.number }}</td>
-      <td>
+      <td (click)="showEditModal(document)"><div class="square orange">{{ document.category.name }}</div></td>
+      <td (click)="showEditModal(document)"><div class="square green">{{ document.kind.name }}</div></td>
+      <td (click)="showEditModal(document)">№{{ document.id }}</td>
+      <td (click)="showEditModal(document)">#{{ document.number }}</td>
+      <td >
         <div class="file">
           <i class="material-icons">
             insert_drive_file
@@ -33,7 +32,7 @@
           <a href="{{ document.url }}" target="_blank" download>Скачать</a>
         </div>
       </td>
-      <td>{{ document.comment }}</td>
+      <td (click)="showEditModal(document)">{{ document.comment }}</td>
       <td class="status">
         <div class="select-blocks">
           <div class="select-field-block">
@@ -44,12 +43,14 @@
           </div>
         </div>
       </td>
-      <td class="date">{{ document.created_at | date: 'dd.MM.yyyy' }}</td>
+      <td class="date" (click)="showEditModal(document)">{{ document.created_at | date: 'dd.MM.yyyy' }}</td>
+      <!--
       <td class="arrow">
         <i class="material-icons" (click)="showEditModal(document)">
         keyboard_arrow_right
         </i>
       </td>
+    -->
     </tr>
   </tbody>
 </table>

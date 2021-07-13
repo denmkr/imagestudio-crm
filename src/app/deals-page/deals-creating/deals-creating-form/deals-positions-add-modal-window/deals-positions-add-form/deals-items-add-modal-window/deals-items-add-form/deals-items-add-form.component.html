@@ -3,7 +3,30 @@
    <div class="input-blocks" [ngClass]="{'small' : smallWindow}">
    	<div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
-        <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
+        <div *ngIf="select.title !== undefined" class="input-title" >{{select.title}}</div>
+        <ng-select [loading]="loading" addTagText="Добавить" [addTag]="addProductTag" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+          <ng-template ng-typetosearch-tmp>
+              <div class="ng-option disabled">
+                  Поиск...
+              </div>
+          </ng-template>
+          <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}"</div>
+              </div>
+          </ng-template>
+          <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+              <div class="ng-option disabled">
+                  Загрузка "{{searchTerm}}"
+              </div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <div *ngFor="let select of organizationInput" class="input-field-block">
+      <div class="select-container">
+        <div *ngIf="select.title !== undefined" class="input-title" >{{select.title}}</div>
         <ng-select [loading]="loading" [typeahead]=this[select.typeahead] #{{select.id}} [items]="this[select.items]" bindLabel="name" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
@@ -12,7 +35,8 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  <div id="notFound" #notFound class="notFound">Не найдено для "{{searchTerm}}" <div class="new-product-button" (click)="addNewProduct(searchTerm)">Добавить</div></div>
+                  Не найдено для "{{searchTerm}}"
+                  <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -37,19 +61,41 @@
     </div>
   </div>
 
-  <div (click)="addNewDocumentReceiptItem()" class="add-button">
-    <a>Добавить счет</a>
-    <i class="material-icons">
-    add_circle
-    </i>
-  </div>
+  <ng-container *ngIf="documents.length == 0">
+    <div (click)="addNewDocumentTemplateItem()" class="add-button">
+      <a>Добавить макет</a>
+      <i class="material-icons">
+      add_circle
+      </i>
+    </div>
+    <div (click)="addNewDocumentReceiptItem()" class="add-button">
+      <a>Добавить счет</a>
+      <i class="material-icons">
+      add_circle
+      </i>
+    </div>
+  </ng-container>
 
-   <div (click)="addNewDocumentTemplateItem()" class="add-button">
-    <a>Добавить макет</a>
-    <i class="material-icons">
-    add_circle
-    </i>
-  </div>
+  <ng-container *ngIf="documents.length == 1">
+    <ng-container *ngFor="let document of documents">
+      <ng-container *ngIf="document.kind.id != 'check'">
+        <div (click)="addNewDocumentReceiptItem()" class="add-button">
+          <a>Добавить счет</a>
+          <i class="material-icons">
+          add_circle
+          </i>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="document.kind.id != 'layout'">
+        <div (click)="addNewDocumentTemplateItem()" class="add-button">
+          <a>Добавить макет</a>
+          <i class="material-icons">
+          add_circle
+          </i>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
 
   <ng-container *ngIf="documents.length != 0">
     <table>
@@ -89,3 +135,4 @@
 </form>
 
 <documents-add-modal-window (updateTableInItem)="updateTable($event)"></documents-add-modal-window>
+<parties-add-modal-window (updateOrganization)="updateOrganization($event)"></parties-add-modal-window>

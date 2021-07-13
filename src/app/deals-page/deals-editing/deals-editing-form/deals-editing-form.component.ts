@@ -21,7 +21,12 @@ import * as ruLocale from 'date-fns/locale/ru';
 })
 export class DealsEditingFormComponent implements OnInit {
 
+  @HostBinding('class.active')
+  yurActive: boolean = false;
+  templateActive: boolean = false;
+
   partiesLoading: boolean = false;
+  currentDate: any;
 
   options: DatepickerOptions = {
     barTitleIfEmpty: 'Выберите дату',
@@ -55,6 +60,7 @@ export class DealsEditingFormComponent implements OnInit {
   public organizations;
   public orders_positions = [];
   public documents = [];
+  public allDocuments = [];
 
   public selects = [
     {items: "users", name: "doer", placeholder: "Менеджер", id: "userSelect", bindLabel: "name", bindValue: "id"},
@@ -92,12 +98,29 @@ export class DealsEditingFormComponent implements OnInit {
 
   editDeal(event) {
     if (this.oldStatusId != this.status.value) {
-      this.dealsService.updateDealStatusByOrderId(this.status.value, this.id);
+      this.dealsService.updateDealStatusByOrderId(this.status.value, this.id).subscribe(
+        result => {
+          this.dealsService.editDealById(this.id, this.editDealForm.get("must_be_finished_at").value, this.editDealForm.get("doer").value, this.editDealForm.get("counterparty").value, this.editDealForm.get("comment").value, this.orders_positions, this.documents).subscribe(result => {
+            
+            this.router.navigate([this.cancelLink]);
+            this.editDealForm.reset();
+          });
+        }
+      );
     }
+    else {
+      this.dealsService.editDealById(this.id, this.editDealForm.get("must_be_finished_at").value, this.editDealForm.get("doer").value, this.editDealForm.get("counterparty").value, this.editDealForm.get("comment").value, this.orders_positions, this.documents).subscribe(result => {
+        
+        this.router.navigate([this.cancelLink]);
+        this.editDealForm.reset();
+      });
+    }
+  }
 
-    this.dealsService.editDealById(this.id, this.editDealForm.get("must_be_finished_at").value, this.editDealForm.get("doer").value, this.editDealForm.get("counterparty").value, this.editDealForm.get("comment").value, this.orders_positions, this.documents);
-    this.editDealForm.reset();
-    this.router.navigate([this.cancelLink]);
+  remove() {
+    this.dealsService.removeDealById(this.id).subscribe(result => {
+      this.router.navigate([this.cancelLink]);
+    });
   }
 
   editDocument(document) {
@@ -123,7 +146,12 @@ export class DealsEditingFormComponent implements OnInit {
   }
 
   updateTable(event) {
-    this.documents.push(event);
+    this.allDocuments.push(event);
+    console.log(this.allDocuments);
+    this.documents = this.allDocuments;
+
+    this.yurActive = false;
+    this.templateActive = false;
   }
 
   updateTableEdit(event) {
@@ -140,6 +168,7 @@ export class DealsEditingFormComponent implements OnInit {
   refreshOrderPositionsEdit(event) {
     this.dealsService.getDealById(this.id).subscribe(order => {
       this.orders_positions = order.orders_positions;
+      this.documents = order.documents;
     });
   }
 
@@ -188,6 +217,7 @@ export class DealsEditingFormComponent implements OnInit {
       counterparty: this.counterparty
     });
 
+    this.currentDate = Date.now();
     this.editDealForm.reset();
 
     this.activatedRoute.queryParams.subscribe(params => {
@@ -202,12 +232,56 @@ export class DealsEditingFormComponent implements OnInit {
 
         this.statuses = order.available_events;
         this.documents = order.documents;
+        this.allDocuments = this.documents;
+
         this.orders_positions = order.orders_positions;
 
       });
+
     });
 
     this.getCurrentParty();
+  }
+
+  public showYurDocuments() {
+    if (this.yurActive) {
+      this.yurActive = false;
+      this.templateActive = false;
+
+      this.documents = this.allDocuments;
+    }
+    else {
+      let newDocuments = [];
+      this.allDocuments.map(document => {
+        if (document.kind.id != "template") {
+          newDocuments.push(document);
+        }
+      });
+      this.documents = newDocuments;
+      this.yurActive = true;
+      this.templateActive = false;
+    }
+    
+  }
+
+  public showTemplatesDocuments() {
+    if (this.templateActive) {
+      this.yurActive = false;
+      this.templateActive = false;
+
+      this.documents = this.allDocuments;
+    }
+    else {
+      let newDocuments = [];
+      this.allDocuments.map(document => {
+        if (document.kind.id == "template") {
+          newDocuments.push(document);
+        }
+      });
+      this.documents = newDocuments;
+      this.yurActive = false;
+      this.templateActive = true;
+    }
   }
 
   getCurrentParty() {

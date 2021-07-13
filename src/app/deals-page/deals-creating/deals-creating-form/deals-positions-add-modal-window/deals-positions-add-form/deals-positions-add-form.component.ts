@@ -24,6 +24,10 @@ export class DealsPositionsAddFormComponent implements OnInit {
     locale: ruLocale,
   };
 
+  currentDate: any;
+
+  @ViewChild('notFound') notFound: ElementRef;
+
   @ViewChild(DealsItemsAddModalWindowComponent) dealsItemsAddModalWindowComponent: DealsItemsAddModalWindowComponent;
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
@@ -49,7 +53,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
 
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
-    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true},
+    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true, placeholder: "0"},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
 
@@ -78,6 +82,10 @@ export class DealsPositionsAddFormComponent implements OnInit {
     this.dealsItemsAddModalWindowComponent.show();
   }
 
+  addProductTag(name) {
+    return { id: null, name: name };
+  }
+
   addPositionItems(event) {
     this.position_items.push(event);
 
@@ -89,19 +97,40 @@ export class DealsPositionsAddFormComponent implements OnInit {
   }
 
   addDealsPositions() {
+    let product_id = this.product.value.id;
 
-    let positionForm = {
-      product: this.product.value,
-      price: this.price.value,
-      prime_price: this.cost.value,
-      full_price: this.amount.value * this.cost.value,
-      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
-      count: this.amount.value,
-      orders_items: this.position_items,
-      must_be_finished_at: this.deadline.value
-    };
+    if (product_id == null) {
+      this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+
+        let positionForm = {
+          product: product,
+          price: this.price.value,
+          prime_price: this.cost.value,
+          full_price: this.amount.value * this.cost.value,
+          profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+          count: this.amount.value,
+          orders_items: this.position_items,
+          must_be_finished_at: this.deadline.value
+        };
+        
+        this.refreshOrderPositions.emit(positionForm);
+      });
+    }
+    else {
+      let positionForm = {
+        product: this.product.value,
+        price: this.price.value,
+        prime_price: this.cost.value,
+        full_price: this.amount.value * this.cost.value,
+        profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+        count: this.amount.value,
+        orders_items: this.position_items,
+        must_be_finished_at: this.deadline.value
+      };
+      
+      this.refreshOrderPositions.emit(positionForm);
+    }
     
-    this.refreshOrderPositions.emit(positionForm);
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -129,6 +158,8 @@ export class DealsPositionsAddFormComponent implements OnInit {
         name: product.name
       };
       this.product.setValue(fieldProduct);
+      let el: HTMLElement = this.notFound.nativeElement as HTMLElement;
+      el.innerHTML = "Добавлено";
     });
   }
 
@@ -159,6 +190,7 @@ export class DealsPositionsAddFormComponent implements OnInit {
       deadline: this.deadline
     });
 
+    this.currentDate = new Date();
     this.newDealsPositionForm.reset();
   }
 

@@ -25,6 +25,8 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
     locale: ruLocale,
   };
 
+  currentDate: any;
+
   @ViewChild(DealsItemsAddModalWindowComponent) dealsItemsAddModalWindowComponent: DealsItemsAddModalWindowComponent;
   @HostBinding('class.active') activeClass: boolean = false;
   @HostBinding('class.validation') validationClass: boolean = false;
@@ -50,7 +52,7 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
 
   public inputs = [
     {name: "amount", type: "text", inline: true, title: "Количество", tiny: true},
-    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true},
+    {name: "cost", type: "text", inline: true, title: "Себес.", tiny: true, smallTitle: true, readonly: true, placeholder: "0"},
     {name: "price", type: "text", inline: true, title: "Продаж.", tiny: true, smallTitle: true}
   ];
 
@@ -68,12 +70,17 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
   deadline: FormControl;
 
   @Output() refreshOrderPositions = new EventEmitter<any>();
+  @Output() refreshOrderPositionsEdit = new EventEmitter<any>();
   @Output() eventEmitter = new EventEmitter<boolean>();
   @Output() refreshTableEvent = new EventEmitter<boolean>();
 
   hideWindow() {
     this.validationClass = false;
     this.eventEmitter.emit(true);
+  }
+
+  addProductTag(name) {
+    return { id: null, name: name };
   }
 
   addNewDealsItem() {
@@ -92,20 +99,46 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
 
   addDealsPositions() {
 
-    let positionForm = {
-      id: this.orderId,
-      product: this.product.value,
-      price: this.price.value,
-      prime_price: this.cost.value,
-      full_price: this.amount.value * this.cost.value,
-      profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
-      count: this.amount.value,
-      orders_items: this.position_items,
-      must_be_finished_at: this.deadline.value
-    };
+    let product_id = this.product.value.id;
+
+    if (product_id == null) {
+      this.warehouseService.createProduct(this.product.value.name).subscribe(product => {
+        let positionForm = {
+          id: this.orderId,
+          product: product,
+          price: this.price.value,
+          prime_price: this.cost.value,
+          full_price: this.amount.value * this.cost.value,
+          profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+          count: this.amount.value,
+          orders_items: this.position_items,
+          must_be_finished_at: this.deadline.value
+        };
+        
+        this.dealsService.createNewPosition(this.position_items, positionForm.must_be_finished_at, positionForm.product.id, positionForm.id, positionForm.price, positionForm.count).subscribe(result => {
+          this.refreshOrderPositionsEdit.emit(positionForm);
+        });
+      });
+    }
+    else {
+      let positionForm = {
+        id: this.orderId,
+        product: this.product.value,
+        price: this.price.value,
+        prime_price: this.cost.value,
+        full_price: this.amount.value * this.cost.value,
+        profit: (this.amount.value * this.price.value) - (this.amount.value * this.cost.value),
+        count: this.amount.value,
+        orders_items: this.position_items,
+        must_be_finished_at: this.deadline.value
+      };      
+      
+      this.dealsService.createNewPosition(this.position_items, positionForm.must_be_finished_at, positionForm.product.id, positionForm.id, positionForm.price, positionForm.count).subscribe(result => {
+        this.refreshOrderPositionsEdit.emit(positionForm);
+      });
+    }
+
     
-    this.refreshOrderPositions.emit(positionForm);
-    this.dealsService.createNewPosition(positionForm.must_be_finished_at, positionForm.product.id, positionForm.id, positionForm.price, positionForm.count);
   }
 
   productsTypeahead = new EventEmitter<string>();
@@ -167,6 +200,7 @@ export class DealsPositionsCreatingFormComponent implements OnInit {
       deadline: this.deadline
     });
 
+    this.currentDate = new Date();
     this.newDealsPositionForm.reset();
   }
 

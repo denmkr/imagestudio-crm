@@ -13,6 +13,7 @@ export class DealsPositionsCreatingModalWindowComponent implements OnInit {
 
   @Output() refreshTableEvent = new EventEmitter<boolean>();
   @Output() refreshOrderPositions = new EventEmitter<any>();
+  @Output() refreshOrderPositionsEdit = new EventEmitter<any>();
 
   title = "Создание нового продукта в заказ";
 
@@ -31,6 +32,13 @@ export class DealsPositionsCreatingModalWindowComponent implements OnInit {
 
   hide() {
     this.activeClass = false;
+    let timeoutClear = setTimeout(() => { this.dealsPositionsCreatingFormComponent.newDealsPositionForm.reset(); clearTimeout(timeoutClear); }, 300);
+  }
+
+  refreshPositionsEdit(event) {
+    this.refreshOrderPositionsEdit.emit(event);
+    this.activeClass = false;
+    this.dealsPositionsCreatingFormComponent.position_items = [];
     let timeoutClear = setTimeout(() => { this.dealsPositionsCreatingFormComponent.newDealsPositionForm.reset(); clearTimeout(timeoutClear); }, 300);
   }
 

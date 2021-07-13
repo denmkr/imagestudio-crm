@@ -11,7 +11,7 @@ export class WarehouseService {
     let httpParams = new HttpParams();
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/products/", { params: httpParams })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/products/", { params: httpParams })
     .map(result => {
       return result.products.map(product => ({
         id: product.id,
@@ -25,8 +25,10 @@ export class WarehouseService {
       name: name
     };
 
-    return this.http.post<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/products/', product).map(
-      result => { return result.product }
+    return this.http.post<any>('http://backend-crm.imagestudio.su/api/v1/products/', product).map(
+      result => { 
+        return result.product; 
+      }
     );
   }
 

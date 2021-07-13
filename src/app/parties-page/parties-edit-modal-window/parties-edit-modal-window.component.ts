@@ -30,6 +30,9 @@ export class PartiesEditModalWindowComponent implements OnInit {
       this.activeClass = true;
       this.partiesEditFormComponent.updateValues(party);
     }
+    else {
+      console.log("Нет доступа");
+    }
   }
 
   hide() {

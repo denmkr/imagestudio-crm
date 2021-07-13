@@ -12,7 +12,7 @@ export class DealsService {
     let httpParams = new HttpParams();
     if (name != null && name != undefined) { httpParams = httpParams.set('name', name); }
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', { params: httpParams }).subscribe(
+    this.http.post('http://backend-crm.imagestudio.su/api/v1/organizations/', { params: httpParams }).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -23,7 +23,7 @@ export class DealsService {
     httpParams = httpParams.set('page[number]', '1');
     httpParams = httpParams.set('page[size]', '2500');
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/users/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/users/", { params: httpParams, reportProgress: true })
     .map(result => {
 
       let users = result.users.map(user => ({
@@ -42,7 +42,7 @@ export class DealsService {
     httpParams = httpParams.set('page[number]', '1');
     httpParams = httpParams.set('page[size]', '2500');
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
 
       let orders = result.orders.map(order => ({
@@ -62,7 +62,7 @@ export class DealsService {
       event: eventId
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', params);
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders/' + id + '/process_event', params);
   }
 
   updateItemStatusById(eventId: string, id: string) {
@@ -70,7 +70,7 @@ export class DealsService {
       event: eventId
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id + '/process_event', params);
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders_items/' + id + '/process_event', params);
   }
 
   updatePositionStatusByOrderId(eventId: string, id: string) {
@@ -78,24 +78,36 @@ export class DealsService {
       event: eventId
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', params);
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders_positions/' + id + '/process_event', params);
   }
 
   removeDeal(id: string) {
-    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id).subscribe(
+    this.http.delete('http://backend-crm.imagestudio.su/api/v1/orders/' + id).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     ); 
   }
 
-  editDealById(id: string, deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
+  removeDealById(id: string) {
+    return this.http.delete('http://backend-crm.imagestudio.su/api/v1/orders/' + id);
+  }
 
+  editDealById(id: string, deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
+    
     documents.map(document => {
       document.kind = document.kind.id;
       document.category = document.category.id;
-      document.counterparty = {
-        id: document.counterparty.id
-      };
+      if (document.counterparty == null) {
+        document.counterparty = {
+          id: null
+        };
+      }
+      else {
+        document.counterparty = {
+          id: document.counterparty.id
+        };
+      }
+
     });
 
     orders_positions.map(orders_position => {
@@ -127,10 +139,7 @@ export class DealsService {
       documents: documents
     };
 
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, order).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.put('http://backend-crm.imagestudio.su/api/v1/orders/' + id, order);
   }
 
   createNewDeal(deadline: string, doer_id: string, counterparty_id: string, comment: string, orders_positions: Array<any>, documents: Array<any>) {
@@ -148,11 +157,12 @@ export class DealsService {
       documents: documents
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', order).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders/', order);
     
+  }
+
+  removePositionById(id: number) {
+    return this.http.delete('http://backend-crm.imagestudio.su/api/v1/orders_positions/' + id);
   }
 
   editPositionById(id: number, deadline: string, product_id: number, order_id: number, price: string, count: string) {
@@ -168,13 +178,22 @@ export class DealsService {
       count: count
     };
 
-    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id, order_position);
+    return this.http.put('http://backend-crm.imagestudio.su/api/v1/orders_positions/' + id, order_position);
+  }
+
+  removeItemById(id: number) {
+    return this.http.delete('http://backend-crm.imagestudio.su/api/v1/orders_items/' + id);
   }
 
   editItemById(id:number, organization_id: number, product_id: number, position_id: number, prime_price: string, description: string, documents: any) {
     documents.map(document => {
+      /*
       document.counterparty = {
         id: document.counterparty.id
+      };
+      */
+      document.organization = {
+        id: organization_id
       };
 
       document.category = document.category.id;
@@ -196,10 +215,18 @@ export class DealsService {
       description: description
     };
 
-    return this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id, order_item);
+    return this.http.put('http://backend-crm.imagestudio.su/api/v1/orders_items/' + id, order_item);
   }
 
   createNewItem(organization_id: number, product_id: number, position_id: number, prime_price: string, description: string, documents: any) {
+    documents.map(document => {
+      document.organization = {
+        id: organization_id
+      };
+      document.kind = document.kind.id;
+      document.category = document.category.id;
+    });
+
     const order_item = {
       product: {
         id: product_id
@@ -215,10 +242,10 @@ export class DealsService {
       description: description
     };
 
-    return this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/', order_item);
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders_items/', order_item);
   }
 
-  createNewPosition(deadline: string, product_id: number, order_id: number, price: string, count: string) {
+  createNewPosition(items: any, deadline: string, product_id: number, order_id: number, price: string, count: string) {
     const order_position = {
       product: {
         id: product_id
@@ -228,13 +255,20 @@ export class DealsService {
       },
       must_be_finished_at: deadline,
       price: price,
-      count: count
+      count: count,
+      orders_items: items
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/', order_position).subscribe(
-      res => { console.log(res) },
-      err => { console.log(err) }
-    );
+    items.map(item => {
+      item.documents.map(document => {
+        document.kind = document.kind.id;
+        document.category = document.category.id;
+      });
+    });
+
+    console.log(order_position);
+
+    return this.http.post('http://backend-crm.imagestudio.su/api/v1/orders_positions/', order_position);
   }
 
   getColumnDealsByParams(status: string, search: string, user_id: string) {
@@ -244,7 +278,7 @@ export class DealsService {
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     httpParams = httpParams.set('page[size]', '25');
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
 
       let names;
@@ -275,7 +309,7 @@ export class DealsService {
   }
 
   getPositionById(id: string) {
-    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id)
+    return this.http.get<any>('http://backend-crm.imagestudio.su/api/v1/orders_positions/' + id)
     .map(result => {
         result.orders_position.orders_items.map(item => {
 
@@ -294,8 +328,8 @@ export class DealsService {
             case "deffered":
               item.status = {name: "Различить", id: "deffered"};
               break;
-            case "waiting":
-              item.status = {name: "Ожидается", id: "waiting"};
+            case "waiting_payment":
+              item.status = {name: "Ожидается", id: "waiting_payment"};
               break;
             case "in_progress":
               item.status = {name: "В работе", id: "in_progress"};
@@ -318,29 +352,26 @@ export class DealsService {
 
           item.available_events.map(available_event => {
             switch (available_event) {
-              case "accept":
-                item_events.push({ name: "Лид", id: "accept" });
+              case "do_in_progress":
+                item_events.push({ name: "В работе", id: "do_in_progress" });
                 break;
-              case "start":
-                item_events.push({ name: "В работе", id: "start" });
+              case "do_ordered":
+                item_events.push({ name: "Заказал", id: "do_ordered" });
                 break;
-              case "put_in_wait":
-                item_events.push({ name: "Ожидание", id: "put_in_wait" });
+              case "do_waiting_design":
+                item_events.push({ name: "Жду макет", id: "do_waiting_design" });
                 break;
-              case "calculate":
-                item_events.push({ name: "Рассчет", id: "calculate" });
+              case "do_waiting_payment":
+                item_events.push({ name: "Жду оплаты", id: "do_waiting_payment" });
                 break;
-              case "set_ordered":
-                item_events.push({ name: "Заказ", id: "set_ordered" });
+              case "do_delaying":
+                item_events.push({ name: "Отложено", id: "do_delaying" });
                 break;
-              case "complete":
-                item_events.push({ name: "Выполнено", id: "complete" });
+              case "do_done":
+                item_events.push({ name: "Выполнено", id: "do_done" });
                 break;
-              case "set_payed":
-                item_events.push({ name: "Оплачено", id: "set_payed" });
-                break;
-              case "verify":
-                item_events.push({ name: "Проверено", id: "verify" });
+              case "do_waiting_approve":
+                item_events.push({ name: "Жду утвeрждения", id: "do_waiting_approve" });
                 break;
               default:
                 break;
@@ -393,12 +424,14 @@ export class DealsService {
   }
 
   getItemById(id: string) {
-    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_items/' + id);
+    return this.http.get<any>('http://backend-crm.imagestudio.su/api/v1/orders_items/' + id);
   }
 
   getDealById(id: string) {
-    return this.http.get<any>('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id)
+
+    return this.http.get<any>('http://backend-crm.imagestudio.su/api/v1/orders/' + id)
     .map(result => {
+
       let available_events = [];
 
       result.order.available_events.map(available_event => {
@@ -470,8 +503,8 @@ export class DealsService {
           case "deffered":
             position.status = {name: "Различить", id: "deffered"};
             break;
-          case "waiting":
-            position.status = {name: "Ожидается", id: "waiting"};
+          case "waiting_payment":
+            position.status = {name: "Ожидается", id: "waiting_payment"};
             break;
           case "in_progress":
             position.status = {name: "В работе", id: "in_progress"};
@@ -492,31 +525,31 @@ export class DealsService {
             break;
         };
 
+
+
         position.available_events.map(available_event => {
+
           switch (available_event) {
-            case "accept":
-              position_events.push({ name: "Лид", id: "accept" });
+            case "do_in_progress":
+              position_events.push({ name: "В работе", id: "do_in_progress" });
               break;
-            case "start":
-              position_events.push({ name: "В работе", id: "start" });
+            case "do_ordered":
+              position_events.push({ name: "Заказал", id: "do_ordered" });
               break;
-            case "put_in_wait":
-              position_events.push({ name: "Ожидание", id: "put_in_wait" });
+            case "do_waiting_design":
+              position_events.push({ name: "Жду макет", id: "do_waiting_design" });
               break;
-            case "calculate":
-              position_events.push({ name: "Рассчет", id: "calculate" });
+            case "do_waiting_payment":
+              position_events.push({ name: "Жду оплаты", id: "do_waiting_payment" });
               break;
-            case "set_ordered":
-              position_events.push({ name: "Заказ", id: "set_ordered" });
+            case "do_delaying":
+              position_events.push({ name: "Отложено", id: "do_delaying" });
               break;
-            case "complete":
-              position_events.push({ name: "Выполнено", id: "complete" });
+            case "do_done":
+              position_events.push({ name: "Выполнено", id: "do_done" });
               break;
-            case "set_payed":
-              position_events.push({ name: "Оплачено", id: "set_payed" });
-              break;
-            case "verify":
-              position_events.push({ name: "Проверено", id: "verify" });
+            case "do_waiting_approve":
+              position_events.push({ name: "Жду утвeрждения", id: "do_waiting_approve" });
               break;
             default:
               break;
@@ -543,8 +576,8 @@ export class DealsService {
             case "deffered":
               item.status = {name: "Различить", id: "deffered"};
               break;
-            case "waiting":
-              item.status = {name: "Ожидается", id: "waiting"};
+            case "waiting_payment":
+              item.status = {name: "Ожидается", id: "waiting_payment"};
               break;
             case "in_progress":
               item.status = {name: "В работе", id: "in_progress"};
@@ -566,34 +599,31 @@ export class DealsService {
           };
 
           item.available_events.map(available_event => {
-            switch (available_event) {
-              case "accept":
-                item_events.push({ name: "Лид", id: "accept" });
-                break;
-              case "start":
-                item_events.push({ name: "В работе", id: "start" });
-                break;
-              case "put_in_wait":
-                item_events.push({ name: "Ожидание", id: "put_in_wait" });
-                break;
-              case "calculate":
-                item_events.push({ name: "Рассчет", id: "calculate" });
-                break;
-              case "set_ordered":
-                item_events.push({ name: "Заказ", id: "set_ordered" });
-                break;
-              case "complete":
-                item_events.push({ name: "Выполнено", id: "complete" });
-                break;
-              case "set_payed":
-                item_events.push({ name: "Оплачено", id: "set_payed" });
-                break;
-              case "verify":
-                item_events.push({ name: "Проверено", id: "verify" });
-                break;
-              default:
-                break;
-            };
+              switch (available_event) {
+                case "do_in_progress":
+                  item_events.push({ name: "В работе", id: "do_in_progress" });
+                  break;
+                case "do_ordered":
+                  item_events.push({ name: "Заказал", id: "do_ordered" });
+                  break;
+                case "do_waiting_design":
+                  item_events.push({ name: "Жду макет", id: "do_waiting_design" });
+                  break;
+                case "do_waiting_payment":
+                  item_events.push({ name: "Жду оплаты", id: "do_waiting_payment" });
+                  break;
+                case "do_delaying":
+                  item_events.push({ name: "Отложено", id: "do_delaying" });
+                  break;
+                case "do_done":
+                  item_events.push({ name: "Выполнено", id: "do_done" });
+                  break;
+                case "do_waiting_approve":
+                  item_events.push({ name: "Жду утвeрждения", id: "do_waiting_approve" });
+                  break;
+                default:
+                  break;
+              };
           });
 
           item.available_events = item_events;
@@ -680,10 +710,10 @@ export class DealsService {
 
         switch (document.status) {
           case "approved":
-            document.status = { id: "approve", name: "Оплачено" };
+            document.status = { id: "approve", name: "Подписано" };
             break;
           case "pending":
-            document.status = { id: "pending", name: "Не оплачено" };
+            document.status = { id: "pending", name: "Не подписано" };
             break;
           default:
             break;
@@ -693,17 +723,17 @@ export class DealsService {
 
         switch (document.available_event) {
           case "complete":
-            events.push({ id: "approve", name: "Оплачено"});
+            events.push({ id: "approve", name: "Подписано"});
             break;
           case "pending":
-            events.push({ id: "pending", name: "Не оплачено"});
+            events.push({ id: "pending", name: "Не подписано"});
             break;
           default:
             break;
         };
 
-        events.push({ id: "pending", name: "Не оплачено"});
-        events.push({ id: "approve", name: "Оплачено"});
+        events.push({ id: "pending", name: "Не подписано"});
+        events.push({ id: "approve", name: "Подписано"});
 
         document.available_events = events;
 
@@ -736,12 +766,21 @@ export class DealsService {
     if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
+
       let names;
 
       result.orders.map(order => {
         names = "";
+
+        if (order.counterparty == null) {
+          order.counterparty = {
+            organization: {
+              name: ""
+            }
+          };
+        }
 
         switch (order.status) {
           case "new":
@@ -817,8 +856,8 @@ export class DealsService {
             case "deffered":
               position.status = {name: "Различить", id: "deffered"};
               break;
-            case "waiting":
-              position.status = {name: "Ожидается", id: "waiting"};
+            case "waiting_payment":
+              position.status = {name: "Ожидается", id: "waiting_payment"};
               break;
             case "in_progress":
               position.status = {name: "В работе", id: "in_progress"};
@@ -841,29 +880,26 @@ export class DealsService {
 
           position.available_events.map(available_event => {
             switch (available_event) {
-              case "accept":
-                position_events.push({ name: "Лид", id: "accept" });
+              case "do_in_progress":
+                position_events.push({ name: "В работе", id: "do_in_progress" });
                 break;
-              case "start":
-                position_events.push({ name: "В работе", id: "start" });
+              case "do_ordered":
+                position_events.push({ name: "Заказал", id: "do_ordered" });
                 break;
-              case "put_in_wait":
-                position_events.push({ name: "Ожидание", id: "put_in_wait" });
+              case "do_waiting_design":
+                position_events.push({ name: "Жду макет", id: "do_waiting_design" });
                 break;
-              case "calculate":
-                position_events.push({ name: "Рассчет", id: "calculate" });
+              case "do_waiting_payment":
+                position_events.push({ name: "Жду оплаты", id: "do_waiting_payment" });
                 break;
-              case "set_ordered":
-                position_events.push({ name: "Заказ", id: "set_ordered" });
+              case "do_delaying":
+                position_events.push({ name: "Отложено", id: "do_delaying" });
                 break;
-              case "complete":
-                position_events.push({ name: "Выполнено", id: "complete" });
+              case "do_done":
+                position_events.push({ name: "Выполнено", id: "do_done" });
                 break;
-              case "set_payed":
-                position_events.push({ name: "Оплачено", id: "set_payed" });
-                break;
-              case "verify":
-                position_events.push({ name: "Проверено", id: "verify" });
+              case "do_waiting_approve":
+                position_events.push({ name: "Жду утвeрждения", id: "do_waiting_approve" });
                 break;
               default:
                 break;
@@ -878,11 +914,14 @@ export class DealsService {
 
       });
 
+      
+
       let deals = result.orders.map(order => ({
         id: order.id,
         names: order.names,
         organization: order.counterparty.organization.name,
         doer: order.doer.first_name,
+        creator: order.user.first_name,
         number: order.number,
         status: order.status,
         full_price: order.full_price,

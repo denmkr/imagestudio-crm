@@ -8,7 +8,6 @@
       <th>Сумма</th>
       <th>Прибыль</th>
       <th>Статус</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -19,18 +18,19 @@
           keyboard_arrow_down
           </i>
         </td>
-        <td>
+        <td (click)="toEditPage(deal.id, deal.user_id)">
           <div>{{ deal.organization }}</div>
           <div class="additional-attributes">
             <div class="client">{{ deal.doer }}</div>
             <div class="number">{{ deal.number }}</div>
+            <div class="creator">{{ deal.creator }}</div>
             <!--<div class="date">{{ deal.deadline | date: 'HH:mm' }}</div>-->
           </div>
         </td>
-        <td>{{ deal.names }}</td>
-        <td>{{ deal.deadline | date: 'dd.MM.yyyy' }}</td>
-        <td>{{ deal.price }} Р</td>
-        <td>{{ deal.profit }} Р</td>
+        <td (click)="toEditPage(deal.id, deal.user_id)">{{ deal.names }}</td>
+        <td (click)="toEditPage(deal.id, deal.user_id)">{{ deal.deadline | date: 'dd.MM.yyyy' }}</td>
+        <td (click)="toEditPage(deal.id, deal.user_id)">{{ deal.price }} Р</td>
+        <td (click)="toEditPage(deal.id, deal.user_id)">{{ deal.profit }} Р</td>
         <td class="status">
           <div class="select-blocks">
             <div class="select-field-block">
@@ -41,11 +41,6 @@
             </div>
           </div>
           <div class="percent">{{ deal.readiness }}%</div>
-        </td>
-        <td class="arrow">
-          <i class="material-icons" (click)="toEditPage(deal.id, deal.user_id)">
-          keyboard_arrow_right
-          </i>
         </td>
       </tr>
       <ng-container *ngFor="let order_position of deal.orders_positions">

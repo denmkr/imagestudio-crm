@@ -17,7 +17,7 @@
     <div *ngFor="let select of selectInputs" class="input-field-block">
       <div class="select-container">
         <div *ngIf="select.title !== undefined" class="input-title">{{select.title}}</div>
-        <ng-select [loading]="partiesLoading" [typeahead]="partiesTypeahead" #{{select.id}} [items]="this[select.items]" bindLabel="contact_name" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено">
+        <ng-select [loading]="this[select.loading]" addTagText="Добавить" [addTag]="this[select.addTag]" [typeahead]="this[select.typeahead]" #{{select.id}} [items]="this[select.items]" bindLabel="{{select.bindLabel}}" bindValue="id" placeholder="{{select.placeholder}}" formControlName="{{select.name}}" notFoundText="Не найдено" (change)="setOrganization($event)">
           <ng-template ng-typetosearch-tmp>
               <div class="ng-option disabled">
                   Поиск...
@@ -25,7 +25,10 @@
           </ng-template>
           <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
               <div class="ng-option disabled">
-                  Не найдено для "{{searchTerm}}" <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
+                  Не найдено для "{{searchTerm}}" 
+                  <div *ngIf="select.name == 'counterparty'">
+                    <div class="new-party-button" (click)="addNewParty(searchTerm)">Добавить</div>
+                  </div>
               </div>
           </ng-template>
           <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
@@ -33,10 +36,12 @@
                   Поиск "{{searchTerm}}"
               </div>
           </ng-template>
-          <ng-template ng-option-tmp let-item="item">
-            {{item.contact_name}} <br />
-            <small>{{item.organization.name}}</small>
-          </ng-template>
+          <div *ngIf="select.bindLabel == contact_name">
+            <ng-template ng-option-tmp let-item="item">
+              {{item.contact_name}} <br />
+              <small>{{item.organization.name}}</small>
+            </ng-template>
+          </div>
         </ng-select>
       </div>
     </div>

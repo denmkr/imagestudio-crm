@@ -11,7 +11,7 @@ export class DesignService {
     let httpParams = new HttpParams();
     if (name != null && name != undefined) { httpParams = httpParams.set('name', name); }
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/organizations/', { params: httpParams }).subscribe(
+    this.http.post('http://backend-crm.imagestudio.su/api/v1/organizations/', { params: httpParams }).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -45,7 +45,7 @@ export class DesignService {
       event: newStatus
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id + '/process_event', status).subscribe(
+    this.http.post('http://backend-crm.imagestudio.su/api/v1/orders/' + id + '/process_event', status).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -79,14 +79,14 @@ export class DesignService {
       event: newStatus
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders_positions/' + id + '/process_event', status).subscribe(
+    this.http.post('http://backend-crm.imagestudio.su/api/v1/orders_positions/' + id + '/process_event', status).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
   }
 
   removeDeal(id: string) {
-    this.http.delete('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id).subscribe(
+    this.http.delete('http://backend-crm.imagestudio.su/api/v1/orders/' + id).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     ); 
@@ -112,7 +112,7 @@ export class DesignService {
       }
     };
 
-    this.http.put('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/' + id, document).subscribe(
+    this.http.put('http://backend-crm.imagestudio.su/api/v1/orders/' + id, document).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -131,7 +131,7 @@ export class DesignService {
       }
     };
 
-    this.http.post('http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/', document).subscribe(
+    this.http.post('http://backend-crm.imagestudio.su/api/v1/orders/', document).subscribe(
       res => { console.log(res) },
       err => { console.log(err) }
     );
@@ -145,7 +145,7 @@ export class DesignService {
     if (search != null && search != undefined) { httpParams = httpParams.set('q', search); }
     httpParams = httpParams.set('page[size]', '25');
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
 
       let names;
@@ -185,7 +185,7 @@ export class DesignService {
     if (page != null && page != undefined) httpParams = httpParams.set('page[size]', '25');
 
 
-    return this.http.get<any>("http://imagestudio-crm-backend-qa.herokuapp.com/api/v1/orders/", { params: httpParams, reportProgress: true })
+    return this.http.get<any>("http://backend-crm.imagestudio.su/api/v1/orders/", { params: httpParams, reportProgress: true })
     .map(result => {
       let names;
 

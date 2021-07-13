@@ -28,10 +28,10 @@ export class DocumentsTableComponent {
   statusForm: FormGroup;
   status: FormControl;
 
-  public available_events = [{ id: "approve", name: "Оплачено"}];
+  public available_events = [{ id: "approve", name: "Подписано"}];
 
   public statusSelect = {items: "statuses", name: "status", placeholder: "Статус", id: "statusSelect"};
-  public statuses = [{id: "approve", name: "Оплачено"}];
+  public statuses = [{id: "approve", name: "Подписано"}];
 
   constructor(private documentsService: DocumentsService, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(params => {

@@ -14,7 +14,7 @@ export class DealsItemsAddModalWindowComponent implements OnInit {
   @Output() refreshTableEvent = new EventEmitter<boolean>();
   @Output() refreshOrderItems = new EventEmitter<any>();
 
-  title = "Добавление товара";
+  title = "Добавление услуги";
 
   constructor() { }
 
